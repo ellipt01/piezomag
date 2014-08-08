@@ -1,15 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "constants.h"
-#include "piez.h"
+#include "piezomag.h"
 
 int
 main (int argc, char **argv)
 {
-	if (!initialize (argc, argv)) exit (1);
+	fault_params		*fault;
+	magnetic_params	*mag;
 
-  fprintf_piezomagnetic_effect (stdout, output_comp, x01, x02, dx, y01, y02, dy, z_obs);
+	if (!initialize (argc, argv, &fault, &mag)) exit (1);
 
+  fprintf_piezomagnetic_effect (stdout, output_comp, fault, mag, x_west, x_east, dx, y_south, y_north, dy, z_obs);
+
+  free (fault);
+  free (mag);
   return EXIT_SUCCESS;
 }

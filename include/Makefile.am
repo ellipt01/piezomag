@@ -2,8 +2,6 @@
 
 libpiezomag_includedir = $(pkgincludedir)
 
-libpiezomag_include_DATA =\
-	constants.h\
-	piez.h
+libpiezomag_include_DATA = piezomag.h
 
 EXTRA_DIST = $(libpiezomag_include_DATA)

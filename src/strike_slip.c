@@ -1,30 +1,30 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "constants.h"
-#include "piez.h"
+#include "piezomag.h"
+#include "private.h"
 
 /*** main term ***/
-double
+static double
 strikex0 (int flag, double xi, double et, double qq)
 {
 	return 2.0 * K1 (flag, 1.0, xi, et, qq);
 }
 
-double
+static double
 strikey0 (int flag, double xi, double et, double qq)
 {
 	return 2.0 * K2 (flag, 1.0, xi, et, qq);
 }
 
-double
+static double
 strikez0 (int flag, double xi, double et, double qq)
 {
 	return 2.0 * K3 (flag, 1.0, xi, et, qq);
 }
 
-double
-strike0 (int flag, double x, double y, double z)
+static double
+strike0 (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -39,30 +39,30 @@ strike0 (int flag, double x, double y, double z)
 	for (i = 0; i < 4; i++) {
 		double xi, et;
 
-		xi = x + flength1;
-		et = p + fwidth1;
+		xi = x + fault->flength1;
+		et = p + fault->fwidth1;
 
-		if (i >= 2)		 xi = x - flength2;
-		if (i % 2 == 0) et = p - fwidth2;
+		if (i >= 2)		 xi = x - fault->flength2;
+		if (i % 2 == 0) et = p - fault->fwidth2;
 
 		set_geometry_variables (sign, xi, et, q);
 		hx = strikex0 (flag, xi, et, q);
 		hy = strikey0 (flag, xi, et, q);
 		hz = strikez0 (flag, xi, et, q);
 
-		res[i] = cx * hx + cy * hy + cz * hz;
+		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
 	clear_singular_flag (0);
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
 /*** contributions from the mirror image H0 ***/
-double
-strikexH0 (int flag, double xi, double et, double qq, double y, double z)
+static double
+strikexH0 (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
-	double h = dcurier;
-	double qd = y * sd + (fdepth - h) * cd;
+	double h = mag->dcurier;
+	double qd = y * sd + (fault->fdepth - h) * cd;
 	double K1_val = K1 (flag, 1.0, xi, et, qq);
 	double atan_xe_qr_val = atan_xe_qr (flag, 1.0, xi, et, qq);
 	double J1_val = J1 (flag, 1.0, xi, et, qq);
@@ -81,12 +81,12 @@ strikexH0 (int flag, double xi, double et, double qq, double y, double z)
 	return val;
 }
 
-double
-strikeyH0 (int flag, double xi, double et, double qq, double y, double z)
+static double
+strikeyH0 (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
-	double h = dcurier;
-	double qd = y * sd + (fdepth - h) * cd;
+	double h = mag->dcurier;
+	double qd = y * sd + (fault->fdepth - h) * cd;
 	double K2_val = K2 (flag, 1.0, xi, et, qq);
 	double log_re_val = log_re (flag, 1.0, xi, et, qq);
 	double J2_val = J2 (flag, 1.0, xi, et, qq);
@@ -107,12 +107,12 @@ strikeyH0 (int flag, double xi, double et, double qq, double y, double z)
 	return val;
 }
 
-double
-strikezH0 (int flag, double xi, double et, double qq, double y, double z)
+static double
+strikezH0 (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
-	double h = dcurier;
-	double qd = y * sd + (fdepth - h) * cd;
+	double h = mag->dcurier;
+	double qd = y * sd + (fault->fdepth - h) * cd;
 	double K3_val = K3 (flag, 1.0, xi, et, qq);
 	double log_re_val = log_re (flag, 1.0, xi, et, qq);
 	double M2_val = M2 (flag, 1.0, xi, et, qq);
@@ -121,9 +121,9 @@ strikezH0 (int flag, double xi, double et, double qq, double y, double z)
 	double M3z_val = M2y (flag, 1.0, xi, et, qq);
 
 	val = - (2.0 + alpha5) * K3_val
-		- alpha * log_re_val * cd
+		- fault->alpha * log_re_val * cd
 		- alpha3 * (qd * M3_val - (z - h) * M2_val * sd)
-		+ 2.0 * alpha * h * (M3_val * cd + M2_val * sd)
+		+ 2.0 * fault->alpha * h * (M3_val * cd + M2_val * sd)
 		- 4.0 * alpha1 * h * M2_val * sd
 		- 2.0 * alpha2 * h * M2_val * sd
 		- 2.0 * alpha2 * h * ((qd + h * cd) * M3z_val - (z - 2.0 * h) * M3y_val * sd);
@@ -131,8 +131,8 @@ strikezH0 (int flag, double xi, double et, double qq, double y, double z)
 	return val;
 }
 
-double
-strikeH0 (int flag, double x, double y, double z)
+static double
+strikeH0 (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -147,30 +147,30 @@ strikeH0 (int flag, double x, double y, double z)
 	for (i = 0; i < 4; i++) {
 		double xi, et;
 
-		xi = x + flength1;
-		et = p + fwidth1;
+		xi = x + fault->flength1;
+		et = p + fault->fwidth1;
 
-		if (i >= 2)		 xi = x - flength2;
-		if (i % 2 == 0) et = p - fwidth2;
+		if (i >= 2)		 xi = x - fault->flength2;
+		if (i % 2 == 0) et = p - fault->fwidth2;
 
 		set_geometry_variables (sign, xi, et, q);
-		hx = strikexH0 (flag, xi, et, q, y, z);
-		hy = strikeyH0 (flag, xi, et, q, y, z);
-		hz = strikezH0 (flag, xi, et, q, y, z);
+		hx = strikexH0 (flag, fault, mag, xi, et, q, y, z);
+		hy = strikeyH0 (flag, fault, mag, xi, et, q, y, z);
+		hz = strikezH0 (flag, fault, mag, xi, et, q, y, z);
 
-		res[i] = cx * hx + cy * hy + cz * hz;
+		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
 	clear_singular_flag (0);
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
 /*** contributions from the mirror image HI ***/
-double
-strikexHI (int flag, double xi, double et, double qq, double y, double z)
+static double
+strikexHI (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
-	double h = dcurier;
-	double qd = y * sd + (fdepth - h) * cd;
+	double h = mag->dcurier;
+	double qd = y * sd + (fault->fdepth - h) * cd;
 	double K1_val = K1 (flag, -1.0, xi, et, qq);
 	double atan_xe_qr_val = atan_xe_qr (flag, -1.0, xi, et, qq);
 	double J1_val = J1 (flag, -1.0, xi, et, qq);
@@ -184,12 +184,12 @@ strikexHI (int flag, double xi, double et, double qq, double y, double z)
 	return val;
 }
 
-double
-strikeyHI (int flag, double xi, double et, double qq, double y, double z)
+static double
+strikeyHI (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
-	double h = dcurier;
-	double qd = y * sd + (fdepth - h) * cd;
+	double h = mag->dcurier;
+	double qd = y * sd + (fault->fdepth - h) * cd;
 	double K2_val = K2 (flag, -1.0, xi, et, qq);
 	double log_re_val = log_re (flag, -1.0, xi, et, qq);
 	double J2_val = J2 (flag, -1.0, xi, et, qq);
@@ -202,25 +202,25 @@ strikeyHI (int flag, double xi, double et, double qq, double y, double z)
 	return val;
 }
 
-double
-strikezHI (int flag, double xi, double et, double qq, double y, double z)
+static double
+strikezHI (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
-	double h = dcurier;
-	double qd = y * sd + (fdepth - h) * cd;
+	double h = mag->dcurier;
+	double qd = y * sd + (fault->fdepth - h) * cd;
 	double K3_val = K3 (flag, -1.0, xi, et, qq);
 	double log_re_val = log_re (flag, -1.0, xi, et, qq);
 	double M2_val = M2 (flag, -1.0, xi, et, qq);
 	double M3_val = M3 (flag, -1.0, xi, et, qq);
 
-	val = alpha5 * K3_val + alpha * log_re_val * cd
+	val = alpha5 * K3_val + fault->alpha * log_re_val * cd
 		+ alpha2 * (qd * M3_val - (z - h) * M2_val * sd);
 
 	return val;
 }
 
-double
-strikeHI (int flag, double x, double y, double z)
+static double
+strikeHI (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -235,30 +235,30 @@ strikeHI (int flag, double x, double y, double z)
 	for (i = 0; i < 4; i++) {
 		double xi, et;
 
-		xi = x + flength1;
-		et = p + fwidth1;
+		xi = x + fault->flength1;
+		et = p + fault->fwidth1;
 
-		if (i >= 2)		 xi = x - flength2;
-		if (i % 2 == 0) et = p - fwidth2;
+		if (i >= 2)		 xi = x - fault->flength2;
+		if (i % 2 == 0) et = p - fault->fwidth2;
 
 		set_geometry_variables (sign, xi, et, q);
-		hx = strikexHI (flag, xi, et, q, y, z);
-		hy = strikeyHI (flag, xi, et, q, y, z);
-		hz = strikezHI (flag, xi, et, q, y, z);
+		hx = strikexHI (flag, fault, mag, xi, et, q, y, z);
+		hy = strikeyHI (flag, fault, mag, xi, et, q, y, z);
+		hz = strikezHI (flag, fault, mag, xi, et, q, y, z);
 
-		res[i] = cx * hx + cy * hy + cz * hz;
+		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
 	clear_singular_flag (0);
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
 /*** contributions from the mirror image HIII ***/
-double
-strikexHIII (int flag, double xi, double et, double qq, double y, double z)
+static double
+strikexHIII (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
-	double h = dcurier;
-	double qd = y * sd + (fdepth - h) * cd;
+	double h = mag->dcurier;
+	double qd = y * sd + (fault->fdepth - h) * cd;
 	double K1_val = K1 (flag, 1.0, xi, et, qq);
 	double atan_xe_qr_val = atan_xe_qr (flag, 1.0, xi, et, qq);
 	double J1_val = J1 (flag, 1.0, xi, et, qq);
@@ -272,12 +272,12 @@ strikexHIII (int flag, double xi, double et, double qq, double y, double z)
 	return val;
 }
 
-double
-strikeyHIII (int flag, double xi, double et, double qq, double y, double z)
+static double
+strikeyHIII (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
-	double h = dcurier;
-	double qd = y * sd + (fdepth - h) * cd;
+	double h = mag->dcurier;
+	double qd = y * sd + (fault->fdepth - h) * cd;
 	double K2_val = K2 (flag, 1.0, xi, et, qq);
 	double log_re_val = log_re (flag, 1.0, xi, et, qq);
 	double J2_val = J2 (flag, 1.0, xi, et, qq);
@@ -290,25 +290,25 @@ strikeyHIII (int flag, double xi, double et, double qq, double y, double z)
 	return val;
 }
 
-double
-strikezHIII (int flag, double xi, double et, double qq, double y, double z)
+static double
+strikezHIII (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
-	double h = dcurier;
-	double qd = y * sd + (fdepth - h) * cd;
+	double h = mag->dcurier;
+	double qd = y * sd + (fault->fdepth - h) * cd;
 	double K3_val = K3 (flag, 1.0, xi, et, qq);
 	double log_re_val = log_re (flag, 1.0, xi, et, qq);
 	double M2_val = M2 (flag, 1.0, xi, et, qq);
 	double M3_val = M3 (flag, 1.0, xi, et, qq);
 
-	val = alpha5 * K3_val + alpha * log_re_val * cd
+	val = alpha5 * K3_val + fault->alpha * log_re_val * cd
 		+ alpha3 * (qd * M3_val - (z - h) * M2_val * sd);
 
 	return val;
 }
 
-double
-strikeHIII (int flag, double x, double y, double z)
+static double
+strikeHIII (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -323,32 +323,32 @@ strikeHIII (int flag, double x, double y, double z)
 	for (i = 0; i < 4; i++) {
 		double xi, et;
 
-		xi = x + flength1;
-		et = p + fwidth1;
+		xi = x + fault->flength1;
+		et = p + fault->fwidth1;
 
-		if (i >= 2)		 xi = x - flength2;
-		if (i % 2 == 0) et = p - fwidth2;
+		if (i >= 2)		 xi = x - fault->flength2;
+		if (i % 2 == 0) et = p - fault->fwidth2;
 
 		set_geometry_variables (sign, xi, et, q);
-		hx = strikexHIII (flag, xi, et, q, y, z);
-		hy = strikeyHIII (flag, xi, et, q, y, z);
-		hz = strikezHIII (flag, xi, et, q, y, z);
+		hx = strikexHIII (flag, fault, mag, xi, et, q, y, z);
+		hy = strikeyHIII (flag, fault, mag, xi, et, q, y, z);
+		hz = strikezHIII (flag, fault, mag, xi, et, q, y, z);
 
-		res[i] = cx * hx + cy * hy + cz * hz;
+		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
 	clear_singular_flag (0);
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
 
-double
-strikeHII (int flag, double x, double y, double z)
+static double
+strikeHII (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
 	double p, q;
 	double sign;
-	double w = (dcurier - fdepth) / sd;
+	double w = (mag->dcurier - fault->fdepth) / sd;
 	double hx, hy, hz;
 
 	set_singular_flag (2);
@@ -358,19 +358,19 @@ strikeHII (int flag, double x, double y, double z)
 	for (i = 0; i < 4; i++) {
 		double xi, et;
 
-		xi = x + flength1;
-		et = p + fwidth1;
+		xi = x + fault->flength1;
+		et = p + fault->fwidth1;
 
-		if (i >= 2)		 xi = x - flength2;
+		if (i >= 2)		 xi = x - fault->flength2;
 		if (i % 2 == 0) et = p - w;
 
 		sign = - 1.0;
 		set_geometry_variables (sign, xi, et, q);
-		hx = strikexHI (flag, xi, et, q, y, z);
-		hy = strikeyHI (flag, xi, et, q, y, z);
-		hz = strikezHI (flag, xi, et, q, y, z);
+		hx = strikexHI (flag, fault, mag, xi, et, q, y, z);
+		hy = strikeyHI (flag, fault, mag, xi, et, q, y, z);
+		hz = strikezHI (flag, fault, mag, xi, et, q, y, z);
 
-		res[i] = cx * hx + cy * hy + cz * hz;
+		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
 
 	set_singular_flag (1);
@@ -380,19 +380,19 @@ strikeHII (int flag, double x, double y, double z)
 	for (i = 0; i < 4; i++) {
 		double xi, et;
 
-		xi = x + flength1;
+		xi = x + fault->flength1;
 		et = p - w;
 
-		if (i >= 2)		 xi = x - flength2;
-		if (i % 2 == 0) et = p - fwidth2;
+		if (i >= 2)		 xi = x - fault->flength2;
+		if (i % 2 == 0) et = p - fault->fwidth2;
 
 		sign = 1.0;
 		set_geometry_variables (sign, xi, et, q);
-		hx = strikexHIII (flag, xi, et, q, y, z);
-		hy = strikeyHIII (flag, xi, et, q, y, z);
-		hz = strikezHIII (flag, xi, et, q, y, z);
+		hx = strikexHIII (flag, fault, mag, xi, et, q, y, z);
+		hy = strikeyHIII (flag, fault, mag, xi, et, q, y, z);
+		hz = strikezHIII (flag, fault, mag, xi, et, q, y, z);
 
-		res[i] += cx * hx + cy * hy + cz * hz;
+		res[i] += mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
 	set_singular_flag (0);
 	return (res[0] + res[3]) - (res[1] + res[2]);
@@ -400,15 +400,15 @@ strikeHII (int flag, double x, double y, double z)
 
 
 double
-strike_slip (int flag, double x, double y, double z)
+strike_slip (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	double res;
 
-	res = strike0 (flag, x, y, z);
-	res += strikeH0 (flag, x, y, z);
-	if (fdepth + fwidth2 * sd < dcurier) res += strikeHI (flag, x, y, z);
-	else if (fdepth - fwidth1 * sd > dcurier) res += strikeHIII (flag, x, y, z);
-	else res += strikeHII (flag, x, y, z);
+	res = strike0 (flag, fault, mag, x, y, z);
+	res += strikeH0 (flag, fault, mag, x, y, z);
+	if (fault->fdepth + fault->fwidth2 * sd < mag->dcurier) res += strikeHI (flag, fault, mag, x, y, z);
+	else if (fault->fdepth - fault->fwidth1 * sd > mag->dcurier) res += strikeHIII (flag, fault, mag, x, y, z);
+	else res += strikeHII (flag, fault, mag, x, y, z);
 
 	return res;
 }

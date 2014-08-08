@@ -9,12 +9,12 @@ AM_CFLAGS =\
 lib_LTLIBRARIES = libpiezomag.la
 
 libpiezomag_la_SOURCES =\
-	common.c\
+	utils.c\
 	deriv.c\
 	dip_slip.c\
 	strike_slip.c\
 	tensile_opening.c\
-	util.c
+	piezomag.c
 
 libpiezomag_la_CPPFLAGS = -I$(top_srcdir)/include
 

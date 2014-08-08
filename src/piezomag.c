@@ -1,57 +1,25 @@
+/*
+ * piezomag.c
+ *
+ *  Created on: 2014/08/08
+ *      Author: utsugi
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <float.h>
 
-#include "constants.h"
-#include "piez.h"
+#include "piezomag.h"
+#include "private.h"
 
-#define DUMMY 0
-#define MIN(x, y) ((x) <= (y)) ? (x) : (y)
-
-bool
-set_constants (void)
+static double
+total_force (double hx, double hy, double hz, double exf_inc, double exf_dec)
 {
-	double	c0, jx, jy, jz;
-
-	fstrike = 90.0 - fstrike;
-
-	sd = sin (deg2rad (fdip));
-	cd = cos (deg2rad (fdip));
-	td = tan (deg2rad (fdip));
-	secd = 1.0 / cd;
-	sd2 = pow (sd, 2.0);
-	cd2 = pow (cd, 2.0);
-	s2d = sin (deg2rad (2.0 * fdip));
-	c2d = cos (deg2rad (2.0 * fdip));
-
-	d[0] = DUMMY;
-	d[1] = fdepth - z_obs;
-	d[2] = fdepth - 2.0 * dcurier + z_obs;
-	d[3] = fdepth + 2.0 * dcurier - z_obs;
-
-	alpha = (lambda + mu) / (lambda + 2.0 * mu);
-
-	alpha0 = 4.0 * alpha - 1.0;
-	alpha1 = 3.0 * alpha / alpha0;
-
-	alpha2 = 6.0 * alpha * alpha / alpha0;
-	alpha3 = 2.0 * alpha * (1.0 - alpha) / alpha0;
-	alpha4 = alpha * (2.0 * alpha + 1.0) / alpha0;
-	alpha5 = alpha * (2.0 * alpha - 5.0) / alpha0;
-	alpha6 = 3.0 * alpha * (1.0 - 2.0 * alpha) / alpha0;
-
-	jx = mgz_int * cos (deg2rad (mgz_inc)) * sin (deg2rad (mgz_dec));
-	jy = - mgz_int * cos (deg2rad (mgz_inc)) * cos (deg2rad (mgz_dec));
-	jz = mgz_int * sin (deg2rad (mgz_inc));
-	coordinates_transform (fstrike, &jx, &jy);
-
-	c0 = 0.25 * beta * mu * (3.0 * lambda + 2.0 * mu) / (lambda + mu);
-	cx = c0 * jx;
-	cy = c0 * jy;
-	cz = c0 * jz;
-
-	return true;
+	double	f = hx * cos (deg2rad (exf_inc)) * sin (deg2rad (exf_dec))
+		- hy * cos (deg2rad (exf_inc)) * cos (deg2rad (exf_dec))
+		+ hz * sin (deg2rad (exf_inc));
+	return f;
 }
 
 void
@@ -99,7 +67,6 @@ set_geometry_variables (double sign, double xi, double et, double qq)
 		if (fabs (r5) > DBL_EPSILON) ir5 = 1.0 / r5;
 	}
 
-
 	if (fabs (rx) > DBL_EPSILON) {
 		irx   = 1.0 / rx;
 		irx2  = 1.0 / rx2;
@@ -145,28 +112,19 @@ set_geometry_variables (double sign, double xi, double et, double qq)
 }
 
 double
-total_force (double hx, double hy, double hz, double exf_inc, double exf_dec)
-{
-	double	f = hx * cos (deg2rad (exf_inc)) * sin (deg2rad (exf_dec))
-		- hy * cos (deg2rad (exf_inc)) * cos (deg2rad (exf_dec))
-		+ hz * sin (deg2rad (exf_inc));
-	return f;
-}
-
-double
-piezomagnetic_effect_component (int component, double u1, double u2, double u3, double x, double y, double z)
+piezomagnetic_effect_component (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	double	val = 0.0;
 
-	if (fabs (u1) > DBL_EPSILON) val += u1 * strike_slip (component, x, y, z);
-	if (fabs (u2) > DBL_EPSILON) val += u2 * dip_slip (component, x, y, z);
-	if (fabs (u3) > DBL_EPSILON) val += u3 * tensile_opening (component, x, y, z);
+	if (fabs (fault->u1) > DBL_EPSILON) val += fault->u1 * strike_slip (component, fault, mag, x, y, z);
+	if (fabs (fault->u2) > DBL_EPSILON) val += fault->u2 * dip_slip (component, fault, mag, x, y, z);
+	if (fabs (fault->u3) > DBL_EPSILON) val += fault->u3 * tensile_opening (component, fault, mag, x, y, z);
 
 	return val;
 }
 
 double
-piezomagnetic_effect (int component, double u1, double u2, double u3, double x, double y, double z)
+piezomagnetic_effect (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	double	val;
 	if (component < 0 || component >= 4) {
@@ -174,38 +132,43 @@ piezomagnetic_effect (int component, double u1, double u2, double u3, double x, 
 		exit (1);
 	}
 	if (component == TOTAL_FORCE) {
-		double	hx = piezomagnetic_effect_component (X_COMP, u1, u2, u3, x, y, z);
-		double	hy = piezomagnetic_effect_component (Y_COMP, u1, u2, u3, x, y, z);
-		double hz = piezomagnetic_effect_component (Z_COMP, u1, u2, u3, x, y, z);
-		if (fabs (fstrike) > DBL_EPSILON) coordinates_transform (-fstrike, &hx, &hy);
-		val = total_force (hx, hy, hz, exf_inc, exf_dec);
+		double	hx = piezomagnetic_effect_component (X_COMP, fault, mag, x, y, z);
+		double	hy = piezomagnetic_effect_component (Y_COMP, fault, mag, x, y, z);
+		double hz = piezomagnetic_effect_component (Z_COMP, fault, mag, x, y, z);
+		if (fabs (fault->fstrike) > DBL_EPSILON) coordinates_transform (-fault->fstrike, &hx, &hy);
+		val = total_force (hx, hy, hz, mag->exf_inc, mag->exf_dec);
 	} else
-		val = piezomagnetic_effect_component (component, u1, u2, u3, x, y, z);
+		val = piezomagnetic_effect_component (component, fault, mag, x, y, z);
 
 	return val;
 }
 
+/*
+ * calculates and outputs seismo-magnetic effect in the specified range
+ *
+ * */
 void
-fprintf_piezomagnetic_effect (FILE *stream, int component, double x1, double x2, double dx, double y1, double y2, double dy, double z)
+fprintf_piezomagnetic_effect (FILE *stream, int component, const fault_params *fault, const magnetic_params *mag,
+		double x1, double x2, double dx, double y1, double y2, double dy, double z)
 {
 	int		i, j;
 	double x, y;
-	int		n_grid_x = (int) floor ((x02 - x01) / dx);
-	int		n_grid_y = (int) floor ((y02 - y01) / dy);
+	int		n_grid_x = (int) floor ((x2 - x1) / dx);
+	int		n_grid_y = (int) floor ((y2 - y1) / dy);
 	double eps, grid = MIN (dx, dy);
 
 	eps = 2.0 * grid;
-	for (i = 0, x = x01; i <= n_grid_x; i++, x += dx) {
-		for (j = 0, y = y01; j <= n_grid_y; j++, y += dy) {
+	for (i = 0, x = x1; i <= n_grid_x; i++, x += dx) {
+		for (j = 0, y = y1; j <= n_grid_y; j++, y += dy) {
 			double tx, ty;
 			double val;
 
 			tx = x;
 			ty = -y;
-			if (fabs (fstrike) > DBL_EPSILON) coordinates_transform (fstrike, &tx, &ty);
+			if (fabs (fault->fstrike) > DBL_EPSILON) coordinates_transform (fault->fstrike, &tx, &ty);
 
 			clear_all_singular_flag ();
-			check_singular_point (tx, ty, eps);
+			check_singular_point (fault, tx, ty, eps);
 			if (is_singular_point (singular_R)) {
 				if (verbos) {
 					fprintf (stderr, "## SINGULAR: R: ");
@@ -222,9 +185,10 @@ fprintf_piezomagnetic_effect (FILE *stream, int component, double x1, double x2,
 				}
 				continue;
 			}
-			val = piezomagnetic_effect (component, u1, u2, u3, tx, ty, z_obs);
+			val = piezomagnetic_effect (component, fault, mag, tx, ty, z_obs);
 			fprintf (stream, "%.4f\t%.4f\t%.8f\n", x, y, val);
 		}
 	}
 	return;
 }
+

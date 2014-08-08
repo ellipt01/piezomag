@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "constants.h"
-#include "piez.h"
+#include "piezomag.h"
+#include "private.h"
 
 #define DERIV_X 0
 #define DERIV_Y 1

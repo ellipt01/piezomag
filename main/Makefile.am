@@ -5,7 +5,7 @@ bin_PROGRAMS = piez
 piez_SOURCES = main.c
 piez_CPPFLAGS =\
 	-I$(top_srcdir)/include\
-	-I$(top_srcdir)/example
+	-I$(top_srcdir)/main
 
 piez_LDFLAGS = -L$(top_srcdir)/src
 
