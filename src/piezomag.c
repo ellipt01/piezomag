@@ -13,6 +13,14 @@
 #include "piezomag.h"
 #include "private.h"
 
+/*
+ * calculate total
+ * double	hx:			x(EW) component
+ * double	hy:			y(NS) component
+ * double	hz:			z component
+ * double	exf_inc:	inclination of external field
+ * double	exf_dec:	declination of external field
+ */
 static double
 total_force (double hx, double hy, double hz, double exf_inc, double exf_dec)
 {
@@ -22,6 +30,9 @@ total_force (double hx, double hy, double hz, double exf_inc, double exf_dec)
 	return f;
 }
 
+/*
+ * calculate some constants which are used in piezomagnetic field estimation
+ */
 void
 set_geometry_variables (double sign, double xi, double et, double qq)
 {
@@ -111,20 +122,28 @@ set_geometry_variables (double sign, double xi, double et, double qq)
 	return;
 }
 
-double
-piezomagnetic_effect_component (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+/*
+ * calculates specified component of seismo-magnetic effect on obs. point (xobs, yobs, zobs)
+ * int	component:		X_COMP(0), Y_COMP(1), Z_COMP(2) or TOTAL_FORCE(3)
+ */
+static double
+piezomagnetic_effect_component (int component, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs)
 {
 	double	val = 0.0;
 
-	if (fabs (fault->u1) > DBL_EPSILON) val += fault->u1 * strike_slip (component, fault, mag, x, y, z);
-	if (fabs (fault->u2) > DBL_EPSILON) val += fault->u2 * dip_slip (component, fault, mag, x, y, z);
-	if (fabs (fault->u3) > DBL_EPSILON) val += fault->u3 * tensile_opening (component, fault, mag, x, y, z);
+	if (fabs (fault->u1) > DBL_EPSILON) val += fault->u1 * strike_slip (component, fault, mag, xobs, yobs, zobs);
+	if (fabs (fault->u2) > DBL_EPSILON) val += fault->u2 * dip_slip (component, fault, mag, xobs, yobs, zobs);
+	if (fabs (fault->u3) > DBL_EPSILON) val += fault->u3 * tensile_opening (component, fault, mag, xobs, yobs, zobs);
 
 	return val;
 }
 
+/*
+ * calculates specified X, Y, Z component or total force of seismo-magnetic effect on obs. point (xobs, yobs, zobs)
+ * int	component:		X_COMP(0), Y_COMP(1), Z_COMP(2) or TOTAL_FORCE(3)
+ */
 double
-piezomagnetic_effect (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+piezomagnetic_effect (int component, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs)
 {
 	double	val;
 	if (component < 0 || component >= 4) {
@@ -132,34 +151,33 @@ piezomagnetic_effect (int component, const fault_params *fault, const magnetic_p
 		exit (1);
 	}
 	if (component == TOTAL_FORCE) {
-		double	hx = piezomagnetic_effect_component (X_COMP, fault, mag, x, y, z);
-		double	hy = piezomagnetic_effect_component (Y_COMP, fault, mag, x, y, z);
-		double hz = piezomagnetic_effect_component (Z_COMP, fault, mag, x, y, z);
+		double	hx = piezomagnetic_effect_component (X_COMP, fault, mag, xobs, yobs, zobs);
+		double	hy = piezomagnetic_effect_component (Y_COMP, fault, mag, xobs, yobs, zobs);
+		double hz = piezomagnetic_effect_component (Z_COMP, fault, mag, xobs, yobs, zobs);
 		if (fabs (fault->fstrike) > DBL_EPSILON) coordinates_transform (-fault->fstrike, &hx, &hy);
 		val = total_force (hx, hy, hz, mag->exf_inc, mag->exf_dec);
-	} else
-		val = piezomagnetic_effect_component (component, fault, mag, x, y, z);
+	} else val = piezomagnetic_effect_component (component, fault, mag, xobs, yobs, zobs);
 
 	return val;
 }
 
 /*
- * calculates and outputs seismo-magnetic effect in the specified range
+ * calculates and outputs seismo-magnetic effect in the range [xobs1 : dx : xobs2], [yobs1 : dy : yobs2] and z = zobs
  *
- * */
+ */
 void
 fprintf_piezomagnetic_effect (FILE *stream, int component, const fault_params *fault, const magnetic_params *mag,
-		double x1, double x2, double dx, double y1, double y2, double dy, double z)
+		double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs)
 {
 	int		i, j;
 	double x, y;
-	int		n_grid_x = (int) floor ((x2 - x1) / dx);
-	int		n_grid_y = (int) floor ((y2 - y1) / dy);
+	int		n_grid_x = (int) floor ((xobs2 - xobs1) / dx);
+	int		n_grid_y = (int) floor ((yobs2 - yobs1) / dy);
 	double eps, grid = MIN (dx, dy);
 
 	eps = 2.0 * grid;
-	for (i = 0, x = x1; i <= n_grid_x; i++, x += dx) {
-		for (j = 0, y = y1; j <= n_grid_y; j++, y += dy) {
+	for (i = 0, x = xobs1; i <= n_grid_x; i++, x += dx) {
+		for (j = 0, y = yobs1; j <= n_grid_y; j++, y += dy) {
 			double tx, ty;
 			double val;
 

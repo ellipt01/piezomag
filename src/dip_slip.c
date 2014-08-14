@@ -405,7 +405,6 @@ dipHII (int flag, const fault_params *fault, const magnetic_params *mag, double 
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
-
 double
 dip_slip (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {

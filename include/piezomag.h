@@ -112,15 +112,15 @@ bool	is_singular_point (bool *flag);
 void	check_singular_point (const fault_params *fault, double x, double y, double eps);
 
 /********* common.c *********/
-//bool	set_constants (fault_params *fault, magnetic_params *mag);
-void	set_geometry_variables (double sign, double xi, double et, double qq);
-double	piezomagnetic_effect_component (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
-double	piezomagnetic_effect (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
+double	piezomagnetic_effect (int component, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs);
 void	fprintf_piezomagnetic_effect (FILE *stream, int component, const fault_params *fault, const magnetic_params *mag,
-			double x1, double x2, double dx, double y1, double y2, double dy, double z);
+			double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs);
 
+/********* strike.c *********/
 double strike_slip (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
+/********* dip.c *********/
 double dip_slip (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
+/********* tensile.c *********/
 double tensile_opening (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
 
 #endif	// _PIEZOMAG_H_
