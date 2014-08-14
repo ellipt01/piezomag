@@ -1,5 +1,12 @@
 #/bin/sh
 
+if [ -z "$1" ]; then
+	echo "USAGE: $0 <parameter file name>."
+	exit
+fi
+
+fnparam="$1"
+
 gmtset ANNOT_FONT_PRIMARY "Helvetica"
 gmtset ANNOT_FONT_SIZE_PRIMARY "10p"
 gmtset ANNOT_FONT_SECONDARY "Helvetica"
@@ -43,7 +50,7 @@ for i in `seq 0 3`; do
 	
 	esac
 
-	sed s'/VAL/'$i'/'g params.dat >| infile
+	sed s'/VAL/'$i'/'g $fnparam >| infile
 	../main/piez -f infile >| res
 	xyz2grd -Gres.grd -I0.1/0.1 -R-10/10/-10/10 res
 
