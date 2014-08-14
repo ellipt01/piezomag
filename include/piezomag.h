@@ -33,21 +33,15 @@
 #endif
 #define deg2rad(a) ((a) * M_PI / 180.)
 
-/*** range for calculating magnetic field ***/
-double	z_obs;		// z-coordinate of obs. point
-double	x_west;	// left end of x coordinate (EW) in the range
-double	x_east;	// right edge in range
-double	dx;			// x interval
-double	y_south;	// lower end of y coordinate (NS) in the range
-double	y_north;	// top of the range
-double	dy;			// y interval
+/*** z-coordinate of observation point ***/
+double	z_obs;
 
 // specify component of output : X_COMP (0), Y_COMP (1), Z_COMP (2) or TOTAL_FORCE (3)
 int		output_comp;
 
 /*** flags ***/
-bool	singular_R[4];	// is R is singular
-bool	singular_RE[4];	// is R + eta is singular
+bool	singular_R[4];	// R is singular?
+bool	singular_RE[4];	// R + eta is singular?
 bool	verbos;			// verbos mode
 
 /*** fault parameters ***/

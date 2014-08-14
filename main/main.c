@@ -21,8 +21,6 @@
 
 #include "piezomag.h"
 
-extern char	*optarg;
-
 /*** range of calculation. By default, x=[-10:0.1:10], y=[-10:0.1:10](km) ***/
 double		xwest = -10.;
 double		xeast = 10.;
@@ -32,7 +30,7 @@ double		ysouth = -10.;
 double		ynorth = 10.;
 double		dy = 0.1;
 
-void
+static void
 usage (char *toolname)
 {
 	char	*p = strrchr (toolname, '/');
@@ -46,12 +44,13 @@ usage (char *toolname)
 }
 
 /*** set parameters from command-line options ***/
-bool
+static bool
 initialize (int argc, char **argv, fault_params **fault, magnetic_params **mag)
 {
-	char	in_fn[80] = "\0";
-	char	c;
-	FILE	*fp;
+	extern char	*optarg;
+	char			in_fn[80] = "\0";
+	char			c;
+	FILE			*fp;
 
 	fault_params		*_fault = (fault_params *) malloc (sizeof (fault_params));
 	magnetic_params	*_mag = (magnetic_params *) malloc (sizeof (magnetic_params));
@@ -97,13 +96,12 @@ initialize (int argc, char **argv, fault_params **fault, magnetic_params **mag)
 	}
 
 	if (fabs (dx) < DBL_EPSILON || fabs (dy) < DBL_EPSILON) {
-		fprintf (stderr, "ERROR: -r : specified range is invalid.\n");
+		fprintf (stderr, "ERROR: -i : specified grid interval is invalid.\n");
 		return false;
 	}
 
-
 	if ((fp = fopen (in_fn, "r")) == NULL) {
-		fprintf (stderr, "ERROR: cannot open input file %s\nprogram aborted.\n", in_fn);
+		fprintf (stderr, "ERROR: cannot open input file %s.\n", in_fn);
 		return false;
 	}
 	if (!fread_params (fp, _fault, _mag)) return false;
@@ -124,11 +122,14 @@ main (int argc, char **argv)
 	fault_params		*fault;
 	magnetic_params	*mag;
 
-	if (!initialize (argc, argv, &fault, &mag)) exit (1);
+	if (!initialize (argc, argv, &fault, &mag)) {
+		fprintf (stderr, "initialization of program failed.\naborted.\n");
+		exit (1);
+	}
 
-  fprintf_piezomagnetic_effect (stdout, output_comp, fault, mag, xwest, xeast, dx, ysouth, ynorth, dy, z_obs);
+	fprintf_piezomagnetic_effect (stdout, output_comp, fault, mag, xwest, xeast, dx, ysouth, ynorth, dy, z_obs);
 
-  free (fault);
-  free (mag);
-  return EXIT_SUCCESS;
+	free (fault);
+	free (mag);
+	return EXIT_SUCCESS;
 }

@@ -19,7 +19,7 @@ double	cd2;	// cos^2 (delta)
 double	s2d;	// sin (2 * delta)
 double	c2d;	// cos (2 * delta)
 
-double	d[4];
+double	d[4];	// d_1, d_2, d_3 and d_4
 
 // alpha;
 double	alpha0;	// 4 * alpha - 1

@@ -7,7 +7,7 @@
 # GMT (Generic Mapping Tools)
 #
 # Description:
-# Calculate seismomagnetic field due to strike-slip, dip-slip and tensile opening fault motion
+# This script calculates seismomagnetic field due to strike-slip, dip-slip or tensile opening fault motion
 # using the program "main/piez", and draw contour figures of X, Y, Z component and Total force using GMT.
 # The range of calculation is fixed in x(EW)=[-10:0.1:10](km), y(NS)=[-10:0.1:10](km)
 # If GMT is not installed on your system, this script will abort with some errors.

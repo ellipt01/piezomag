@@ -1,10 +1,13 @@
+# piezomag
+
 A program and library for calculating seismomagnetic field caused by inclined rectangular fault.
 
-This package containes library for calculating seismomagnetic field due to fault motion,
-strike-slip, dip-slip and tensile opening on inclined rectangular fault plane.
+## Description
+This package contains library for calculating seismomagnetic field due to fault motion, strike-slip, dip-slip and tensile opening, on inclined rectangular fault plane which located
+inside the perfectly elastic half space.
 Any dip angle of fault plane are available except for 90 degree (vertical fault plane).
 
-1. Installation
+## Installation
 
 Run the following commands on the top source directry:
 
@@ -13,13 +16,12 @@ $ ./configure
 $ make
 $ make install
 
-By above, shared (dinamic link) library libpiezomag.so will be installed in your system.
-By default, this library and relevant files, such as include files, are installed under /usr/local.
+By above, shared (dinamic link) library libpiezomag.so will be installed in your system. By default, this library and relevant files, such as include files, are installed under /usr/local.
 To change this, please specify prefix as follows:
 
 $ ./configure --prefix=hoge
 
-2. sample program
+## Sample program
 
 An example program "main/piez" is also contained in this package.
 To run this program, do
@@ -29,5 +31,9 @@ $ ./main/piez -f <parameter file name>
 For detail, please see
 example of parameter file: work/example_params.dat
 example script to run this program: work/calcomp.sh
+
+## Licence
+LGPL
+
 
 

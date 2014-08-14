@@ -292,14 +292,24 @@ fread_params (FILE *fp, fault_params *fault, magnetic_params *mag)
 			}
 		}
 	}
+
+	// todo: check all parameters are appropriate
+
+	// z_obs must be < 0
+	if ((int) items[0] >= 0) {
+		fprintf (stderr, "ERROR: z_obs must be < 0.\n");
+		fprintf (stderr, "observation point must be located outside the medium.\n");
+		return false;
+	}
+	// output_comp must be X_COMP(0), Y_COMP(1), Z_COMP(2) or TOTAL_FORCE(3)
 	if ((int) items[SPEC_COMP] < 0 || (int) items[SPEC_COMP] >= 4) {
-		fprintf (stderr, "ERROR: specified component invalid.\n");
+		fprintf (stderr, "ERROR: output_comp is invalid.\n");
 		return false;
 	}
 	for (i = 0; i < n_key; i++) {
 		if (!is_set_item[i]) {
 			fprintf (stderr, "ERROR: following parameter is not specified.\n");
-			fprintf (stderr, "			 %s : %s\n", key[i], key_string[i]);
+			fprintf (stderr, "       %s : %s\n", key[i], key_string[i]);
 			return false;
 		}
 	}
