@@ -1,5 +1,21 @@
 #/bin/sh
 
+# Name of script:
+# calcomp.sh
+#
+# Require:
+# GMT (Generic Mapping Tools)
+#
+# Description:
+# Calculate seismomagnetic field due to strike-slip, dip-slip and tensile opening fault motion
+# using the program "main/piez", and draw contour figures of X, Y, Z component and Total force using GMT.
+# The range of calculation is fixed in x(EW)=[-10:0.1:10](km), y(NS)=[-10:0.1:10](km)
+# If GMT is not installed on your system, this script will abort with some errors.
+#
+# Usage:
+# $ calcomp.sh <parameter file name>
+#
+
 if [ -z "$1" ]; then
 	echo "USAGE: $0 <parameter file name>."
 	exit
@@ -51,7 +67,9 @@ for i in `seq 0 3`; do
 	esac
 
 	sed s'/VAL/'$i'/'g $fnparam >| infile
-	../main/piez -f infile >| res
+
+	# calculate seismomagnetic field in range x=[-10:0.1:10], y=[-10:0.1:10]
+	../main/piez -f infile -r -10/10/-10/10 -i 0.1/0.1 >| res
 	xyz2grd -Gres.grd -I0.1/0.1 -R-10/10/-10/10 res
 
 	if [ $i == 0 ]; then

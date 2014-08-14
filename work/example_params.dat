@@ -71,18 +71,6 @@ fdepth   =  0.5
 
 ############## PARAMETERS FOR CALCULATION ##############
 
-### RANGE
-### EW range: x_west,  x_east,  dx : x = [x_west: dx : x_east] (km)
-### NS range: y_south, y_north, dy : y = [y_south: dy : y_north] (km)
-
-x_west = -10.0
-x_east =  10.0
-dx  =   0.1
-
-y_south = -10.0
-y_north =  10.0
-dy  =   0.1
-
 ### OUTPUT COMPONENT
 ### output_comp = 0 : x component
 ###               1 : y component

@@ -1,16 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <math.h>
-#include <float.h>
 
 #include "piezomag.h"
 #include "private.h"
 
 #define DUMMY 0
 
-int	n_key = 27;
+const int	n_key = 21;
 char *key[] = {
 	"z_obs",
 	"lambda",
@@ -32,12 +30,6 @@ char *key[] = {
 	"fwidth1",
 	"fwidth2",
 	"fdepth",
-	"x_west",
-	"x_east",
-	"dx",
-	"y_south",
-	"y_north",
-	"dy",
 	"output_comp"
 };
 
@@ -62,27 +54,8 @@ char *key_string[] = {
 	"fault width1",
 	"fault width2",
 	"fault depth",
-	"x-range left",
-	"x-range right",
-	"x-grid spacing",
-	"y-range bottom",
-	"y-range upper",
-	"y-grid spacing",
 	"component of output result"
 };
-
-void
-usage (char *toolname)
-{
-	char	*p = strrchr (toolname, '/');
-	if (p) p++;
-	else p = toolname;
-	fprintf (stderr, "USAGE	 : %s -f <parameter file name>\n", p);
-	fprintf (stderr, "optional: -v (verbos mode)\n");
-	return;
-}
-
-extern char	*optarg;
 
 static bool
 set_params (double *items, fault_params *fault, magnetic_params *mag)
@@ -94,116 +67,92 @@ set_params (double *items, fault_params *fault, magnetic_params *mag)
 	for (i = 0; i < n_key; i++) {
 		double val = items[i];
 		switch (i) {
-		case 0:
-			z_obs = val;
-			break;
+			case 0:
+				z_obs = val;
+				break;
 
-		case 1:
-			fault->lambda = val;
-			break;
+			case 1:
+				fault->lambda = val;
+				break;
 
-		case 2:
-			fault->mu = val;
-			break;
+			case 2:
+				fault->mu = val;
+				break;
 
-		case 3:
-			mag->beta = val;
-			break;
+			case 3:
+				mag->beta = val;
+				break;
 
-		case 4:
-			mag->exf_inc = val;
-			break;
+			case 4:
+				mag->exf_inc = val;
+				break;
 
-		case 5:
-			mag->exf_dec = val;
-			break;
+			case 5:
+				mag->exf_dec = val;
+				break;
 
-		case 6:
-			mag->mgz_int = val;
-			break;
+			case 6:
+				mag->mgz_int = val;
+				break;
 
-		case 7:
-			mag->mgz_inc = val;
-			break;
+			case 7:
+				mag->mgz_inc = val;
+				break;
 
-		case 8:
-			mag->mgz_dec = val;
-			break;
+			case 8:
+				mag->mgz_dec = val;
+				break;
 
-		case 9:
-			mag->dcurier = val;
-			break;
+			case 9:
+				mag->dcurier = val;
+				break;
 
-		case 10:
-			fault->u1 = val;
-			break;
+			case 10:
+				fault->u1 = val;
+				break;
 
-		case 11:
-			fault->u2 = val;
-			break;
+			case 11:
+				fault->u2 = val;
+				break;
 
-		case 12:
-			fault->u3 = val;
-			break;
+			case 12:
+				fault->u3 = val;
+				break;
 
-		case 13:
-			fault->fstrike = val;
-			break;
+			case 13:
+				fault->fstrike = val;
+				break;
 
-		case 14:
-			fault->fdip = val;
-			break;
+			case 14:
+				fault->fdip = val;
+				break;
 
-		case 15:
-			fault->flength1 = val;
-			break;
+			case 15:
+				fault->flength1 = val;
+				break;
 
-		case 16:
-			fault->flength2 = val;
-			break;
+			case 16:
+				fault->flength2 = val;
+				break;
 
-		case 17:
-			fault->fwidth1 = val;
-			break;
+			case 17:
+				fault->fwidth1 = val;
+				break;
 
-		case 18:
-			fault->fwidth2 = val;
-			break;
+			case 18:
+				fault->fwidth2 = val;
+				break;
 
-		case 19:
-			fault->fdepth = val;
-			break;
+			case 19:
+				fault->fdepth = val;
+				break;
 
-		case 20:
-			x_west = val;
-			break;
+			case 20:
+				output_comp = (int) val;
+				break;
 
-		case 21:
-			x_east = val;
-			break;
-
-		case 22:
-			dx = val;
-			break;
-
-		case 23:
-			y_south = val;
-			break;
-
-		case 24:
-			y_north = val;
-			break;
-
-		case 25:
-			dy = val;
-			break;
-
-		case 26:
-			output_comp = (int) val;
-			break;
-
-		default:
-			break;
+			default:
+				break;
 		}
 	}
 	return true;
@@ -216,119 +165,95 @@ fwrite_params (FILE *stream, const fault_params *fault, const magnetic_params *m
 	for (i = 0; i < n_key; i++) {
 		double val = 0.;
 		switch (i) {
-		case 0:
-			val = z_obs;
-			break;
+			case 0:
+				val = z_obs;
+				break;
 
-		case 1:
-			val = fault->lambda;
-			break;
+			case 1:
+				val = fault->lambda;
+				break;
 
-		case 2:
-			val = fault->mu;
-			break;
+			case 2:
+				val = fault->mu;
+				break;
 
-		case 3:
-			val = mag->beta;
-			break;
+			case 3:
+				val = mag->beta;
+				break;
 
-		case 4:
-			val = mag->exf_inc;
-			break;
+			case 4:
+				val = mag->exf_inc;
+				break;
 
-		case 5:
-			val = mag->exf_dec;
-			break;
+			case 5:
+				val = mag->exf_dec;
+				break;
 
-		case 6:
-			val = mag->mgz_int;
-			break;
+			case 6:
+				val = mag->mgz_int;
+				break;
 
-		case 7:
-			val = mag->mgz_inc;
-			break;
+			case 7:
+				val = mag->mgz_inc;
+				break;
 
-		case 8:
-			val = mag->mgz_dec;
-			break;
+			case 8:
+				val = mag->mgz_dec;
+				break;
 
-		case 9:
-			val = mag->dcurier;
-			break;
+			case 9:
+				val = mag->dcurier;
+				break;
 
-		case 10:
-			val = fault->u1;
-			break;
+			case 10:
+				val = fault->u1;
+				break;
 
-		case 11:
-			val = fault->u2;
-			break;
+			case 11:
+				val = fault->u2;
+				break;
 
-		case 12:
-			val = fault->u3;
-			break;
+			case 12:
+				val = fault->u3;
+				break;
 
-		case 13:
-			val = fault->fstrike;
-			break;
+			case 13:
+				val = fault->fstrike;
+				break;
 
-		case 14:
-			val = fault->fdip;
-			break;
+			case 14:
+				val = fault->fdip;
+				break;
 
-		case 15:
-			val = fault->flength1;
-			break;
+			case 15:
+				val = fault->flength1;
+				break;
 
-		case 16:
-			val = fault->flength2;
-			break;
+			case 16:
+				val = fault->flength2;
+				break;
 
-		case 17:
-			val = fault->fwidth1;
-			break;
+			case 17:
+				val = fault->fwidth1;
+				break;
 
-		case 18:
-			val = fault->fwidth2;
-			break;
+			case 18:
+				val = fault->fwidth2;
+				break;
 
-		case 19:
-			val = fault->fdepth;
-			break;
+			case 19:
+				val = fault->fdepth;
+				break;
 
-		case 20:
-			val = x_west;
-			break;
+			case 20:
+				val = output_comp;
+				break;
 
-		case 21:
-			val = x_east;
-			break;
-
-		case 22:
-			val = dx;
-			break;
-
-		case 23:
-			val = y_south;
-			break;
-
-		case 24:
-			val = y_north;
-			break;
-
-		case 25:
-			val = dy;
-			break;
-
-		case 26:
-			val = output_comp;
-			break;
-
-		default:
-			break;
+			default:
+				break;
 		}
 		fprintf (stream, "%s\t : %s", key_string[i], key[i]);
-		if (i == 26) {
+		if (i == 20) {
 			if (output_comp == X_COMP) fprintf (stream, "= X_COMP\n");
 			else if (output_comp == Y_COMP) fprintf (stream, "= Y_COMP\n");
 			else if (output_comp == Z_COMP) fprintf (stream, "= Z_COMP\n");
@@ -338,9 +263,9 @@ fwrite_params (FILE *stream, const fault_params *fault, const magnetic_params *m
 	return;
 }
 
-#define SPEC_COMP 26
+#define SPEC_COMP 20
 
-static bool
+bool
 fread_params (FILE *fp, fault_params *fault, magnetic_params *mag)
 {
 	int		i;
@@ -382,7 +307,7 @@ fread_params (FILE *fp, fault_params *fault, magnetic_params *mag)
 	return true;
 }
 
-static bool
+bool
 set_constants (fault_params *fault, magnetic_params *mag)
 {
 	double	jx, jy, jz;
@@ -427,57 +352,9 @@ set_constants (fault_params *fault, magnetic_params *mag)
 	return true;
 }
 
-bool
-initialize (int argc, char **argv, fault_params **fault, magnetic_params **mag)
-{
-	char	in_fn[80];
-	char	c;
-	FILE	*fp;
-
-	fault_params		*_fault = (fault_params *) malloc (sizeof (fault_params));
-	magnetic_params	*_mag = (magnetic_params *) malloc (sizeof (magnetic_params));
-
-	if (argc <= 1) {
-		usage (argv[0]);
-		return false;
-	}
-
-	verbos = false;
-	while ((c = getopt (argc, argv, "f:v")) != -1) {
-
-		switch (c) {
-			case 'f':
-			case 'F':
-				strcpy (in_fn, optarg);
-				break;
-
-			case 'v':
-			case 'V':
-				verbos = true;
-				break;
-
-			default:
-				break;
-		}
-
-	}
-
-	if ((fp = fopen (in_fn, "r")) == NULL) {
-		fprintf (stderr, "ERROR: cannot open input file %s\nprogram aborted.\n", in_fn);
-		return false;
-	}
-	if (!fread_params (fp, _fault, _mag)) return false;
-	fclose (fp);
-
-	if (verbos) fwrite_params (stderr, _fault, _mag);
-	if (!set_constants (_fault, _mag)) return false;
-
-	if (fault) *fault = _fault;
-	if (mag) *mag = _mag;
-
-	return true;
-}
-
+/***************************************
+ * coordinate transform
+ ***************************************/
 void
 coordinates_transform (double theta, double *x, double *y)
 {
@@ -489,6 +366,9 @@ coordinates_transform (double theta, double *x, double *y)
 	return;
 }
 
+/***************************************
+ * treatment of singular point
+ ***************************************/
 void
 clear_singular_flag (int i)
 {

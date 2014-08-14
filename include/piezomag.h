@@ -102,7 +102,8 @@ struct s_magnetic_params {
 };
 
 /********* util.c *********/
-bool	initialize (int argc, char **argv, fault_params **fault, magnetic_params **mag);
+bool	fread_params (FILE *fp, fault_params *fault, magnetic_params *mag);
+bool	set_constants (fault_params *fault, magnetic_params *mag);
 void	coordinates_transform (double theta, double *x, double *y);
 
 void	clear_singular_flag (int i);
