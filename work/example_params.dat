@@ -4,10 +4,18 @@
 #
 ################################################################
 
-############## Z COORDINATE OF OBSERVATION POINT ##############
-### z_obs (km)
-
-z_obs = -0.002
+#
+# A line starting by '#' or blank is regarded as comment and not read.
+#
+# The format of parameter setting line is
+#
+#<keyword> = <value>
+#
+# There must be one or more blanks before and after '='.
+# <keyword> specifies the parameters such as fault parameters, crustal magnetic properties.
+# In the following comment lines, each <keyword> and its descriptions are listed.
+# For more detail of the fault parameters, see doc/fault_geometry.pdf
+#
 
 ############## PROPERTIES OF MEDIUM ##############
 ### lambda     : Lame's constant (x10^11 cgs)
@@ -21,7 +29,7 @@ beta   = 1.0
 ############## MAGNETIC PROPERTIES ##############
 
 ### EXTERNAL GEOMAGNETIC FIELD INCLINATION, DECLINATION
-### exf_inc    : inclination (degree)
+### exf_inc    : inclination of external field (degree)
 ### exf_dec    : declination (degree)
 
 exf_inc = 45.0
@@ -37,31 +45,33 @@ mgz_inc = 45.0
 mgz_dec = 0.0
 
 ### CURIER POINT ISOTHERM
-### dcurier    : depth of curier point isotherm (km)
+### dcurier    : depth of Curier point isotherm (km)
 
 dcurier = 15.0
 
 ############## FAULT PROPERTIES ##############
 
-### DISPLACEMENT VECTOR
+### DISLOCATION VECTOR
 ### (u1, u2, u3):
-###  displacement of strike slip, dip slip and tensile opening component (meter)
+###  dislocation vector (strike-slip, dip-slip, tensile-opening). (meter)
 
 u1 =  1.0
 u2 =  0.0
 u3 =  0.0
 
-### FAULT STRIKE AND DIP ANGLE
-### fstrike     : fault strike    (degree)
-### fdip        : fault dip angle (degree)
+### FAULT GEOMETRIES
+
+### STRIKE and DIP ANGLE
+### fstrike     : strike angle of fault (degree)
+### fdip        : dip angle (degree)
 
 fstrike = 90.0
 fdip    = 45.0
 
-### FAULT DIMENSION
+### LENGTH, WIDTH AND DEPTH
 ### flength1, flength2 : fault length (flength1 <= xi <= flength2) (km)
-### fwidth1, fwidth2   : fault width (fwidth1 <= eta <= fwidth2)   (km)
-### fdepth             : fault depth (km)
+### fwidth1, fwidth2   :       width (fwidth1 <= eta <= fwidth2)   (km)
+### fdepth             :       depth (km)
 
 flength1 =  5.0
 flength2 =  5.0
@@ -70,6 +80,11 @@ fwidth2  =  5.0
 fdepth   =  0.5
 
 ############## PARAMETERS FOR CALCULATION ##############
+
+### HEIGHT OF OBSERVATION POINT
+### z_obs   : z coordinate of obs. point (< 0: outside medium) (km)
+
+z_obs = -0.002
 
 ### OUTPUT COMPONENT
 ### output_comp = 0 : total force
