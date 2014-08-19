@@ -22,6 +22,34 @@ To change this, please specify prefix as follows:
 $ ./configure --prefix=hoge
 ```
 
+## Public functions
+This library provides the following three public functions:
+```
+bool
+fread_params (FILE *fp, fault_params *fault, magnetic_params *mag);
+```
+This function reads user-defined parameters from input file and store them to global variables and pre-allocated structures:
+
+```fault_params *fault: ``` structure which stores fault parameters.
+
+```magnetic_params *mag:``` structure which stores crustal magnetic properties.
+
+```
+double
+seismomagnetic_effect (int component, const fault_params *fault, const magnetic_params *mag,
+    double xobs, double yobs, double zobs);
+```
+This function calculates the seismomagnetic field on obervation point ```(xobs, yobs, zobs)```.
+```int component``` specifies the output magnetic component and it takes ```X_COMP (=0)```, ```Y_COMP (=1)```, ```Z_COMP (=3)``` or ```TOTAL_FORCE (=0)```.
+
+```
+void
+fprintf_seismomagnetic_effect (FILE *stream, int component, const fault_params *fault, const magnetic_params *mag,
+    double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs);
+```
+This function calculates the seismomagnetic field on the grid ```x=[xobs1:dx:xobs2]```, ```y=[yobs1:dy:yobs2]``` and ```z=zobs```.
+
+
 ## Sample program
 
 An example program "main/piez" is also contained in this package.

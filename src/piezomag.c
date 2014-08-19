@@ -14,12 +14,12 @@
 #include "private.h"
 
 /*c*********************************************************************
- * calculates specified component of seismo-magnetic field
+ * calculates specified component of seismomagnetic field
  * on obs. point (xobs, yobs, zobs)
  * int	component:		X_COMP(0), Y_COMP(1), Z_COMP(2) or TOTAL_FORCE(3)
  *c*********************************************************************/
 static double
-piezomagnetic_effect_component (int component, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs)
+seismomagnetic_effect_component (int component, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs)
 {
 	double	val = 0.0;
 
@@ -31,12 +31,12 @@ piezomagnetic_effect_component (int component, const fault_params *fault, const 
 }
 
 /*c******************************************************************
- * calculates specified component of seismo-magnetic field
+ * calculates specified component of seismomagnetic field
  * on obs. point (xobs, yobs, zobs)
  * int	component:	X_COMP(0), Y_COMP(1), Z_COMP(2) or TOTAL_FORCE(3)
  *c******************************************************************/
 double
-piezomagnetic_effect (int component, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs)
+seismomagnetic_effect (int component, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs)
 {
 	double	val;
 	if (component < 0 || component >= 4) {
@@ -44,22 +44,22 @@ piezomagnetic_effect (int component, const fault_params *fault, const magnetic_p
 		exit (1);
 	}
 	if (component == TOTAL_FORCE) {
-		double	hx = piezomagnetic_effect_component (X_COMP, fault, mag, xobs, yobs, zobs);
-		double	hy = piezomagnetic_effect_component (Y_COMP, fault, mag, xobs, yobs, zobs);
-		double hz = piezomagnetic_effect_component (Z_COMP, fault, mag, xobs, yobs, zobs);
+		double	hx = seismomagnetic_effect_component (X_COMP, fault, mag, xobs, yobs, zobs);
+		double	hy = seismomagnetic_effect_component (Y_COMP, fault, mag, xobs, yobs, zobs);
+		double hz = seismomagnetic_effect_component (Z_COMP, fault, mag, xobs, yobs, zobs);
 		if (fabs (fault->fstrike) > DBL_EPSILON) rotate (-fault->fstrike, &hx, &hy);
 		val = total_force (hx, hy, hz, mag->exf_inc, mag->exf_dec);
-	} else val = piezomagnetic_effect_component (component, fault, mag, xobs, yobs, zobs);
+	} else val = seismomagnetic_effect_component (component, fault, mag, xobs, yobs, zobs);
 
 	return val;
 }
 
 /*c**********************************************************************
- * calculates and outputs seismo-magnetic effect
+ * calculates and outputs seismomagnetic effect
  * in the range [xobs1 : dx : xobs2], [yobs1 : dy : yobs2] and z = zobs
  *c**********************************************************************/
 void
-fprintf_piezomagnetic_effect (FILE *stream, int component, const fault_params *fault, const magnetic_params *mag,
+fprintf_seismomagnetic_effect (FILE *stream, int component, const fault_params *fault, const magnetic_params *mag,
 		double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs)
 {
 	int		i, j;
@@ -96,7 +96,7 @@ fprintf_piezomagnetic_effect (FILE *stream, int component, const fault_params *f
 				}
 				continue;
 			}
-			val = piezomagnetic_effect (component, fault, mag, tx, ty, z_obs);
+			val = seismomagnetic_effect (component, fault, mag, tx, ty, z_obs);
 			fprintf (stream, "%.4f\t%.4f\t%.8f\n", x, y, val);
 		}
 	}

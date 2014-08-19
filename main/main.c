@@ -126,7 +126,7 @@ main (int argc, char **argv)
 		exit (1);
 	}
 
-	fprintf_piezomagnetic_effect (stdout, output_comp, fault, mag, xwest, xeast, dx, ysouth, ynorth, dy, z_obs);
+	fprintf_seismomagnetic_effect (stdout, output_comp, fault, mag, xwest, xeast, dx, ysouth, ynorth, dy, z_obs);
 
 	free (fault);
 	free (mag);

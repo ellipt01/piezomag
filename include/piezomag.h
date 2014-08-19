@@ -3,49 +3,59 @@
 
 #include <stdbool.h>
 
+/**** utilities ***/
 #ifdef MIN
 #undef MIN
 #endif
 #define MIN(x, y) ((x) <= (y)) ? (x) : (y)
 
+/* degree -> radian */
 #ifdef deg2rad
 #undef deg2rad
 #endif
 #define deg2rad(a) ((a) * M_PI / 180.)
 
-/*** magnetic component ***/
+/*** definition of magnetic components ***/
 #ifdef  TOTAL_FORCE
 #undef  TOTAL_FORCE
 #endif
-#define TOTAL_FORCE 0
+#define TOTAL_FORCE 0	// total force
 
 #ifdef  X_COMP
 #undef  X_COMP
 #endif
-#define X_COMP 1
+#define X_COMP 1	// x component
 
 #ifdef  Y_COMP
 #undef  Y_COMP
 #endif
-#define Y_COMP 2
+#define Y_COMP 2	// y component
 
 #ifdef  Z_COMP
 #undef  Z_COMP
 #endif
-#define Z_COMP 3
+#define Z_COMP 3	// z component
 
-/*** z-coordinate of observation point ***/
+
+/*c********************
+ *c  global variables
+ *c********************/
+
+/* z-coordinate of observation point ***/
 double	z_obs;
 
-// specify component of output : X_COMP (1), Y_COMP (2), Z_COMP (3) or TOTAL_FORCE (0)
+/* specify component of output : X_COMP (1), Y_COMP (2), Z_COMP (3) or TOTAL_FORCE (0) */
 int		output_comp;
 
-/*** flags ***/
-bool	singular_R[4];	// R is singular?
-bool	singular_RE[4];	// R + eta is singular?
-bool	verbos;			// verbos mode
+/* verbos mide */
+bool	verbos;
 
-/*** fault parameters ***/
+
+/*c********************
+ *c    structures
+ *c********************/
+
+/* fault parameters */
 typedef struct s_fault_params	fault_params;
 
 struct s_fault_params {
@@ -55,10 +65,10 @@ struct s_fault_params {
 	double	mu;
 	double	alpha;		// = (lambda + mu) / (lambda + 2 * mu)
 
-	// fault dimension
-	double	flength1;
+	// fault geometry
+	double	flength1;	// length
 	double	flength2;
-	double	fwidth1;
+	double	fwidth1;	// width
 	double	fwidth2;
 
 	double	fdepth;	// depth of the origin of fault coordinate
@@ -72,12 +82,11 @@ struct s_fault_params {
 
 };
 
-/*** crustal and magnetic parameters ***/
+/* magnetic parameters */
 typedef struct s_magnetic_params	magnetic_params;
 
 struct s_magnetic_params {
 
-	// magnetic parameters
 	double	beta;		// seismo-magnetic sensitivity
 
 	double	mgz_int;	// intensity of magnetization of the uniformly magnetized crust
@@ -87,10 +96,9 @@ struct s_magnetic_params {
 	double	exf_inc;	// inclination of external field
 	double	exf_dec;	// declination
 
-	// depth of Curier point isotherm
-	double	dcurier;
+	double	dcurier;	// depth of Curier point isotherm
 
-	// seismo-magnetic moment vector
+	// seismomagnetic moment vector
 	double	cx;
 	double	cy;
 	double	cz;
@@ -98,12 +106,25 @@ struct s_magnetic_params {
 
 };
 
-/********* util.c *********/
+
+/*c********************
+ *c  public functions
+ *c********************/
+
+/** util.c **/
+
+/* read parameters from file and store them to global variables
+   and pre-allocated structures: fault_params *fault, magnetic_params *mag. */
 bool	fread_params (FILE *fp, fault_params *fault, magnetic_params *mag);
 
-/********* common.c *********/
-double	piezomagnetic_effect (int component, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs);
-void	fprintf_piezomagnetic_effect (FILE *stream, int component, const fault_params *fault, const magnetic_params *mag,
+
+/** piezomag.c **/
+
+/* calculate seismomagnetic field on observation point (xobs, yobs, zobs) */
+double	seismomagnetic_effect (int component, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs);
+
+/* calculate seismomagnetic field on grid x=[xobs1:dx:xobs2], y=[yobs1:dy:yobs2], z=zobs */
+void	fprintf_seismomagnetic_effect (FILE *stream, int component, const fault_params *fault, const magnetic_params *mag,
 			double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs);
 
 #endif	// _PIEZOMAG_H_

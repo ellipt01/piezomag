@@ -8,8 +8,17 @@
 #ifndef _PRIVATE_H_
 #define _PRIVATE_H_
 
-/*** constants and functions which are used internally ***/
+/*c*********************************************************
+ *c
+ *c private functions, constants which are used internally
+ *c
+ *c*********************************************************/
 
+/* flags */
+bool	singular_R[4];	// R is singular?
+bool	singular_RE[4];	// R + eta is singular?
+
+/* trigonometric functions */
 double	sd;		// sin (delta)
 double	cd;		// cos (delta)
 double	td;		// tan (delta)
@@ -19,7 +28,7 @@ double	cd2;	// cos^2 (delta)
 double	s2d;	// sin (2 * delta)
 double	c2d;	// cos (2 * delta)
 
-// d1, d2, d3
+// depth of source and mirror images
 // d0 = dummy (not used)
 // d1 = fdepth - z_obs
 // d2 = fdepth - 2 * dcurier + z_obs
@@ -77,8 +86,8 @@ double	ir5x3;
 double	ir5e3;
 double	ir5c3;
 
-/********* deriv.c *********/
-/***** dipole terms *****/
+/** deriv.c **/
+/* dipole terms */
 double log_rx (int flag, double sign, double xi, double et, double qq);
 double log_re (int flag, double sign, double xi, double et, double qq);
 double log_rc (int flag, double sign, double xi, double et, double qq);
@@ -94,7 +103,7 @@ double K6 (int flag, double sign, double xi, double et, double qq);
 double K7 (int flag, double sign, double xi, double et, double qq);
 double K8 (int flag, double sign, double xi, double et, double qq);
 double K9 (int flag, double sign, double xi, double et, double qq);
-/***** quad-pole terms *****/
+/* quad-pole terms */
 double L1 (int flag, double sign, double xi, double et, double qq);
 double L2 (int flag, double sign, double xi, double et, double qq);
 double M1 (int flag, double sign, double xi, double et, double qq);
@@ -108,7 +117,7 @@ double O3 (int flag, double sign, double xi, double et, double qq);
 double P1 (int flag, double sign, double xi, double et, double qq);
 double P2 (int flag, double sign, double xi, double et, double qq);
 double P3 (int flag, double sign, double xi, double et, double qq);
-/***** oct-pole terms *****/
+/* oct-pole terms */
 double M1y (int flag, double sign, double xi, double et, double qq);
 double M1z (int flag, double sign, double xi, double et, double qq);
 double M2y (int flag, double sign, double xi, double et, double qq);
@@ -128,7 +137,7 @@ double P3z (int flag, double sign, double xi, double et, double qq);
 
 void	set_geometry_variables (double sign, double xi, double et, double qq);
 
-/********* utils.c *********/
+/** utils.c **/
 double	total_force (double hx, double hy, double hz, double exf_inc, double exf_dec);
 void	rotate (double theta, double *x, double *y);
 //void	clear_singular_flag (int i);
@@ -137,11 +146,13 @@ void	set_singular_flag (int i);
 bool	is_singular_point (bool *flag);
 void	check_singular_point (const fault_params *fault, double x, double y, double eps);
 
-/********* strike.c *********/
+/** strike.c **/
 double strike_slip (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
-/********* dip.c *********/
+
+/** dip.c **/
 double dip_slip (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
-/********* tensile.c *********/
+
+/** tensile.c **/
 double tensile_opening (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
 
 #endif /* _PRIVATE_H_ */
