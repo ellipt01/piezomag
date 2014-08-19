@@ -63,7 +63,7 @@ makecpt -T-5/5/0.25 -Z >| mg.cpt
 title="FAULT PARAMETERS: dimension (L,W)=($LENGTH, $WIDTH)"
 echo "8 48 14 0 4 TC $title" | pstext -JX"$size" -R-10/10/-10/10 -N -K >| $fnout
 
-title="displacement=($U1, $U2, $U3), strike and dip angle=($STRIKE, $DIP)"
+title="dislocation=($U1, $U2, $U3), strike and dip angle=($STRIKE, $DIP)"
 echo "8 46.5 14 0 4 TC $title" | pstext -JX"$size" -R -N -K -O >> $fnout
 
 # draw contours for each components

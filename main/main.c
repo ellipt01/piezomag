@@ -52,8 +52,8 @@ initialize (int argc, char **argv, fault_params **fault, magnetic_params **mag)
 	char			c;
 	FILE			*fp;
 
-	fault_params		*_fault = (fault_params *) malloc (sizeof (fault_params));
-	magnetic_params	*_mag = (magnetic_params *) malloc (sizeof (magnetic_params));
+	fault_params		*_fault = fault_params_alloc ();
+	magnetic_params	*_mag = magnetic_params_alloc ();
 
 	if (argc <= 1) {
 		usage (argv[0]);
@@ -130,5 +130,6 @@ main (int argc, char **argv)
 
 	free (fault);
 	free (mag);
+
 	return EXIT_SUCCESS;
 }

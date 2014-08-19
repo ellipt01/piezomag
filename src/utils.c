@@ -10,7 +10,7 @@
 #define DUMMY 0
 
 /* total force
- * double	hx, hy, hz: x(EW), y(NS) and z(UD) components
+ * double	hx, hy, hz: x(E+W-), y(N+S-) and z(Up-Down+) components
  * double	exf_inc, exf_dec:	inclination and declination of external field
  * double	exf_dec:	declination of external field */
 double
@@ -34,6 +34,21 @@ rotate (double theta, double *x, double *y)
 	return;
 }
 
+/* allocate structure */
+fault_params *
+fault_params_alloc (void)
+{
+	return (fault_params *) malloc (sizeof (fault_params));
+}
+
+/* allocate structure */
+magnetic_params *
+magnetic_params_alloc (void)
+{
+	return (magnetic_params *) malloc (sizeof (magnetic_params));
+}
+
+/* keywords for parameters */
 const int	n_key = 21;
 char *key[] = {
 	"z_obs",
@@ -59,20 +74,21 @@ char *key[] = {
 	"output_comp"
 };
 
+/* descriptions of keyword */
 char *key_string[] = {
 	"z coordinates of observation point",
 	"lame's constants (lambda)",
-	"lame's constants (mu)",
+	"rigidity (mu)",
 	"stress sensitivity",
 	"inclination of external geomagnetic field",
 	"declination of external geomagnetic field",
 	"intensity of initial crustal magnetization",
 	"inclination of initial crustal magnetization",
 	"declination of initial crustal magnetization",
-	"depth of curier point isotherm",
-	"displacement (strike slip)",
-	"displacement (dip slip)",
-	"displacement (tensile opening)",
+	"depth of Curier point isotherm",
+	"dislocation (strike slip)",
+	"dislocation (dip slip)",
+	"dislocation (tensile opening)",
 	"strike angle of fault",
 	"dip angle of fault plane",
 	"fault length1",

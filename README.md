@@ -23,7 +23,7 @@ $ ./configure --prefix=hoge
 ```
 
 ## Public functions
-This library provides the following three public functions:
+This library provides the following public functions:
 ```
 bool
 fread_params (FILE *fp, fault_params *fault, magnetic_params *mag);
@@ -33,6 +33,12 @@ This function reads user-defined parameters from input file and store them to gl
 ```fault_params *fault: ``` structure which stores fault parameters.
 
 ```magnetic_params *mag:``` structure which stores crustal magnetic properties.
+
+These structures are allocated by the following functions, respectivly:
+
+```fault_params *fault_params_alloc (void)```
+
+```magnetic_params *magnetic_params_alloc (void)```
 
 ```
 double
@@ -62,6 +68,3 @@ For more details, please see work/example_params.dat (example of parameter file)
 
 ## Licence
 LGPL
-
-
-

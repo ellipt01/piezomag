@@ -62,7 +62,7 @@ struct s_fault_params {
 
 	// crustal parameters
 	double	lambda;	// lame constants
-	double	mu;
+	double	mu;			// rigidity
 	double	alpha;		// = (lambda + mu) / (lambda + 2 * mu)
 
 	// fault geometry
@@ -89,9 +89,11 @@ struct s_magnetic_params {
 
 	double	beta;		// seismo-magnetic sensitivity
 
+	// initial crustal magnetization
 	double	mgz_int;	// intensity of magnetization of the uniformly magnetized crust
 	double	mgz_inc;	// inclination
 	double	mgz_dec;	// declination
+
 	// external field
 	double	exf_inc;	// inclination of external field
 	double	exf_dec;	// declination
@@ -113,7 +115,11 @@ struct s_magnetic_params {
 
 /** util.c **/
 
-/* read parameters from file and store them to global variables
+/* allocate structure */
+fault_params		*fault_params_alloc (void);
+magnetic_params	*magnetic_params_alloc (void);
+
+/* read parameters from file FILE *fp and store them to global variables
    and pre-allocated structures: fault_params *fault, magnetic_params *mag. */
 bool	fread_params (FILE *fp, fault_params *fault, magnetic_params *mag);
 
