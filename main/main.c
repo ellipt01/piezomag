@@ -108,7 +108,6 @@ initialize (int argc, char **argv, fault_params **fault, magnetic_params **mag)
 	fclose (fp);
 
 	if (verbos) fwrite_params (stderr, _fault, _mag);
-	if (!set_constants (_fault, _mag)) return false;
 
 	if (fault) *fault = _fault;
 	if (mag) *mag = _mag;

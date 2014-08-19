@@ -72,9 +72,9 @@ fdepth   =  0.5
 ############## PARAMETERS FOR CALCULATION ##############
 
 ### OUTPUT COMPONENT
-### output_comp = 0 : x component
-###               1 : y component
-###               2 : z component
-###               3 : total force
+### output_comp = 0 : total force
+###               1 : x component
+###               2 : y component
+###               3 : z component
 
 output_comp = VAL

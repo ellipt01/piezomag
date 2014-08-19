@@ -19,7 +19,12 @@ double	cd2;	// cos^2 (delta)
 double	s2d;	// sin (2 * delta)
 double	c2d;	// cos (2 * delta)
 
-double	d[4];	// d_1, d_2, d_3 and d_4
+// d1, d2, d3
+// d0 = dummy (not used)
+// d1 = fdepth - z_obs
+// d2 = fdepth - 2 * dcurier + z_obs
+// d3 = fdepth + 2 * dcurier - z_obs
+double	d[4];
 
 // alpha;
 double	alpha0;	// 4 * alpha - 1
@@ -30,8 +35,8 @@ double	alpha4;	// alpha * (2 * alpha + 1) / alpha0
 double	alpha5;	// alpha * (2 * alpha - 5) / alpha0
 double	alpha6;	// 3 * alpha * (1 - 2 * alpha) / alpha0
 
-double	yy;
-double	cc;
+double	yy;	// yy = eta * cos(delta) + qq * sin(delta)
+double	cc;	// cc = sign * (qq * sin(delta) - eta * sin(delta))
 
 // r, r^2: r = sqrt (xi^2 + eta^2 + q^2)
 double	r;
@@ -72,7 +77,8 @@ double	ir5x3;
 double	ir5e3;
 double	ir5c3;
 
-/********* dipole terms *********/
+/********* deriv.c *********/
+/***** dipole terms *****/
 double log_rx (int flag, double sign, double xi, double et, double qq);
 double log_re (int flag, double sign, double xi, double et, double qq);
 double log_rc (int flag, double sign, double xi, double et, double qq);
@@ -88,7 +94,7 @@ double K6 (int flag, double sign, double xi, double et, double qq);
 double K7 (int flag, double sign, double xi, double et, double qq);
 double K8 (int flag, double sign, double xi, double et, double qq);
 double K9 (int flag, double sign, double xi, double et, double qq);
-/********* quad-pole terms *********/
+/***** quad-pole terms *****/
 double L1 (int flag, double sign, double xi, double et, double qq);
 double L2 (int flag, double sign, double xi, double et, double qq);
 double M1 (int flag, double sign, double xi, double et, double qq);
@@ -102,7 +108,7 @@ double O3 (int flag, double sign, double xi, double et, double qq);
 double P1 (int flag, double sign, double xi, double et, double qq);
 double P2 (int flag, double sign, double xi, double et, double qq);
 double P3 (int flag, double sign, double xi, double et, double qq);
-/********* oct-pole terms *********/
+/***** oct-pole terms *****/
 double M1y (int flag, double sign, double xi, double et, double qq);
 double M1z (int flag, double sign, double xi, double et, double qq);
 double M2y (int flag, double sign, double xi, double et, double qq);
@@ -121,5 +127,21 @@ double P3y (int flag, double sign, double xi, double et, double qq);
 double P3z (int flag, double sign, double xi, double et, double qq);
 
 void	set_geometry_variables (double sign, double xi, double et, double qq);
+
+/********* utils.c *********/
+double	total_force (double hx, double hy, double hz, double exf_inc, double exf_dec);
+void	rotate (double theta, double *x, double *y);
+//void	clear_singular_flag (int i);
+void	clear_all_singular_flags (void);
+void	set_singular_flag (int i);
+bool	is_singular_point (bool *flag);
+void	check_singular_point (const fault_params *fault, double x, double y, double eps);
+
+/********* strike.c *********/
+double strike_slip (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
+/********* dip.c *********/
+double dip_slip (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
+/********* tensile.c *********/
+double tensile_opening (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
 
 #endif /* _PRIVATE_H_ */

@@ -4,9 +4,9 @@
 #include "piezomag.h"
 #include "private.h"
 
-#define DERIV_X 0
-#define DERIV_Y 1
-#define DERIV_Z 2
+#define DERIV_X 1
+#define DERIV_Y 2
+#define DERIV_Z 3
 
 /* log (R_i + xi) */
 double

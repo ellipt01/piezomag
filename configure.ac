@@ -20,6 +20,11 @@ dnl Check if Libtool is present
 dnl Libtool is used for building share libraries 
 AC_PROG_LIBTOOL
 
+# pkgconfig
+PIEZOMAG_DESCRIPTION="Library for calculating seismo-magnetic effect due to an inclined rectangular fault"
+AC_SUBST([PIEZOMAG_DESCRIPTION])
+AC_CONFIG_FILES([piezomag.pc:pkgconfig/piezomag.pc.in])
+
 AC_CONFIG_FILES(Makefile
                 include/Makefile
                 src/Makefile

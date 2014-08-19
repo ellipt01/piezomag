@@ -52,7 +52,7 @@ strike0 (int flag, const fault_params *fault, const magnetic_params *mag, double
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
-	clear_singular_flag (0);
+//	clear_singular_flag (0);
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
@@ -160,7 +160,7 @@ strikeH0 (int flag, const fault_params *fault, const magnetic_params *mag, doubl
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
-	clear_singular_flag (0);
+//	clear_singular_flag (0);
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
@@ -248,7 +248,7 @@ strikeHI (int flag, const fault_params *fault, const magnetic_params *mag, doubl
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
-	clear_singular_flag (0);
+//	clear_singular_flag (0);
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
@@ -336,7 +336,7 @@ strikeHIII (int flag, const fault_params *fault, const magnetic_params *mag, dou
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
-	clear_singular_flag (0);
+//	clear_singular_flag (0);
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
