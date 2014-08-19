@@ -449,37 +449,34 @@ set_geometry_variables (double sign, double xi, double et, double qq)
 	r3c2 = r3 * rc2;		// r^3 * (r + cc)^2
 	r5c3 = r5 * rc3;		// r^5 * (r + cc)^2
 
-	if (singular_R[0]) {
-		ir  = 0.0;
-		ir3 = 0.0;
-		ir5 = 0.0;
-	} else {
+	ir  = 0.0;
+	ir3 = 0.0;
+	ir5 = 0.0;
+	if (!singular_R[0]) {
 		if (fabs (r) > DBL_EPSILON)  ir  = 1.0 / r;
 		if (fabs (r3) > DBL_EPSILON) ir3 = 1.0 / r3;
 		if (fabs (r5) > DBL_EPSILON) ir5 = 1.0 / r5;
 	}
 
+	irx   = 0.0;
+	irx2  = 0.0;
+	irx3  = 0.0;
+	ir3x2 = 0.0;
+	ir5x3 = 0.0;
 	if (fabs (rx) > DBL_EPSILON) {
 		irx   = 1.0 / rx;
 		irx2  = 1.0 / rx2;
 		irx3  = 1.0 / rx3;
 		ir3x2 = 1.0 / r3x2;
 		ir5x3 = 1.0 / r5x3;
-	} else {
-		irx   = 0.0;
-		irx2  = 0.0;
-		irx3  = 0.0;
-		ir3x2 = 0.0;
-		ir5x3 = 0.0;
 	}
 
-	if (singular_RE[0]) {
-		ire   = 0.0;
-		ire2  = 0.0;
-		ire3  = 0.0;
-		ir3e2 = 0.0;
-		ir5e3 = 0.0;
-	} else {
+	ire   = 0.0;
+	ire2  = 0.0;
+	ire3  = 0.0;
+	ir3e2 = 0.0;
+	ir5e3 = 0.0;
+	if (!singular_RE[0]) {
 		if (fabs (re) > DBL_EPSILON)   ire   = 1.0 / re;
 		if (fabs (re2) > DBL_EPSILON)  ire2  = 1.0 / re2;
 		if (fabs (r3e2) > DBL_EPSILON) ir3e2 = 1.0 / r3e2;
@@ -487,19 +484,19 @@ set_geometry_variables (double sign, double xi, double et, double qq)
 		if (fabs (r5e3) > DBL_EPSILON) ir5e3 = 1.0 / r5e3;
 	}
 
+	irc   = 0.0;
+	irc2  = 0.0;
+	irc3  = 0.0;
+	ir3c2 = 0.0;
+	ir5c3 = 0.0;
 	if (fabs (rc) > DBL_EPSILON) {
 		irc   = 1.0 / rc;
 		irc2  = 1.0 / rc2;
 		irc3  = 1.0 / rc3;
 		ir3c2 = 1.0 / r3c2;
 		ir5c3 = 1.0 / r5c3;
-	} else {
-		irc   = 0.0;
-		irc2  = 0.0;
-		irc3  = 0.0;
-		ir3c2 = 0.0;
-		ir5c3 = 0.0;
 	}
+
 	return;
 }
 
@@ -532,7 +529,7 @@ set_singular_flag (int i)
 bool
 is_singular_point (bool *flag)
 {
-	return flag[1] + flag[2] + flag[3];
+	return (flag[1] || flag[2] || flag[3]);
 }
 
 void

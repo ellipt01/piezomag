@@ -104,7 +104,7 @@ for i in 1 2 3 0; do
 	../main/piez -f _tmp_infile_ -r -10/10/-10/10 -i 0.1/0.1 >| res
 
 	# create contour figure
-	xyz2grd -Gres.grd -I0.1/0.1 -R-10/10/-10/10 res
+	surface -Gres.grd -I0.1/0.1 -R-10/10/-10/10 res
 
 	# draw color contour
 	grdimage res.grd -JX -R -P -Cmg.cpt -B5nSWe -X"$shiftx" -Y"$shifty" -K -O >> $fnout
