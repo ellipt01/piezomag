@@ -10,7 +10,9 @@ lib_LTLIBRARIES = libpiezomag.la
 
 libpiezomag_la_SOURCES =\
 	utils.c\
-	deriv.c\
+	deriv_dipoles.c\
+	deriv_quadpoles.c\
+	deriv_octpoles.c\
 	dip_slip.c\
 	strike_slip.c\
 	tensile_opening.c\

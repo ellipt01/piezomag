@@ -50,6 +50,8 @@ int		output_comp;
 /* verbos mide */
 bool	verbos;
 
+/* if fdip = 90., i.e. fault is vertical, set true */
+bool	fault_is_vertical;
 
 /*c********************
  *c    structures

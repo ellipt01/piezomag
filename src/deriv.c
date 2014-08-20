@@ -8,6 +8,8 @@
 #define DERIV_Y 2
 #define DERIV_Z 3
 
+typedef double (*deriv_func) (double sign, double xi, double et, double qq);
+
 /* log (R_i + xi) */
 double
 log_rx_x (double sign, double xi, double et, double qq)
@@ -151,25 +153,48 @@ K1_z (double sign, double xi, double et, double qq)
 	return td * (xi * irc2 + xi * cc * (ir * irc2) + r_J1_z * td);
 }
 
-double
-K2_x (double sign, double xi, double et, double qq)
+static double
+K2_x_1 (double sign, double xi, double et, double qq)
 {
 	double r_J2_x = J2_x (sign, xi, et, qq);
 	return td * (- xi * yy * (ir * irc2) - sign * r_J2_x * td);
 }
 
-double
-K2_y (double sign, double xi, double et, double qq)
+static double
+K2_y_1 (double sign, double xi, double et, double qq)
 {
 	double r_J2_y = J2_y (sign, xi, et, qq);
 	return td * (irc - yy * yy * (ir * irc2) - sign * r_J2_y * td);
 }
 
-double
-K2_z (double sign, double xi, double et, double qq)
+static double
+K2_z_1 (double sign, double xi, double et, double qq)
 {
 	double r_J2_z = J2_z (sign, xi, et, qq);
 	return td * (yy * irc2 + yy * cc * (ir * irc2) - sign * r_J2_z * td);
+}
+
+static double
+K2_x_0 (double sign, double xi, double et, double qq)
+{
+	return - 0.5 * xi * et * (ir * irc2)
+			+ sign * xi * pow (qq, 2.) * (ir * irc3)
+			+ 0.5 * xi * (ir * ire);
+}
+
+static double
+K2_y_0 (double sign, double xi, double et, double qq)
+{
+	return irc - pow (qq, 2.) * (ir * irc2);
+}
+
+static double
+K2_z_0 (double sign, double xi, double et, double qq)
+{
+	return - 0.5 * et * qq * (ir * irc2)
+			- sign * qq * irc2
+			+ sign * xi * pow (qq, 2.) * (ir * irc3)
+			+ 0.5 * xi * (ir * ire);
 }
 
 double
@@ -194,23 +219,44 @@ K3_z (double sign, double xi, double et, double qq)
 }
 
 double
-K4_x (double sign, double xi, double et, double qq)
+K4_x_0 (double sign, double xi, double et, double qq)
 {
-	double r_K2_x = K2_x (sign, xi, et, qq);
+	double r_K2_x = K2_x_0 (sign, xi, et, qq);
 	return cd * (r_K2_x - xi * sd * (ir * ire));
 }
 
 double
-K4_y (double sign, double xi, double et, double qq)
+K4_y_0 (double sign, double xi, double et, double qq)
 {
-	double r_K2_y = K2_y (sign, xi, et, qq);
+	double r_K2_y = K2_y_0 (sign, xi, et, qq);
 	return cd * (r_K2_y - sd * (cd * ire + yy * (ir * ire)));
 }
 
 double
-K4_z (double sign, double xi, double et, double qq)
+K4_z_0 (double sign, double xi, double et, double qq)
 {
-	double r_K2_z = K2_z (sign, xi, et, qq);
+	double r_K2_z = K2_z_0 (sign, xi, et, qq);
+	return cd * (r_K2_z - sd * (sign * sd * ire - cc * (ir * ire)));
+}
+
+double
+K4_x_1 (double sign, double xi, double et, double qq)
+{
+	double r_K2_x = K2_x_1 (sign, xi, et, qq);
+	return cd * (r_K2_x - xi * sd * (ir * ire));
+}
+
+double
+K4_y_1 (double sign, double xi, double et, double qq)
+{
+	double r_K2_y = K2_y_1 (sign, xi, et, qq);
+	return cd * (r_K2_y - sd * (cd * ire + yy * (ir * ire)));
+}
+
+double
+K4_z_1 (double sign, double xi, double et, double qq)
+{
+	double r_K2_z = K2_z_1 (sign, xi, et, qq);
 	return cd * (r_K2_z - sd * (sign * sd * ire - cc * (ir * ire)));
 }
 
@@ -257,23 +303,44 @@ K6_z (double sign, double xi, double et, double qq)
 }
 
 double
-K7_x (double sign, double xi, double et, double qq)
+K7_x_0 (double sign, double xi, double et, double qq)
 {
-	double r_K4_x = K4_x (sign, xi, et, qq);
+	double r_K4_x = K4_x_0 (sign, xi, et, qq);
 	return - r_K4_x * td;
 }
 
 double
-K7_y (double sign, double xi, double et, double qq)
+K7_y_0 (double sign, double xi, double et, double qq)
 {
-	double r_K4_y = K4_y (sign, xi, et, qq);
+	double r_K4_y = K4_y_0 (sign, xi, et, qq);
 	return - r_K4_y * td;
 }
 
 double
-K7_z (double sign, double xi, double et, double qq)
+K7_z_0 (double sign, double xi, double et, double qq)
 {
-	double r_K4_z = K4_z (sign, xi, et, qq);
+	double r_K4_z = K4_z_0 (sign, xi, et, qq);
+	return - r_K4_z * td;
+}
+
+double
+K7_x_1 (double sign, double xi, double et, double qq)
+{
+	double r_K4_x = K4_x_1 (sign, xi, et, qq);
+	return - r_K4_x * td;
+}
+
+double
+K7_y_1 (double sign, double xi, double et, double qq)
+{
+	double r_K4_y = K4_y_1 (sign, xi, et, qq);
+	return - r_K4_y * td;
+}
+
+double
+K7_z_1 (double sign, double xi, double et, double qq)
+{
+	double r_K4_z = K4_z_1 (sign, xi, et, qq);
 	return - r_K4_z * td;
 }
 
@@ -1075,6 +1142,7 @@ J2 (int flag, double sign, double xi, double et, double qq)
 double
 K1 (int flag, double sign, double xi, double et, double qq)
 {
+	return 0.; /*****/
 	if (flag == DERIV_X) return K1_x (sign, xi, et, qq);
 	else if (flag == DERIV_Y) return K1_y (sign, xi, et, qq);
 	else if (flag == DERIV_Z) return K1_z (sign, xi, et, qq);
@@ -1084,15 +1152,22 @@ K1 (int flag, double sign, double xi, double et, double qq)
 double
 K2 (int flag, double sign, double xi, double et, double qq)
 {
-	if (flag == DERIV_X) return K2_x (sign, xi, et, qq);
-	else if (flag == DERIV_Y) return K2_y (sign, xi, et, qq);
-	else if (flag == DERIV_Z) return K2_z (sign, xi, et, qq);
+	if (fault_is_vertical) {
+		if (flag == DERIV_X) return K2_x_0 (sign, xi, et, qq);
+		else if (flag == DERIV_Y) return K2_y_0 (sign, xi, et, qq);
+		else if (flag == DERIV_Z) return K2_z_0 (sign, xi, et, qq);
+	} else {
+		if (flag == DERIV_X) return K2_x_1 (sign, xi, et, qq);
+		else if (flag == DERIV_Y) return K2_y_1 (sign, xi, et, qq);
+		else if (flag == DERIV_Z) return K2_z_1 (sign, xi, et, qq);
+	}
 	return 0.;
 }
 
 double
 K3 (int flag, double sign, double xi, double et, double qq)
 {
+	return 0.; /*****/
 	if (flag == DERIV_X) return K3_x (sign, xi, et, qq);
 	else if (flag == DERIV_Y) return K3_y (sign, xi, et, qq);
 	else if (flag == DERIV_Z) return K3_z (sign, xi, et, qq);
@@ -1102,9 +1177,15 @@ K3 (int flag, double sign, double xi, double et, double qq)
 double
 K4 (int flag, double sign, double xi, double et, double qq)
 {
-	if (flag == DERIV_X) return K4_x (sign, xi, et, qq);
-	else if (flag == DERIV_Y) return K4_y (sign, xi, et, qq);
-	else if (flag == DERIV_Z) return K4_z (sign, xi, et, qq);
+	if (fault_is_vertical) {
+		if (flag == DERIV_X) return K4_x_0 (sign, xi, et, qq);
+		else if (flag == DERIV_Y) return K4_y_0 (sign, xi, et, qq);
+		else if (flag == DERIV_Z) return K4_z_0 (sign, xi, et, qq);
+	} else {
+		if (flag == DERIV_X) return K4_x_1 (sign, xi, et, qq);
+		else if (flag == DERIV_Y) return K4_y_1 (sign, xi, et, qq);
+		else if (flag == DERIV_Z) return K4_z_1 (sign, xi, et, qq);
+	}
 	return 0.;
 }
 
@@ -1129,15 +1210,22 @@ K6 (int flag, double sign, double xi, double et, double qq)
 double
 K7 (int flag, double sign, double xi, double et, double qq)
 {
-	if (flag == DERIV_X) return K7_x (sign, xi, et, qq);
-	else if (flag == DERIV_Y) return K7_y (sign, xi, et, qq);
-	else if (flag == DERIV_Z) return K7_z (sign, xi, et, qq);
+	if (fault_is_vertical) {
+		if (flag == DERIV_X) return K7_x_0 (sign, xi, et, qq);
+		else if (flag == DERIV_Y) return K7_y_0 (sign, xi, et, qq);
+		else if (flag == DERIV_Z) return K7_z_0 (sign, xi, et, qq);
+	} else {
+		if (flag == DERIV_X) return K7_x_1 (sign, xi, et, qq);
+		else if (flag == DERIV_Y) return K7_y_1 (sign, xi, et, qq);
+		else if (flag == DERIV_Z) return K7_z_1 (sign, xi, et, qq);
+	}
 	return 0.;
 }
 
 double
 K8 (int flag, double sign, double xi, double et, double qq)
 {
+	return 0.; /*****/
 	if (flag == DERIV_X) return K8_x (sign, xi, et, qq);
 	else if (flag == DERIV_Y) return K8_y (sign, xi, et, qq);
 	else if (flag == DERIV_Z) return K8_z (sign, xi, et, qq);
@@ -1147,6 +1235,7 @@ K8 (int flag, double sign, double xi, double et, double qq)
 double
 K9 (int flag, double sign, double xi, double et, double qq)
 {
+	return 0.; /*****/
 	if (flag == DERIV_X) return K9_x (sign, xi, et, qq);
 	else if (flag == DERIV_Y) return K9_y (sign, xi, et, qq);
 	else if (flag == DERIV_Z) return K9_z (sign, xi, et, qq);
@@ -1156,6 +1245,7 @@ K9 (int flag, double sign, double xi, double et, double qq)
 double
 L1 (int flag, double sign, double xi, double et, double qq)
 {
+	return 0.; /*****/
 	if (flag == DERIV_X) return L1_x (sign, xi, et, qq);
 	else if (flag == DERIV_Y) return L1_y (sign, xi, et, qq);
 	else if (flag == DERIV_Z) return L1_z (sign, xi, et, qq);
@@ -1165,6 +1255,7 @@ L1 (int flag, double sign, double xi, double et, double qq)
 double
 L2 (int flag, double sign, double xi, double et, double qq)
 {
+	return 0.; /*****/
 	if (flag == DERIV_X) return L2_x (sign, xi, et, qq);
 	else if (flag == DERIV_Y) return L2_y (sign, xi, et, qq);
 	else if (flag == DERIV_Z) return L2_z (sign, xi, et, qq);
@@ -1183,6 +1274,7 @@ M1 (int flag, double sign, double xi, double et, double qq)
 double
 M2 (int flag, double sign, double xi, double et, double qq)
 {
+	return 0.; /*****/
 	if (flag == DERIV_X) return M2_x (sign, xi, et, qq);
 	else if (flag == DERIV_Y) return M2_y (sign, xi, et, qq);
 	else if (flag == DERIV_Z) return M2_z (sign, xi, et, qq);
@@ -1210,6 +1302,7 @@ N1 (int flag, double sign, double xi, double et, double qq)
 double
 N2 (int flag, double sign, double xi, double et, double qq)
 {
+	return 0.; /*****/
 	if (flag == DERIV_X) return N2_x (sign, xi, et, qq);
 	else if (flag == DERIV_Y) return N2_y (sign, xi, et, qq);
 	else if (flag == DERIV_Z) return N2_z (sign, xi, et, qq);

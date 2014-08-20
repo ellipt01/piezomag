@@ -240,10 +240,25 @@ set_constants (fault_params *fault, magnetic_params *mag)
 	rotate (fault->fstrike, &jx, &jy);
 
 	mag->c0 = 0.25 * mag->beta * fault->mu * (3.0 * fault->lambda + 2.0 * fault->mu) / (fault->lambda + fault->mu);
+/*
+	mag->cx = 0.;
+	mag->cy = 1.;
+	mag->cz = 0.;
+*/
 	mag->cx = mag->c0 * jx;
 	mag->cy = mag->c0 * jy;
 	mag->cz = mag->c0 * jz;
 
+	return true;
+}
+
+/* set flags */
+static bool
+set_flags (fault_params *fault, magnetic_params *mag)
+{
+	// check fault dip angle
+	if (fabs (fault->fdip - 90.) < 1.e-3) fault_is_vertical = true;
+	else fault_is_vertical = false;
 	return true;
 }
 
@@ -405,6 +420,11 @@ fread_params (FILE *fp, fault_params *fault, magnetic_params *mag)
 		fprintf (stderr, "observation point must be located outside the medium.\n");
 		return false;
 	}
+	// check fault dip
+	if (items[14] < 0. || 90. < items[14]) {
+		fprintf (stderr, "ERROR: fread_params: fdip must be in [0, 90] (deg.).");
+		return false;
+	}
 	// output_comp must be X_COMP(0), Y_COMP(1), Z_COMP(2) or TOTAL_FORCE(3)
 	if ((int) items[SPEC_COMP] < 0 || (int) items[SPEC_COMP] >= 4) {
 		fprintf (stderr, "ERROR: fread_params: output_comp is invalid.\n");
@@ -419,6 +439,7 @@ fread_params (FILE *fp, fault_params *fault, magnetic_params *mag)
 	}
 	if (!set_params (items, fault, mag)) return false;
 	if (!set_constants (fault, mag)) return false;
+	if (!set_flags (fault, mag)) return false;
 
 	return true;
 }
