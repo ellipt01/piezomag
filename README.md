@@ -1,10 +1,14 @@
 # piezomag
 
-A program and library for calculating seismomagnetic field caused by inclined rectangular fault.
+A program and library for calculating seismomagnetic field, i.e. geomagnetic field change caused by earthquake
+due to piezomagnetic effect.
 
 ## Description
-This package contains library for calculating seismomagnetic field due to fault motion, strike-slip, dip-slip and tensile opening, on inclined rectangular fault plane which located inside the perfectly elastic half space.
-Any dip angle of fault plane are available including 90 degrees (vertical fault plane).
+This package contains library for calculating seismomagnetic field due to a vertical or inclined
+rectangular fault located inside the perfectly elastic half space.
+Using this library, you can calculate seismomagnetic field easily,
+and any dip angle and all types of fault motion, strike-slip, dip-slip and tensile opening is available
+for this library.
 
 ## Installation
 
@@ -40,6 +44,7 @@ These structures are allocated by the following functions, respectivly:
 
 ```magnetic_params *magnetic_params_alloc (void)```
 
+---
 ```
 bool
 seismomagnetic_field (int component, const fault_params *fault, const magnetic_params *mag,
@@ -47,15 +52,16 @@ seismomagnetic_field (int component, const fault_params *fault, const magnetic_p
 ```
 This function calculates the seismomagnetic field on obervation point ```(xobs, yobs, zobs)```.
 ```int component``` specifies the output magnetic component and it takes ```X_COMP (=0)```, ```Y_COMP (=1)```, ```Z_COMP (=3)``` or ```TOTAL_FORCE (=0)```.
-If obervation point is the singular point, return ```false```.
+If obervation point is on the singular point, return ```false```.
 
+---
 ```
 void
 fprintf_seismomagnetic_field (FILE *stream, int component, const fault_params *fault, const magnetic_params *mag,
     double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs);
 ```
 This function calculates the seismomagnetic field on the grid ```x=[xobs1:dx:xobs2]```, ```y=[yobs1:dy:yobs2]``` and ```z=zobs```.
-
+Output format is ``` X  Y  VAL```.
 
 ## Sample program
 
