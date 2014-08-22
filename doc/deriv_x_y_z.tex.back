@@ -267,45 +267,24 @@
 \end{array}
 \right.\\
 &&\left\{
-%\begin{array}{lcl}
-%  \displaystyle \frac{\partial L_2}{\partial x}
-%  &=&
-%  \displaystyle \frac{\partial L_1}{\partial y}\sec\delta\\
-%%  \displaystyle \mp\frac{\xi\sin\delta}{R_i(\re{i})^2}
-%%  +\yy{i}\frac{\partial L_0}{\partial \xi}\sec\delta\\
-%%
-%  \displaystyle \frac{\partial L_2}{\partial y}
-%  &=&
-%  \displaystyle \pm\left\{\frac{\sin\delta}{(\re{i})^2}
-%    \mp\frac{\cc{i}}{R_i(\re{i})^2}\right\}\sin\delta\tan\delta
-%  +\left\{\frac{1}{R_i(\rc{i})}+\yy{i}\frac{\partial L_0}{\partial y}\right\}\sec\delta\\
-%%
-%  \displaystyle \frac{\partial L_2}{\partial z}
-%  &=&
-%  \displaystyle -\left\{\frac{\sin\delta}{(\re{i})^2}
-%    \mp\frac{\cc{i}}{R_i(\re{i})^2}\right\}\sin\delta
-%  +\yy{i}\frac{\partial L_0}{\partial z}\sec\delta
-%\end{array}
 \begin{array}{lcl}
   \displaystyle \frac{\partial L_2}{\partial x}
   &=&
-  \displaystyle \mp\frac{\xi\sin\delta}{R_i(\re{i})^2}+\yy{i}L_{0,x}\sec\delta\\
+  \displaystyle \frac{\partial L_1}{\partial y}\sec\delta\\
+%  \displaystyle \mp\frac{\xi\sin\delta}{R_i(\re{i})^2}
+%  +\yy{i}\frac{\partial L_0}{\partial \xi}\sec\delta\\
 %
   \displaystyle \frac{\partial L_2}{\partial y}
   &=&
-  \displaystyle \mp\sin\delta
-  \left\{
-      \frac{\cos\delta}{(\re{i})^2}+\frac{\yy{i}}{R_i(\re{i})^2}
-    \right\}
-    +L_0\sec\delta+\yy{i}L_{0,y}\sec\delta\\
+  \displaystyle \pm\left\{\frac{\sin\delta}{(\re{i})^2}
+    \mp\frac{\cc{i}}{R_i(\re{i})^2}\right\}\sin\delta\tan\delta
+  +\left\{\frac{1}{R_i(\rc{i})}+\yy{i}\frac{\partial L_0}{\partial y}\right\}\sec\delta\\
 %
   \displaystyle \frac{\partial L_2}{\partial z}
   &=&
-  \displaystyle -\sin\delta
-  \left\{
-      \frac{\sin\delta}{(\re{i})^2}\mp\frac{\cc{i}}{R_i(\re{i})^2}
-    \right\}
-    +\yy{i}L_{0,z}\sec\delta
+  \displaystyle -\left\{\frac{\sin\delta}{(\re{i})^2}
+    \mp\frac{\cc{i}}{R_i(\re{i})^2}\right\}\sin\delta
+  +\yy{i}\frac{\partial L_0}{\partial z}\sec\delta
 \end{array}
 \right.\\
 &&\left\{

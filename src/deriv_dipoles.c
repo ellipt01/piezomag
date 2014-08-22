@@ -20,491 +20,461 @@
  *c**************************/
 
 /* log (R_i + xi) */
-double
+static double
 log_rx_x (double sign, double xi, double et, double qq)
 {
 	return ir;
 }
 
-double
+static double
 log_rx_y (double sign, double xi, double et, double qq)
 {
 	return yy * (ir * irx);
 }
 
-double
+static double
 log_rx_z (double sign, double xi, double et, double qq)
 {
 	return - cc * (ir * irx);
 }
 
 /* log (R_i + eta_i) */
-double
+static double
 log_re_x (double sign, double xi, double et, double qq)
 {
 	return xi * ir * ire;
 }
 
-double
+static double
 log_re_y (double sign, double xi, double et, double qq)
 {
 	return cd * ire + yy * ir * ire;
 }
 
-double
+static double
 log_re_z (double sign, double xi, double et, double qq)
 {
 	return sign * sd * ire - cc * ir * ire;
 }
 
 /* log (R_i + c_i) */
-double
+static double
 log_rc_x (double sign, double xi, double et, double qq)
 {
 	return xi * ir * irc;
 }
 
-double
+static double
 log_rc_y (double sign, double xi, double et, double qq)
 {
 	return yy * ir * irc;
 }
 
-double
+static double
 log_rc_z (double sign, double xi, double et, double qq)
 {
 	return - ir;
 }
 
 /* atan( (xi eta_i)/(q_i R_i) ) */
-double
+static double
 atan_xe_qr_x (double sign, double xi, double et, double qq)
 {
 	return - qq * (ir * ire);
 }
 
-double
+static double
 atan_xe_qr_y (double sign, double xi, double et, double qq)
 {
 	return xi * sd * (ir * ire) - sign * cc * (ir * irx);
 }
 
-double
+static double
 atan_xe_qr_z (double sign, double xi, double et, double qq)
 {
 	return - sign * xi * cd * (ir * ire) - sign * yy * (ir * irx);
 }
 
 /* J_1 */
-double
+static double
 J1_x (double sign, double xi, double et, double qq)
 {
-	//	double res = qq * (ir * ire) + sign * yy * (ir * irc);
-	return ir * (qq * ire + sign * yy * irc);
+	return (fault_is_vertical) ? 0. : ir * (qq * ire + sign * yy * irc);
 }
 
-double
+static double
 J1_y (double sign, double xi, double et, double qq)
 {
-	//	double res = - xi * sd * (ir * ire) - sign * xi * (ir * irc);
-	return - xi * ir * (sd * ire + sign * irc);
+	return (fault_is_vertical) ? 0. : - xi * ir * (sd * ire + sign * irc);
 }
 
-double
+static double
 J1_z (double sign, double xi, double et, double qq)
 {
-	return sign * xi * cd * (ir * ire);
+	return (fault_is_vertical) ? 0. : sign * xi * cd * (ir * ire);
 }
 
 /* J_2 */
-double
+static double
 J2_x (double sign, double xi, double et, double qq)
 {
-	//	double res = xi * (ir * irc) + sign * xi * sd * (ir * ire);
-	return xi * ir * (irc + sign * sd * ire);
+	return (fault_is_vertical) ? 0. : xi * ir * (irc + sign * sd * ire);
 }
 
-double
+static double
 J2_y (double sign, double xi, double et, double qq)
 {
-	/*
-	double res = yy * (ir * irc)
-		+ sign * sd * cd * ire + sign * yy * sd * (ir * ire);
-	*/
-	return yy * (ir * irc) + sign * sd * ire * (cd + yy * ir);
+	return (fault_is_vertical) ? 0. : yy * (ir * irc) + sign * sd * ire * (cd + yy * ir);
 }
 
-double
+static double
 J2_z (double sign, double xi, double et, double qq)
 {
-	//	double res = - ir + sd * sd * ire - sign * cc * sd * (ir * ire);
-	return - ir + sd * ire * (sd - sign * cc * ir);
-}
-
-/* vertical fault */
-double
-K1_x_0 (double sign, double xi, double et, double qq)
-{
-	return - 0.5 * sign * qq * irc2 + sign * pow (xi, 2.) * qq * (ir * irc3);
-}
-
-double
-K1_y_0 (double sign, double xi, double et, double qq)
-{
-	return - 0.5 * sign * xi * irc2 + sign * xi * pow (qq, 2.) * (ir * irc3);
-}
-
-double
-K1_z_0 (double sign, double xi, double et, double qq)
-{
-	return - xi * qq * (ir * irc2);
-}
-
-/* inclined fault */
-double
-K1_x_1 (double sign, double xi, double et, double qq)
-{
-	double r_J1_x = J1_x (sign, xi, et, qq);
-	return td * (irc - xi * xi * (ir * irc2) + r_J1_x * td);
-}
-
-double
-K1_y_1 (double sign, double xi, double et, double qq)
-{
-	double r_J1_y = J1_y (sign, xi, et, qq);
-	return td * (- xi * yy * (ir * irc2) + r_J1_y * td);
-}
-
-double
-K1_z_1 (double sign, double xi, double et, double qq)
-{
-	double r_J1_z = J1_z (sign, xi, et, qq);
-	return td * (xi * irc2 + xi * cc * (ir * irc2) + r_J1_z * td);
-}
-
-/* vertical fault */
-static double
-K2_x_0 (double sign, double xi, double et, double qq)
-{
-	return - 0.5 * xi * et * (ir * irc2)
-			+ sign * xi * pow (qq, 2.) * (ir * irc3)
-			+ 0.5 * xi * (ir * ire);
+	return (fault_is_vertical) ? 0. : - ir + sd * ire * (sd - sign * cc * ir);
 }
 
 static double
-K2_y_0 (double sign, double xi, double et, double qq)
+K1_x (double sign, double xi, double et, double qq)
 {
-	return - 0.5 * et * qq * (ir * irc2)
-			- sign * qq * irc2
-			+ sign * pow (qq, 3.) * (ir * irc3)
-			+ 0.5 * qq * (ir * ire);
+	double	val;
+	if (fault_is_vertical) val = - 0.5 * sign * qq * irc2 + sign * pow (xi, 2.) * qq * (ir * irc3);
+	else {
+		double r_J1_x = J1_x (sign, xi, et, qq);
+		val = (irc - xi * xi * (ir * irc2) + r_J1_x * td) * td;
+	}
+	return val;
 }
 
 static double
-K2_z_0 (double sign, double xi, double et, double qq)
+K1_y (double sign, double xi, double et, double qq)
 {
-	return irc - pow (qq, 2.) * (ir * irc2);
-}
-
-/* inclined fault */
-static double
-K2_x_1 (double sign, double xi, double et, double qq)
-{
-	double r_J2_x = J2_x (sign, xi, et, qq);
-	return td * (- xi * yy * (ir * irc2) - sign * r_J2_x * td);
-}
-
-static double
-K2_y_1 (double sign, double xi, double et, double qq)
-{
-	double r_J2_y = J2_y (sign, xi, et, qq);
-	return td * (irc - yy * yy * (ir * irc2) - sign * r_J2_y * td);
+	double	val;
+	if (fault_is_vertical) val = - 0.5 * sign * xi * irc2 + sign * xi * pow (qq, 2.) * (ir * irc3);
+	else {
+		double r_J1_y = J1_y (sign, xi, et, qq);
+		val = (- xi * yy * (ir * irc2) + r_J1_y * td) * td;
+	}
+	return val;
 }
 
 static double
-K2_z_1 (double sign, double xi, double et, double qq)
+K1_z (double sign, double xi, double et, double qq)
 {
-	double r_J2_z = J2_z (sign, xi, et, qq);
-	return td * (yy * irc2 + yy * cc * (ir * irc2) - sign * r_J2_z * td);
-}
-
-/* vertical fault */
-static double
-K3_x_0 (double sign, double xi, double et, double qq)
-{
-	return - sign * xi * qq * (ir * irc2);
-}
-
-static double
-K3_y_0 (double sign, double xi, double et, double qq)
-{
-	return sign * irc - sign * pow (qq, 2.) * (ir * irc2);
+	double	val;
+	if (fault_is_vertical) val = - sign * xi * qq * (ir * irc2);
+	else {
+		double r_J1_z = J1_z (sign, xi, et, qq);
+		val = (xi * irc2 + xi * cc * (ir * irc2) + r_J1_z * td) * td;
+	}
+	return val;
 }
 
 static double
-K3_z_0 (double sign, double xi, double et, double qq)
+K2_x (double sign, double xi, double et, double qq)
 {
-	return qq * (ir * irc);
-}
-
-/* inclined fault */
-static double
-K3_x_1 (double sign, double xi, double et, double qq)
-{
-	double r_J2_x = J2_x (sign, xi, et, qq);
-	return r_J2_x * td;
-}
-
-static double
-K3_y_1 (double sign, double xi, double et, double qq)
-{
-	double r_J2_y = J2_y (sign, xi, et, qq);
-	return r_J2_y * td;
+	double	val;
+	if (fault_is_vertical) {
+		val = - 0.5 * xi * et * (ir * irc2)
+				+ sign * xi * pow (qq, 2.) * (ir * irc3)
+				+ 0.5 * xi * (ir * ire);
+	} else {
+		double r_J2_x = J2_x (sign, xi, et, qq);
+		val = td * (- xi * yy * (ir * irc2) - sign * r_J2_x * td);
+	}
+	return val;
 }
 
 static double
-K3_z_1 (double sign, double xi, double et, double qq)
+K2_y (double sign, double xi, double et, double qq)
 {
-	double r_J2_z = J2_z (sign, xi, et, qq);
-	return r_J2_z * td;
-}
-
-/* vertical fault */
-static double
-K4_x_0 (double sign, double xi, double et, double qq)
-{
-	double r_K2_x = K2_x_0 (sign, xi, et, qq);
-	return cd * (r_K2_x - xi * sd * (ir * ire));
-}
-
-static double
-K4_y_0 (double sign, double xi, double et, double qq)
-{
-	double r_K2_y = K2_y_0 (sign, xi, et, qq);
-	return cd * (r_K2_y - sd * (cd * ire + yy * (ir * ire)));
+	double	val;
+	if (fault_is_vertical) {
+		val = - 0.5 * et * qq * (ir * irc2)
+					- sign * qq * irc2
+					+ sign * pow (qq, 3.) * (ir * irc3)
+					+ 0.5 * qq * (ir * ire);
+	} else {
+		double r_J2_y = J2_y (sign, xi, et, qq);
+		val = td * (irc - yy * yy * (ir * irc2) - sign * r_J2_y * td);
+	}
+	return val;
 }
 
 static double
-K4_z_0 (double sign, double xi, double et, double qq)
+K2_z (double sign, double xi, double et, double qq)
 {
-	double r_K2_z = K2_z_0 (sign, xi, et, qq);
-	return cd * (r_K2_z - sd * (sign * sd * ire - cc * (ir * ire)));
-}
-
-/* inclined fault */
-static double
-K4_x_1 (double sign, double xi, double et, double qq)
-{
-	double r_K2_x = K2_x_1 (sign, xi, et, qq);
-	return cd * (r_K2_x - xi * sd * (ir * ire));
+	double	val;
+	if (fault_is_vertical) val = sign * (irc - pow (qq, 2.) * (ir * irc2));
+	else {
+		double r_J2_z = J2_z (sign, xi, et, qq);
+		val = td * (yy * irc2 + yy * cc * (ir * irc2) - sign * r_J2_z * td);
+	}
+	return val;
 }
 
 static double
-K4_y_1 (double sign, double xi, double et, double qq)
+K3_x (double sign, double xi, double et, double qq)
 {
-	double r_K2_y = K2_y_1 (sign, xi, et, qq);
-	return cd * (r_K2_y - sd * (cd * ire + yy * (ir * ire)));
+	double	val;
+	if (fault_is_vertical) val = - sign * xi * qq * (ir * irc2);
+	else {
+		double r_J2_x = J2_x (sign, xi, et, qq);
+		val = r_J2_x * td;
+	}
+	return val;
 }
 
 static double
-K4_z_1 (double sign, double xi, double et, double qq)
+K3_y (double sign, double xi, double et, double qq)
 {
-	double r_K2_z = K2_z_1 (sign, xi, et, qq);
-	return cd * (r_K2_z - sd * (sign * sd * ire - cc * (ir * ire)));
-}
-
-/* vertical fault */
-static double
-K5_x_0 (double sign, double xi, double et, double qq)
-{
-	double r_K1_x = K1_x_0 (sign, xi, et, qq);
-	return r_K1_x * cd;
+	double	val;
+	if (fault_is_vertical) val = sign * irc - sign * pow (qq, 2.) * (ir * irc2);
+	else {
+		double r_J2_y = J2_y (sign, xi, et, qq);
+		val = r_J2_y * td;
+	}
+	return val;
 }
 
 static double
-K5_y_0 (double sign, double xi, double et, double qq)
+K3_z (double sign, double xi, double et, double qq)
 {
-	double r_K1_y = K1_y_0 (sign, xi, et, qq);
-	return r_K1_y * cd;
+	double	val;
+	if (fault_is_vertical) val = sign * qq * (ir * irc);
+	else {
+		double r_J2_z = J2_z (sign, xi, et, qq);
+		val = r_J2_z * td;
+	}
+	return val;
 }
 
 static double
-K5_z_0 (double sign, double xi, double et, double qq)
+K4_x (double sign, double xi, double et, double qq)
 {
-	double r_K1_z = K1_z_0 (sign, xi, et, qq);
-	return r_K1_z * cd;
-}
-
-/* inclined fault */
-static double
-K5_x_1 (double sign, double xi, double et, double qq)
-{
-	double r_K1_x = K1_x_1 (sign, xi, et, qq);
-	return r_K1_x * cd;
+	double	val;
+	if (fault_is_vertical) val = 0.;
+	else {
+		double r_K2_x = K2_x (sign, xi, et, qq);
+		val = cd * (r_K2_x - xi * sd * (ir * ire));
+	}
+	return val;
 }
 
 static double
-K5_y_1 (double sign, double xi, double et, double qq)
+K4_y (double sign, double xi, double et, double qq)
 {
-	double r_K1_y = K1_y_1 (sign, xi, et, qq);
-	return r_K1_y * cd;
+	double	val;
+	if (fault_is_vertical) val = 0.;
+	else {
+		double r_K2_y = K2_y (sign, xi, et, qq);
+		val = cd * (r_K2_y - sd * (cd * ire + yy * (ir * ire)));
+	}
+	return val;
 }
 
 static double
-K5_z_1 (double sign, double xi, double et, double qq)
+K4_z (double sign, double xi, double et, double qq)
 {
-	double r_K1_z = K1_z_1 (sign, xi, et, qq);
-	return r_K1_z * cd;
+	double	val;
+	if (fault_is_vertical) val = 0.;
+	else {
+		double r_K2_z = K2_z (sign, xi, et, qq);
+		val = cd * (r_K2_z - sd * (sign * sd * ire - cc * (ir * ire)));
+	}
+	return val;
 }
 
-double
+static double
+K5_x (double sign, double xi, double et, double qq)
+{
+	double	val;
+	if (fault_is_vertical) val = 0.;
+	else {
+		double r_K1_x = K1_x (sign, xi, et, qq);
+		val = r_K1_x * cd;
+	}
+	return val;
+}
+
+static double
+K5_y (double sign, double xi, double et, double qq)
+{
+	double	val;
+	if (fault_is_vertical) val = 0.;
+	else {
+		double r_K1_y = K1_y (sign, xi, et, qq);
+		val = r_K1_y * cd;
+	}
+	return val;
+}
+
+static double
+K5_z (double sign, double xi, double et, double qq)
+{
+	double	val;
+	if (fault_is_vertical) val = 0.;
+	else {
+		double r_K1_z = K1_z (sign, xi, et, qq);
+		val = r_K1_z * cd;
+	}
+	return val;
+}
+
+static double
 K6_x (double sign, double xi, double et, double qq)
 {
-	double r_J1_x = J1_x (sign, xi, et, qq);
-	return - r_J1_x * sd;
+	double	val;
+	if (fault_is_vertical) val = 0.;
+	else {
+		double r_J1_x = J1_x (sign, xi, et, qq);
+		val = - r_J1_x * sd;
+	}
+	return val;
 }
 
-double
+static double
 K6_y (double sign, double xi, double et, double qq)
 {
-	double r_J1_y = J1_y (sign, xi, et, qq);
-	return - r_J1_y * sd;
+	double	val;
+	if (fault_is_vertical) val = 0.;
+	else {
+		double r_J1_y = J1_y (sign, xi, et, qq);
+		val = - r_J1_y * sd;
+	}
+	return val;
 }
 
-double
+static double
 K6_z (double sign, double xi, double et, double qq)
 {
-	double r_J1_z = J1_z (sign, xi, et, qq);
-	return - r_J1_z * sd;
-}
-
-/* vertical fault */
-static double
-K7_x_0 (double sign, double xi, double et, double qq)
-{
-	double r_K4_x = K4_x_0 (sign, xi, et, qq);
-	return - r_K4_x * td;
-}
-
-static double
-K7_y_0 (double sign, double xi, double et, double qq)
-{
-	double r_K4_y = K4_y_0 (sign, xi, et, qq);
-	return - r_K4_y * td;
-}
-
-static double
-K7_z_0 (double sign, double xi, double et, double qq)
-{
-	double r_K4_z = K4_z_0 (sign, xi, et, qq);
-	return - r_K4_z * td;
+	double	val;
+	if (fault_is_vertical) val = 0.;
+	else {
+		double r_J1_z = J1_z (sign, xi, et, qq);
+		val = - r_J1_z * sd;
+	}
+	return val;
 }
 
 /* inclined fault */
 static double
-K7_x_1 (double sign, double xi, double et, double qq)
+K7_x (double sign, double xi, double et, double qq)
 {
-	double r_K4_x = K4_x_1 (sign, xi, et, qq);
-	return - r_K4_x * td;
+	double	val;
+	if (fault_is_vertical) {
+		double r_K2_x = K2_x (sign, xi, et, qq);
+		val = - r_K2_x + xi * ir * ire;
+	} else {
+		double r_K4_x = K4_x (sign, xi, et, qq);
+		val = - r_K4_x * td;
+	}
+	return val;
 }
 
 static double
-K7_y_1 (double sign, double xi, double et, double qq)
+K7_y (double sign, double xi, double et, double qq)
 {
-	double r_K4_y = K4_y_1 (sign, xi, et, qq);
-	return - r_K4_y * td;
+	double	val;
+	if (fault_is_vertical) {
+		double r_K2_y = K2_y (sign, xi, et, qq);
+		val = - r_K2_y + qq * ir * ire;
+	} else {
+		double r_K4_y = K4_y (sign, xi, et, qq);
+		val = - r_K4_y * td;
+	}
+	return val;
 }
 
 static double
-K7_z_1 (double sign, double xi, double et, double qq)
+K7_z (double sign, double xi, double et, double qq)
 {
-	double r_K4_z = K4_z_1 (sign, xi, et, qq);
-	return - r_K4_z * td;
-}
-
-/* vertical fault */
-static double
-K8_x_0 (double sign, double xi, double et, double qq)
-{
-	double r_K5_x = K5_x_0 (sign, xi, et, qq);
-	return - r_K5_x * td;
-}
-
-static double
-K8_y_0 (double sign, double xi, double et, double qq)
-{
-	double r_K5_y = K5_y_0 (sign, xi, et, qq);
-	return - r_K5_y * td;
+	double	val;
+	if (fault_is_vertical) {
+		double r_K2_z = K2_z (sign, xi, et, qq);
+		val = - r_K2_z + sign * ir;
+	} else {
+		double r_K4_z = K4_z (sign, xi, et, qq);
+		val = - r_K4_z * td;
+	}
+	return val;
 }
 
 static double
-K8_z_0 (double sign, double xi, double et, double qq)
+K8_x (double sign, double xi, double et, double qq)
 {
-	double r_K5_z = K5_z_0 (sign, xi, et, qq);
-	return - r_K5_z * td;
-}
-
-/* vertical fault */
-static double
-K8_x_1 (double sign, double xi, double et, double qq)
-{
-	double r_K5_x = K5_x_1 (sign, xi, et, qq);
-	return - r_K5_x * td;
-}
-
-static double
-K8_y_1 (double sign, double xi, double et, double qq)
-{
-	double r_K5_y = K5_y_1 (sign, xi, et, qq);
-	return - r_K5_y * td;
+	double	val;
+	if (fault_is_vertical) {
+		double r_K1_x = K1_x (sign, xi, et, qq);
+		val = - r_K1_x * sd;
+	} else {
+		double r_K5_x = K5_x (sign, xi, et, qq);
+		val = - r_K5_x * td;
+	}
+	return val;
 }
 
 static double
-K8_z_1 (double sign, double xi, double et, double qq)
+K8_y (double sign, double xi, double et, double qq)
 {
-	double r_K5_z = K5_z_1 (sign, xi, et, qq);
-	return - r_K5_z * td;
-}
-
-/* vertical fault */
-static double
-K9_x_0 (double sign, double xi, double et, double qq)
-{
-	return sign * irc - sign * pow (xi, 2.) * (ir * irc2);
-}
-
-static double
-K9_y_0 (double sign, double xi, double et, double qq)
-{
-	return - sign * xi * qq * (ir * irc2);
+	double	val;
+	if (fault_is_vertical) {
+		double r_K1_y = K1_y (sign, xi, et, qq);
+		val = - r_K1_y * sd;
+	} else {
+		double r_K5_y = K5_y (sign, xi, et, qq);
+		val = - r_K5_y * td;
+	}
+	return val;
 }
 
 static double
-K9_z_0 (double sign, double xi, double et, double qq)
+K8_z (double sign, double xi, double et, double qq)
 {
-	return xi * (ir * irc);
-}
-
-/* inclined fault */
-static double
-K9_x_1 (double sign, double xi, double et, double qq)
-{
-	double r_K6_x = K6_x (sign, xi, et, qq);
-	return - r_K6_x * td;
-}
-
-static double
-K9_y_1 (double sign, double xi, double et, double qq)
-{
-	double r_K6_y = K6_y (sign, xi, et, qq);
-	return - r_K6_y * td;
+	double	val;
+	if (fault_is_vertical) {
+		double r_K1_z = K1_z (sign, xi, et, qq);
+		val = - r_K1_z * sd;
+	} else {
+		double r_K5_z = K5_z (sign, xi, et, qq);
+		val = - r_K5_z * td;
+	}
+	return val;
 }
 
 static double
-K9_z_1(double sign, double xi, double et, double qq)
+K9_x (double sign, double xi, double et, double qq)
 {
-	double r_K6_z = K6_z (sign, xi, et, qq);
-	return - r_K6_z * td;
+	double	val;
+	if (fault_is_vertical) val = - (sign * irc - sign * pow (xi, 2.) * (ir * irc2));
+	else {
+		double r_K6_x = K6_x (sign, xi, et, qq);
+		val = - r_K6_x * td;
+	}
+	return val;
+}
+
+static double
+K9_y (double sign, double xi, double et, double qq)
+{
+	double	val;
+	if (fault_is_vertical) val = sign * xi * qq * (ir * irc2);
+	else {
+		double r_K6_y = K6_y (sign, xi, et, qq);
+		val = - r_K6_y * td;
+	}
+	return val;
+}
+
+static double
+K9_z (double sign, double xi, double et, double qq)
+{
+	double	val;
+	if (fault_is_vertical) val = - sign * xi * (ir * irc);
+	else {
+		double r_K6_z = K6_z (sign, xi, et, qq);
+		val = - r_K6_z * td;
+	}
+	return val;
 }
 
 /*****************************************************/
@@ -565,75 +535,45 @@ J2 (int flag, double sign, double xi, double et, double qq)
 double
 K1 (int flag, double sign, double xi, double et, double qq)
 {
-	if (fault_is_vertical) {
-		if (flag == DERIV_X) return K1_x_0 (sign, xi, et, qq);
-		else if (flag == DERIV_Y) return K1_y_0 (sign, xi, et, qq);
-		else if (flag == DERIV_Z) return K1_z_0 (sign, xi, et, qq);
-	} else {
-		if (flag == DERIV_X) return K1_x_1 (sign, xi, et, qq);
-		else if (flag == DERIV_Y) return K1_y_1 (sign, xi, et, qq);
-		else if (flag == DERIV_Z) return K1_z_1 (sign, xi, et, qq);
-	}
+	if (flag == DERIV_X) return K1_x (sign, xi, et, qq);
+	else if (flag == DERIV_Y) return K1_y (sign, xi, et, qq);
+	else if (flag == DERIV_Z) return K1_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
 K2 (int flag, double sign, double xi, double et, double qq)
 {
-	if (fault_is_vertical) {
-		if (flag == DERIV_X) return K2_x_0 (sign, xi, et, qq);
-		else if (flag == DERIV_Y) return K2_y_0 (sign, xi, et, qq);
-		else if (flag == DERIV_Z) return K2_z_0 (sign, xi, et, qq);
-	} else {
-		if (flag == DERIV_X) return K2_x_1 (sign, xi, et, qq);
-		else if (flag == DERIV_Y) return K2_y_1 (sign, xi, et, qq);
-		else if (flag == DERIV_Z) return K2_z_1 (sign, xi, et, qq);
-	}
+	if (flag == DERIV_X) return K2_x (sign, xi, et, qq);
+	else if (flag == DERIV_Y) return K2_y (sign, xi, et, qq);
+	else if (flag == DERIV_Z) return K2_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
 K3 (int flag, double sign, double xi, double et, double qq)
 {
-	if (fault_is_vertical) {
-		if (flag == DERIV_X) return K3_x_0 (sign, xi, et, qq);
-		else if (flag == DERIV_Y) return K3_y_0 (sign, xi, et, qq);
-		else if (flag == DERIV_Z) return K3_z_0 (sign, xi, et, qq);
-	} else {
-		if (flag == DERIV_X) return K3_x_1 (sign, xi, et, qq);
-		else if (flag == DERIV_Y) return K3_y_1 (sign, xi, et, qq);
-		else if (flag == DERIV_Z) return K3_z_1 (sign, xi, et, qq);
-	}
+	if (flag == DERIV_X) return K3_x (sign, xi, et, qq);
+	else if (flag == DERIV_Y) return K3_y (sign, xi, et, qq);
+	else if (flag == DERIV_Z) return K3_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
 K4 (int flag, double sign, double xi, double et, double qq)
 {
-	if (fault_is_vertical) {
-		if (flag == DERIV_X) return K4_x_0 (sign, xi, et, qq);
-		else if (flag == DERIV_Y) return K4_y_0 (sign, xi, et, qq);
-		else if (flag == DERIV_Z) return K4_z_0 (sign, xi, et, qq);
-	} else {
-		if (flag == DERIV_X) return K4_x_1 (sign, xi, et, qq);
-		else if (flag == DERIV_Y) return K4_y_1 (sign, xi, et, qq);
-		else if (flag == DERIV_Z) return K4_z_1 (sign, xi, et, qq);
-	}
+	if (flag == DERIV_X) return K4_x (sign, xi, et, qq);
+	else if (flag == DERIV_Y) return K4_y (sign, xi, et, qq);
+	else if (flag == DERIV_Z) return K4_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
 K5 (int flag, double sign, double xi, double et, double qq)
 {
-	if (fault_is_vertical) {
-		if (flag == DERIV_X) return K5_x_0 (sign, xi, et, qq);
-		else if (flag == DERIV_Y) return K5_y_0 (sign, xi, et, qq);
-		else if (flag == DERIV_Z) return K5_z_0 (sign, xi, et, qq);
-	} else {
-		if (flag == DERIV_X) return K5_x_1 (sign, xi, et, qq);
-		else if (flag == DERIV_Y) return K5_y_1 (sign, xi, et, qq);
-		else if (flag == DERIV_Z) return K5_z_1 (sign, xi, et, qq);
-	}
+	if (flag == DERIV_X) return K5_x (sign, xi, et, qq);
+	else if (flag == DERIV_Y) return K5_y (sign, xi, et, qq);
+	else if (flag == DERIV_Z) return K5_z (sign, xi, et, qq);
 	return 0.;
 }
 
@@ -649,44 +589,26 @@ K6 (int flag, double sign, double xi, double et, double qq)
 double
 K7 (int flag, double sign, double xi, double et, double qq)
 {
-	if (fault_is_vertical) {
-		if (flag == DERIV_X) return K7_x_0 (sign, xi, et, qq);
-		else if (flag == DERIV_Y) return K7_y_0 (sign, xi, et, qq);
-		else if (flag == DERIV_Z) return K7_z_0 (sign, xi, et, qq);
-	} else {
-		if (flag == DERIV_X) return K7_x_1 (sign, xi, et, qq);
-		else if (flag == DERIV_Y) return K7_y_1 (sign, xi, et, qq);
-		else if (flag == DERIV_Z) return K7_z_1 (sign, xi, et, qq);
-	}
+	if (flag == DERIV_X) return K7_x (sign, xi, et, qq);
+	else if (flag == DERIV_Y) return K7_y (sign, xi, et, qq);
+	else if (flag == DERIV_Z) return K7_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
 K8 (int flag, double sign, double xi, double et, double qq)
 {
-	if (fault_is_vertical) {
-		if (flag == DERIV_X) return K8_x_0 (sign, xi, et, qq);
-		else if (flag == DERIV_Y) return K8_y_0 (sign, xi, et, qq);
-		else if (flag == DERIV_Z) return K8_z_0 (sign, xi, et, qq);
-	} else {
-		if (flag == DERIV_X) return K8_x_1 (sign, xi, et, qq);
-		else if (flag == DERIV_Y) return K8_y_1 (sign, xi, et, qq);
-		else if (flag == DERIV_Z) return K8_z_1 (sign, xi, et, qq);
-	}
+	if (flag == DERIV_X) return K8_x (sign, xi, et, qq);
+	else if (flag == DERIV_Y) return K8_y (sign, xi, et, qq);
+	else if (flag == DERIV_Z) return K8_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
 K9 (int flag, double sign, double xi, double et, double qq)
 {
-	if (fault_is_vertical) {
-		if (flag == DERIV_X) return K9_x_0 (sign, xi, et, qq);
-		else if (flag == DERIV_Y) return K9_y_0 (sign, xi, et, qq);
-		else if (flag == DERIV_Z) return K9_z_0 (sign, xi, et, qq);
-	} else {
-		if (flag == DERIV_X) return K9_x_1 (sign, xi, et, qq);
-		else if (flag == DERIV_Y) return K9_y_1 (sign, xi, et, qq);
-		else if (flag == DERIV_Z) return K9_z_1 (sign, xi, et, qq);
-	}
+	if (flag == DERIV_X) return K9_x (sign, xi, et, qq);
+	else if (flag == DERIV_Y) return K9_y (sign, xi, et, qq);
+	else if (flag == DERIV_Z) return K9_z (sign, xi, et, qq);
 	return 0.;
 }

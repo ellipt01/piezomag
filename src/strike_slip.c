@@ -73,9 +73,9 @@ strikexH0 (int flag, const fault_params *fault, const magnetic_params *mag, doub
 
 	val = - (2.0 - alpha4) * K1_val
 		- alpha1 * atan_xe_qr_val - alpha3 * J1_val
-		- alpha3 * (qd * M1_val + (z - h) * L1_val * td)
-		- 2.0 * alpha4 * h * (M1_val * cd - L1_val * td)
-		- 4.0 * alpha1 * h * L1_val * td
+		- alpha3 * (qd * M1_val + (z - h) * L1_val * sd)
+		- 2.0 * alpha4 * h * (M1_val * cd - L1_val * sd)
+		- 4.0 * alpha1 * h * L1_val * sd
 		+ 2.0 * alpha2 * h * ((qd + h * cd) * M1z_val - (z - 2.0 * h) * M1y_val * sd);
 
 	return val;
@@ -98,9 +98,9 @@ strikeyH0 (int flag, const fault_params *fault, const magnetic_params *mag, doub
 
 	val = - (2.0 - alpha4) * K2_val
 		+ alpha4 * log_re_val * sd + alpha3 * J2_val
-		- alpha3 * (qd * M2_val + (z - h) * L2_val * sd)
-		+ 2.0 * alpha4 * h * (M2_val * cd - L2_val * sd)
-		- 4.0 * alpha1 * h * L2_val * sd
+		- alpha3 * (qd * M2_val + (z - h) * L2_val * sd * cd)
+		+ 2.0 * alpha4 * h * (M2_val * cd - L2_val * sd * cd)
+		- 4.0 * alpha1 * h * L2_val * sd * cd
 		+ 2.0 * alpha2 * h * M3_val * sd
 		+ 2.0 * alpha2 * h * ((qd + h * cd) * M2z_val - (z - 2.0 * h) * M2y_val * sd);
 
@@ -179,7 +179,7 @@ strikexHI (int flag, const fault_params *fault, const magnetic_params *mag, doub
 
 	val = alpha4 * K1_val
 		- alpha1 * atan_xe_qr_val - alpha3 * J1_val
-		- alpha2 * (qd * M1_val + (z - h) * L1_val * td);
+		- alpha2 * (qd * M1_val + (z - h) * L1_val * sd);
 
 	return val;
 }
@@ -197,7 +197,7 @@ strikeyHI (int flag, const fault_params *fault, const magnetic_params *mag, doub
 	double M2_val = M2 (flag, -1.0, xi, et, qq);
 
 	val = alpha4 * K2_val + alpha6 * log_re_val * sd - alpha3 * J2_val
-		- alpha2 * (qd * M2_val + (z - h) * L2_val * sd);
+		- alpha2 * (qd * M2_val + (z - h) * L2_val * sd * cd);
 
 	return val;
 }
@@ -267,7 +267,7 @@ strikexHIII (int flag, const fault_params *fault, const magnetic_params *mag, do
 
 	val = - alpha4 * K1_val
 		+ alpha1 * atan_xe_qr_val + alpha3 * J1_val
-		+ alpha3 * (qd * M1_val + (z - h) * L1_val * td);
+		+ alpha3 * (qd * M1_val + (z - h) * L1_val * sd);
 
 	return val;
 }
@@ -285,7 +285,7 @@ strikeyHIII (int flag, const fault_params *fault, const magnetic_params *mag, do
 	double M2_val = M2 (flag, 1.0, xi, et, qq);
 
 	val = - alpha4 * K2_val - alpha4 * log_re_val * sd - alpha3 * J2_val
-		+ alpha3 * (qd * M2_val + (z - h) * L2_val * sd);
+		+ alpha3 * (qd * M2_val + (z - h) * L2_val * sd * cd);
 
 	return val;
 }

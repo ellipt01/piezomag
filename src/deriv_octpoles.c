@@ -18,7 +18,7 @@
 /*c***************************
  *c******** octpoles *********
  *c***************************/
-double
+static double
 M1y_x (double sign, double xi, double et, double qq)
 {
 	return xi * xi * cd * (3.0 * r + et) * (ir3 * ire3)
@@ -27,7 +27,7 @@ M1y_x (double sign, double xi, double et, double qq)
 		- cd * (ir * ire2);
 }
 
-double
+static double
 M1y_y (double sign, double xi, double et, double qq)
 {
 	return - 2.0 * xi * sd2 * (ir * ire3)
@@ -35,7 +35,7 @@ M1y_y (double sign, double xi, double et, double qq)
 		+ xi * yy * yy * (8.0 * r2 + 9.0 * r * et + 3 * et * et) * ir5e3;
 }
 
-double
+static double
 M1y_z (double sign, double xi, double et, double qq)
 {
 	/*
@@ -51,7 +51,7 @@ M1y_z (double sign, double xi, double et, double qq)
 	return res;
 }
 
-double
+static double
 M1z_x (double sign, double xi, double et, double qq)
 {
 	/*
@@ -68,13 +68,13 @@ M1z_x (double sign, double xi, double et, double qq)
 	return res;
 }
 
-double
+static double
 M1z_y (double sign, double xi, double et, double qq)
 {
 	return M1y_z (sign, xi, et, qq);
 }
 
-double
+static double
 M1z_z (double sign, double xi, double et, double qq)
 {
 	/*
@@ -90,7 +90,7 @@ M1z_z (double sign, double xi, double et, double qq)
 	return res;
 }
 
-double
+static double
 M2y_x (double sign, double xi, double et, double qq)
 {
 	return - 2.0 * xi * sd2 * (ir * ire3)
@@ -98,7 +98,7 @@ M2y_x (double sign, double xi, double et, double qq)
 		+ xi * yy * yy * (8.0 * r2 + 9.0 * r * et + 3 * et * et) * ir5e3;
 }
 
-double
+static double
 M2y_y (double sign, double xi, double et, double qq)
 {
 	/*
@@ -121,7 +121,7 @@ M2y_y (double sign, double xi, double et, double qq)
 	return res;
 }
 
-double
+static double
 M2y_z (double sign, double xi, double et, double qq)
 {
 	double res = 2.0 * cc * sd2 * (ir * ire3) + sign * sd * (ir * ire2)
@@ -133,19 +133,19 @@ M2y_z (double sign, double xi, double et, double qq)
 	return res;
 }
 
-double
+static double
 M2z_x (double sign, double xi, double et, double qq)
 {
 	return M1z_y (sign, xi, et, qq);
 }
 
-double
+static double
 M2z_y (double sign, double xi, double et, double qq)
 {
 	return M2y_z (sign, xi, et, qq);
 }
 
-double
+static double
 M2z_z (double sign, double xi, double et, double qq)
 {
 	double res = - 2.0 * yy * cd2 * (ir * ire3) + cd * (ir * ire2)
@@ -157,37 +157,37 @@ M2z_z (double sign, double xi, double et, double qq)
 	return res;
 }
 
-double
+static double
 M3y_x (double sign, double xi, double et, double qq)
 {
 	return M2z_x (sign, xi, et, qq);
 }
 
-double
+static double
 M3y_y (double sign, double xi, double et, double qq)
 {
 	return M2z_y (sign, xi, et, qq);
 }
 
-double
+static double
 M3y_z (double sign, double xi, double et, double qq)
 {
 	return M2z_z (sign, xi, et, qq);
 }
 
-double
+static double
 M3z_x (double sign, double xi, double et, double qq)
 {
 	return M1z_z (sign, xi, et, qq);
 }
 
-double
+static double
 M3z_y (double sign, double xi, double et, double qq)
 {
 	return M2z_z (sign, xi, et, qq);
 }
 
-double
+static double
 M3z_z (double sign, double xi, double et, double qq)
 {
 	double res = 2.0 * cc * cd2 * (ir * ire3)
@@ -201,119 +201,119 @@ M3z_z (double sign, double xi, double et, double qq)
 	return res;
 }
 
-double
+static double
 N1z_x (double sign, double xi, double et, double qq)
 {
 	return 1.0 * ir3 - 3.0 * xi * xi * ir5;
 }
 
-double
+static double
 N1z_y (double sign, double xi, double et, double qq)
 {
 	return - 3.0 * xi * yy * ir5;
 }
 
-double
+static double
 N1z_z (double sign, double xi, double et, double qq)
 {
 	return 3.0 * xi * cc * ir5;
 }
 
-double
+static double
 N2z_x (double sign, double xi, double et, double qq)
 {
 	return N1z_y (sign, xi, et, qq);
 }
 
-double
+static double
 N2z_y (double sign, double xi, double et, double qq)
 {
 	return ir3 - 3.0 * yy * yy * ir5;
 }
 
-double
+static double
 N2z_z (double sign, double xi, double et, double qq)
 {
 	return 3.0 * yy * cc * ir5;
 }
 
-double
+static double
 O1z_x (double sign, double xi, double et, double qq)
 {
 	return -3.0 * xi * cc * ir5;
 }
 
-double
+static double
 O1z_y (double sign, double xi, double et, double qq)
 {
 	return -3.0 * yy * cc * ir5;
 }
 
-double
+static double
 O1z_z (double sign, double xi, double et, double qq)
 {
 	return - ir3 + 3.0 * cc * cc * ir5;
 }
 
-double
+static double
 O2y_x (double sign, double xi, double et, double qq)
 {
 	return - ir3 + 3.0 * yy * yy * ir5;
 }
 
-double
+static double
 O2y_y (double sign, double xi, double et, double qq)
 {
 	return - 3.0 * yy * (r + rx) * ir3x2
 		+ yy * yy * yy * (8.0 * r2 + 9.0 * xi * r + 3.0 * xi * xi) * ir5x3;
 }
 
-double
+static double
 O2y_z (double sign, double xi, double et, double qq)
 {
 	return cc * (r + rx) * ir3x2
 		- yy * yy * cc * (8.0 * r2 + 9.0 * xi * r + 3.0 * xi * xi) * ir5x3;
 }
 
-double
+static double
 O2z_x (double sign, double xi, double et, double qq)
 {
 	return - 3.0 * yy * cc * ir5;
 }
 
-double
+static double
 O2z_y (double sign, double xi, double et, double qq)
 {
 	return O2y_z (sign, xi, et, qq);
 }
 
-double
+static double
 O2z_z (double sign, double xi, double et, double qq)
 {
 	return - yy * (r + rx) * ir3x2
 		+ yy * cc * cc * (8.0 * r2 + 9.0 * xi * r + 3.0 * xi * xi) * ir5x3;
 }
 
-double
+static double
 O3z_x (double sign, double xi, double et, double qq)
 {
 	return - ir3 + 3.0 * cc * cc * ir5;
 }
 
-double
+static double
 O3z_y (double sign, double xi, double et, double qq)
 {
 	return O2z_z (sign, xi, et, qq);
 }
 
-double
+static double
 O3z_z (double sign, double xi, double et, double qq)
 {
 	return 3.0 * cc * (r + rx) * ir3x2
 		- cc * cc * cc * (8.0 * r2 + 9.0 * xi * r + 3.0 * xi * xi) * ir5x3;
 }
 
-double
+static double
 P1y_x (double sign, double xi, double et, double qq)
 {
 	return - sign * 3.0 * xi * cc * ir5
@@ -321,7 +321,7 @@ P1y_x (double sign, double xi, double et, double qq)
 		+ xi * xi * xi * (8.0 * r2 + 9.0 * et * r + 3.0 * et * et) * sd * ir5e3;
 }
 
-double
+static double
 P1y_y (double sign, double xi, double et, double qq)
 {
 	double res = - sign * 3.0 * yy * cc * ir5
@@ -332,7 +332,7 @@ P1y_y (double sign, double xi, double et, double qq)
 	return res;
 }
 
-double
+static double
 P1y_z (double sign, double xi, double et, double qq)
 {
 	double res = - sign * ir3 + sign * 3.0 * cc * cc * ir5
@@ -343,7 +343,7 @@ P1y_z (double sign, double xi, double et, double qq)
 	return res;
 }
 
-double
+static double
 P1z_x (double sign, double xi, double et, double qq)
 {
 	double res =
@@ -354,13 +354,13 @@ P1z_x (double sign, double xi, double et, double qq)
 	return res;
 }
 
-double
+static double
 P1z_y (double sign, double xi, double et, double qq)
 {
 	return P1y_z (sign, xi, et, qq);
 }
 
-double
+static double
 P1z_z (double sign, double xi, double et, double qq)
 {
 	double res = sign * 3.0 * yy * cc * ir5
@@ -372,13 +372,13 @@ P1z_z (double sign, double xi, double et, double qq)
 	return res;
 }
 
-double
+static double
 P3y_x (double sign, double xi, double et, double qq)
 {
 	return P1y_z (sign, xi, et, qq);
 }
 
-double
+static double
 P3y_y (double sign, double xi, double et, double qq)
 {
 	double res = - sign * yy * (r + rx) * ir3x2
@@ -392,7 +392,7 @@ P3y_y (double sign, double xi, double et, double qq)
 	return res;
 }
 
-double
+static double
 P3y_z (double sign, double xi, double et, double qq)
 {
 	double res = sign * 3.0 * cc * (r + rx) * ir3x2
@@ -407,19 +407,19 @@ P3y_z (double sign, double xi, double et, double qq)
 	return res;
 }
 
-double
+static double
 P3z_x (double sign, double xi, double et, double qq)
 {
 	return P1z_z (sign, xi, et, qq);
 }
 
-double
+static double
 P3z_y (double sign, double xi, double et, double qq)
 {
 	return P3y_z (sign, xi, et, qq);
 }
 
-double
+static double
 P3z_z (double sign, double xi, double et, double qq)
 {
 	double res = sign * yy * (r + rx) * ir3x2

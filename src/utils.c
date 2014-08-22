@@ -240,11 +240,7 @@ set_constants (fault_params *fault, magnetic_params *mag)
 	rotate (fault->fstrike, &jx, &jy);
 
 	mag->c0 = 0.25 * mag->beta * fault->mu * (3.0 * fault->lambda + 2.0 * fault->mu) / (fault->lambda + fault->mu);
-/*
-	mag->cx = 1.;
-	mag->cy = 0.;
-	mag->cz = 0.;
-*/
+
 	mag->cx = mag->c0 * jx;
 	mag->cy = mag->c0 * jy;
 	mag->cz = mag->c0 * jz;

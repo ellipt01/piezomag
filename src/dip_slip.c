@@ -63,7 +63,7 @@ dipxH0 (int flag, const fault_params *fault, const magnetic_params *mag, double 
 	double qd = y * sd + (fault->fdepth - h) * cd;
 	double K4_val = K4 (flag, 1.0, xi, et, qq);
 	double log_re_val = log_re (flag, 1.0, xi, et, qq);
-	double J2_val = J2 (flag, 1.0, xi, et, qq);
+	double J2_val = J2 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
 	double O1_val = O1 (flag, 1.0, xi, et, qq);
 	double N2_val = N2 (flag, 1.0, xi, et, qq);
 	double M2_val = M2 (flag, 1.0, xi, et, qq);
@@ -71,7 +71,7 @@ dipxH0 (int flag, const fault_params *fault, const magnetic_params *mag, double 
 	double N2z_val = N2z (flag, 1.0, xi, et, qq);
 
 	val =	(2.0 - alpha4) * K4_val
-		+ alpha3 * (log_re_val * s2d - J2_val * c2d * secd)
+		+ alpha3 * (log_re_val * s2d - J2_val * c2d)
 		+ alpha3 * (qd * O1_val + (z - h) * N2_val * sd)
 		+ 2.0 * alpha5 * h * (O1_val * cd - N2_val * sd)
 		+ 4.0 * alpha1 * h * M2_val
@@ -89,7 +89,7 @@ dipyH0 (int flag, const fault_params *fault, const magnetic_params *mag, double 
 	double K5_val = K5 (flag, 1.0, xi, et, qq);
 	double log_rx_val = log_rx (flag, 1.0, xi, et, qq);
 	double atan_xe_qr_val = atan_xe_qr (flag, 1.0, xi, et, qq);
-	double J1_val = J1 (flag, 1.0, xi, et, qq);
+	double J1_val = J1 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
 	double O2_val = O2 (flag, 1.0, xi, et, qq);
 	double O3_val = O3 (flag, 1.0, xi, et, qq);
 	double N1_val = N1 (flag, 1.0, xi, et, qq);
@@ -100,10 +100,10 @@ dipyH0 (int flag, const fault_params *fault, const magnetic_params *mag, double 
 
 	val = - (2.0 - alpha4) * K5_val
 		- fault->alpha * log_rx_val * sd + alpha4 * atan_xe_qr_val * cd
-		- alpha3 * J1_val * c2d * secd
+		- alpha3 * J1_val * c2d
 		+ alpha3 * (qd * O2_val - (z - h) * (N1_val - O3_val) * sd)
 		+ 2.0 * alpha4 * h * (O2_val * cd + (N1_val - O3_val) * sd)
-		- 4.0 * alpha1 * h * L1_val * sd
+		- 4.0 * alpha1 * h * L1_val * sd * cd
 		- 2.0 * alpha2 * h * ((qd + h * cd) * O2z_val
 				- (z - 2.0 * h) * (N1z_val - O3z_val) * sd
 				+ O3_val * sd);
@@ -177,11 +177,11 @@ dipxHI (int flag, const fault_params *fault, const magnetic_params *mag, double 
 	double qd = y * sd + (fault->fdepth - h) * cd;
 	double K4_val = K4 (flag, -1.0, xi, et, qq);
 	double log_re_val = log_re (flag, -1.0, xi, et, qq);
-	double J2_val = J2 (flag, -1.0, xi, et, qq);
+	double J2_val = J2 (flag, -1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
 	double O1_val = O1 (flag, -1.0, xi, et, qq);
 	double N2_val = N2 (flag, -1.0, xi, et, qq);
 
-	val = - alpha4 * K4_val + alpha3 * (log_re_val * s2d + J2_val * c2d * secd)
+	val = - alpha4 * K4_val + alpha3 * (log_re_val * s2d + J2_val * c2d)
 		- alpha2 * (qd * O1_val + (z - h) * N2_val * sd);
 
 	return val;
@@ -196,14 +196,14 @@ dipyHI (int flag, const fault_params *fault, const magnetic_params *mag, double 
 	double K5_val = K5 (flag, -1.0, xi, et, qq);
 	double log_rx_val = log_rx (flag, -1.0, xi, et, qq);
 	double atan_xe_qr_val = atan_xe_qr (flag, -1.0, xi, et, qq);
-	double J1_val = J1 (flag, -1.0, xi, et, qq);
+	double J1_val = J1 (flag, -1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
 	double O2_val = O2 (flag, -1.0, xi, et, qq);
 	double O3_val = O3 (flag, -1.0, xi, et, qq);
 	double N1_val = N1 (flag, -1.0, xi, et, qq);
 
 	val = alpha4 * K5_val + fault->alpha * log_rx_val * sd
 		+ alpha4 * atan_xe_qr_val * cd
-		- alpha3 * J1_val * c2d * secd
+		- alpha3 * J1_val * c2d
 		+ alpha2 * (qd * O2_val - (z - h) * (N1_val - O3_val) * sd);
 
 	return val;
@@ -268,11 +268,11 @@ dipxHIII (int flag, const fault_params *fault, const magnetic_params *mag, doubl
 	double qd = y * sd + (fault->fdepth - h) * cd;
 	double K4_val = K4 (flag, 1.0, xi, et, qq);
 	double log_re_val = log_re (flag, 1.0, xi, et, qq);
-	double J2_val = J2 (flag, 1.0, xi, et, qq);
+	double J2_val = J2 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
 	double O1_val = O1 (flag, 1.0, xi, et, qq);
 	double N2_val = N2 (flag, 1.0, xi, et, qq);
 
-	val = alpha4 * K4_val - alpha3 * (log_re_val * s2d - J2_val * c2d * secd)
+	val = alpha4 * K4_val - alpha3 * (log_re_val * s2d - J2_val * c2d)
 		- alpha3 * (qd * O1_val + (z - h) * N2_val * sd);
 
 	return val;
@@ -287,14 +287,14 @@ dipyHIII (int flag, const fault_params *fault, const magnetic_params *mag, doubl
 	double K5_val = K5 (flag, 1.0, xi, et, qq);
 	double log_rx_val = log_rx (flag, 1.0, xi, et, qq);
 	double atan_xe_qr_val = atan_xe_qr (flag, 1.0, xi, et, qq);
-	double J1_val = J1 (flag, 1.0, xi, et, qq);
+	double J1_val = J1 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
 	double O2_val = O2 (flag, 1.0, xi, et, qq);
 	double O3_val = O3 (flag, 1.0, xi, et, qq);
 	double N1_val = N1 (flag, 1.0, xi, et, qq);
 
 	val = - alpha4 * K5_val + fault->alpha * log_rx_val * sd
 		- alpha4 * atan_xe_qr_val * cd
-		+ alpha3 * J1_val * c2d * secd
+		+ alpha3 * J1_val * c2d
 		- alpha3 * (qd * O2_val - (z - h) * (N1_val - O3_val) * sd);
 
 	return val;

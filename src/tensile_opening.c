@@ -65,16 +65,18 @@ tensilexH0 (int flag, const fault_params *fault, const magnetic_params *mag, dou
 	double log_re_val = log_re (flag, 1.0, xi, et, qq);
 	double log_rc_val = log_rc (flag, 1.0, xi, et, qq);
 	double P1_val = P1 (flag, 1.0, xi, et, qq);
-	double M2_val = M2 (flag, 1.0, xi, et, qq);
-	double N2_val = N2 (flag, 1.0, xi, et, qq);
+	double M2_val = M2 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
+	double N2_val = N2 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
 	double M3_val = M3 (flag, 1.0, xi, et, qq);
 	double P1z_val = P1z (flag, 1.0, xi, et, qq);
 	double P1y_val = P1y (flag, 1.0, xi, et, qq);
 
 	val =	(2.0 - alpha4) * K7_val
 		+ 2.0 * alpha3 * log_rc_val * sd - fault->alpha * log_re_val
-		+ alpha3 * (qd * P1_val - (z - h) * (M2_val + N2_val * sd) * td)
-		+ 2.0 * alpha5 * h * (P1_val * cd + (M2_val + N2_val * sd) * td)
+		+ alpha3 * (qd * P1_val - (z - h) * (M2_val + N2_val * sd))
+		+ 2.0 * alpha5 * h * (P1_val * cd + (M2_val + N2_val * sd))
+		//		+ alpha3 * (qd * P1_val - (z - h) * (M2_val + N2_val * sd) * td)
+		//		+ 2.0 * alpha5 * h * (P1_val * cd + (M2_val + N2_val * sd) * td)
 		+ 6.0 * alpha3 * h * M3_val
 		- 2.0 * alpha2 * h * ((qd + h * cd) * P1z_val - (z - 2.0 * h) * P1y_val * sd);
 
@@ -102,9 +104,9 @@ tensileyH0 (int flag, const fault_params *fault, const magnetic_params *mag, dou
 	val = - (2.0 - alpha4) * K8_val
 		- alpha4 * atan_xe_qr_val * sd - fault->alpha * log_rx_val * cd
 		+ 2.0 * alpha3 * J1_val * sd
-		+ alpha3 * (qd * (O3_val + M1_val * sd) - (z - h) * (O2_val - L1_val * td) * sd)
-		- 2.0 * fault->alpha * h * ((O3_val+ M1_val * sd) * cd + (O2_val - L1_val * td) * sd)
-		+ 6.0 * alpha3 * h * L1_val * sd * td
+		+ alpha3 * (qd * (O3_val + M1_val * sd) - (z - h) * (O2_val - L1_val * sd) * sd)
+		- 2.0 * fault->alpha * h * ((O3_val+ M1_val * sd) * cd + (O2_val - L1_val * sd) * sd)
+		+ 6.0 * alpha3 * h * L1_val * sd2
 		+ 2.0 * alpha2 * h * ((qd + h * cd) * (O2y_val + M1y_val *cd)
 				+ (z - 2.0 * h) * (O2z_val + M1y_val * sd)
 				+ M1_val * sd2 * cd);
@@ -180,12 +182,13 @@ tensilexHI (int flag, const fault_params *fault, const magnetic_params *mag, dou
 	double log_re_val = log_re (flag, -1.0, xi, et, qq);
 	double log_rc_val = log_rc (flag, -1.0, xi, et, qq);
 	double P1_val = P1 (flag, -1.0, xi, et, qq);
-	double M2_val = M2 (flag, -1.0, xi, et, qq);
-	double N2_val = N2 (flag, -1.0, xi, et, qq);
+	double M2_val = M2 (flag, -1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
+	double N2_val = N2 (flag, -1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
 
 	val =	- alpha4 * K7_val
 		- 2.0 * alpha3 * log_rc_val * sd + fault->alpha * log_re_val
-		+ alpha2 * (qd * P1_val + (z - h) * (M2_val - N2_val * sd) * td);
+		+ alpha2 * (qd * P1_val + (z - h) * (M2_val - N2_val * sd));
+	//	+ alpha2 * (qd * P1_val + (z - h) * (M2_val - N2_val * sd) * td);
 
 	return val;
 }
@@ -208,7 +211,7 @@ tensileyHI (int flag, const fault_params *fault, const magnetic_params *mag, dou
 	val = alpha4 * K8_val
 		- alpha4 * atan_xe_qr_val * sd + fault->alpha * log_rx_val * cd
 		+ 2.0 * alpha3 * J1_val * sd
-		- alpha2 * (qd * (O3_val - M1_val * sd) - (z - h) * (O2_val + L1_val * td) * sd);
+		- alpha2 * (qd * (O3_val - M1_val * sd) - (z - h) * (O2_val + L1_val * sd) * sd);
 
 	return val;
 }
@@ -225,7 +228,7 @@ tensilezHI (int flag, const fault_params *fault, const magnetic_params *mag, dou
 	double P2_val = P2 (flag, -1.0, xi, et, qq);
 	double P3_val = P3 (flag, -1.0, xi, et, qq);
 
-	val = - alpha5 * K9_val
+	val = (fault_is_vertical ? 1. : -1.) * alpha5 * K9_val
 		+ fault->alpha * log_rx_val * sd + alpha4 * atan_xe_qr_val * cd
 		- alpha2 * (qd * P3_val - (z - h) * P2_val * sd);
 
@@ -274,12 +277,13 @@ tensilexHIII (int flag, const fault_params *fault, const magnetic_params *mag, d
 	double log_re_val = log_re (flag, 1.0, xi, et, qq);
 	double log_rc_val = log_rc (flag, 1.0, xi, et, qq);
 	double P1_val = P1 (flag, 1.0, xi, et, qq);
-	double M2_val = M2 (flag, 1.0, xi, et, qq);
-	double N2_val = N2 (flag, 1.0, xi, et, qq);
+	double M2_val = M2 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
+	double N2_val = N2 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
 
 	val =	alpha4 * K7_val
 		- 2.0 * alpha3 * log_rc_val * sd + fault->alpha * log_re_val
-		- alpha3 * (qd * P1_val - (z - h) * (M2_val + N2_val * sd) * td);
+		- alpha3 * (qd * P1_val - (z - h) * (M2_val + N2_val * sd));
+	//	- alpha3 * (qd * P1_val - (z - h) * (M2_val + N2_val * sd) * td);
 
 	return val;
 }
@@ -302,7 +306,7 @@ tensileyHIII (int flag, const fault_params *fault, const magnetic_params *mag, d
 	val = - alpha4 * K8_val
 		+ alpha4 * atan_xe_qr_val * sd + fault->alpha * log_rx_val * cd
 		- 2.0 * alpha3 * J1_val * sd
-		- alpha3 * (qd * (O3_val + M1_val * sd) - (z - h) * (O2_val - L1_val * td) * sd);
+		- alpha3 * (qd * (O3_val + M1_val * sd) - (z - h) * (O2_val - L1_val * sd) * sd);
 
 	return val;
 }
