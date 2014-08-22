@@ -129,10 +129,10 @@ bool	fread_params (FILE *fp, fault_params *fault, magnetic_params *mag);
 /** piezomag.c **/
 
 /* calculate seismomagnetic field on observation point (xobs, yobs, zobs) */
-double	seismomagnetic_effect (int component, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs);
+bool	seismomagnetic_field (int component, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs, double *val);
 
 /* calculate seismomagnetic field on grid x=[xobs1:dx:xobs2], y=[yobs1:dy:yobs2], z=zobs */
-void	fprintf_seismomagnetic_effect (FILE *stream, int component, const fault_params *fault, const magnetic_params *mag,
+void	fprintf_seismomagnetic_field (FILE *stream, int component, const fault_params *fault, const magnetic_params *mag,
 			double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs);
 
 #endif	// _PIEZOMAG_H_

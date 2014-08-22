@@ -41,16 +41,17 @@ These structures are allocated by the following functions, respectivly:
 ```magnetic_params *magnetic_params_alloc (void)```
 
 ```
-double
-seismomagnetic_effect (int component, const fault_params *fault, const magnetic_params *mag,
-    double xobs, double yobs, double zobs);
+bool
+seismomagnetic_field (int component, const fault_params *fault, const magnetic_params *mag,
+    double xobs, double yobs, double zobs, double *val);
 ```
 This function calculates the seismomagnetic field on obervation point ```(xobs, yobs, zobs)```.
 ```int component``` specifies the output magnetic component and it takes ```X_COMP (=0)```, ```Y_COMP (=1)```, ```Z_COMP (=3)``` or ```TOTAL_FORCE (=0)```.
+If obervation point is the singular point, return ```false```.
 
 ```
 void
-fprintf_seismomagnetic_effect (FILE *stream, int component, const fault_params *fault, const magnetic_params *mag,
+fprintf_seismomagnetic_field (FILE *stream, int component, const fault_params *fault, const magnetic_params *mag,
     double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs);
 ```
 This function calculates the seismomagnetic field on the grid ```x=[xobs1:dx:xobs2]```, ```y=[yobs1:dy:yobs2]``` and ```z=zobs```.
