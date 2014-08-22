@@ -55,9 +55,9 @@ dcurier = 15.0
 ### (u1, u2, u3):
 ###  dislocation vector (strike-slip, dip-slip, tensile-opening). (meter)
 
-u1 =  0.0
+u1 =  1.0
 u2 =  0.0
-u3 =  1.0
+u3 =  0.0
 
 ### FAULT GEOMETRIES
 

@@ -4,7 +4,7 @@ A program and library for calculating seismomagnetic field caused by inclined re
 
 ## Description
 This package contains library for calculating seismomagnetic field due to fault motion, strike-slip, dip-slip and tensile opening, on inclined rectangular fault plane which located inside the perfectly elastic half space.
-Any dip angle of fault plane are available except for 90 degrees (vertical fault plane).
+Any dip angle of fault plane are available including 90 degrees (vertical fault plane).
 
 ## Installation
 
@@ -16,7 +16,7 @@ $ make
 $ make install
 ```
 
-By above, shared library (libpiezomag.so) will be installed in your system. By default, this library and relevant files, such as include files, are installed under /usr/local.
+By above, shared library (libpiezomag.so) is installed in your system. By default, this library and relevant files, such as include files, are installed under /usr/local.
 To change this, please specify prefix as follows:
 ```
 $ ./configure --prefix=hoge
