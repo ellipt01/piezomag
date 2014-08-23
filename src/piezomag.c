@@ -18,7 +18,7 @@
  * on obs. point (tx, ty, zobs) of internal fault coordinates
   *c*********************************************************************/
 static double
-seismomagnetic_component_on_fault_coordinates (int component, const fault_params *fault, const magnetic_params *mag, double tx, double ty, double zobs)
+seismomagnetic_component_in_fault_coordinate (int component, const fault_params *fault, const magnetic_params *mag, double tx, double ty, double zobs)
 {
 	double	val = 0.0;
 
@@ -34,25 +34,25 @@ seismomagnetic_component_on_fault_coordinates (int component, const fault_params
  * on obs. point (tx, ty, zobs) of internal fault coordinates
  *c******************************************************************/
 static double
-seismomagnetic_field_on_fault_coordinates (int component, const fault_params *fault, const magnetic_params *mag, double tx, double ty, double zobs)
+seismomagnetic_field_in_fault_coordinate (int component, const fault_params *fault, const magnetic_params *mag, double tx, double ty, double zobs)
 {
 	double	val;
 	if (component == TOTAL_FORCE) {
-		double	hx = seismomagnetic_component_on_fault_coordinates (X_COMP, fault, mag, tx, ty, zobs);
-		double	hy = seismomagnetic_component_on_fault_coordinates (Y_COMP, fault, mag, tx, ty, zobs);
-		double hz = seismomagnetic_component_on_fault_coordinates (Z_COMP, fault, mag, tx, ty, zobs);
+		double	hx = seismomagnetic_component_in_fault_coordinate (X_COMP, fault, mag, tx, ty, zobs);
+		double	hy = seismomagnetic_component_in_fault_coordinate (Y_COMP, fault, mag, tx, ty, zobs);
+		double hz = seismomagnetic_component_in_fault_coordinate (Z_COMP, fault, mag, tx, ty, zobs);
 		if (fabs (fault->fstrike) > DBL_EPSILON) rotate (-fault->fstrike, &hx, &hy);
 		val = total_force (hx, hy, hz, mag->exf_inc, mag->exf_dec);
-	} else val = seismomagnetic_component_on_fault_coordinates (component, fault, mag, tx, ty, zobs);
+	} else val = seismomagnetic_component_in_fault_coordinate (component, fault, mag, tx, ty, zobs);
 
 	return val;
 }
 
-/*c******************************************************************
+/*c*****************************************************************************
  * calculates specified component of seismomagnetic field
  * on obs. point (xobs, yobs, zobs)
- * int	component:	X_COMP(0), Y_COMP(1), Z_COMP(2) or TOTAL_FORCE(3)
- *c******************************************************************/
+ * int	component:	X_COMP(0:NS), Y_COMP(1:EW), Z_COMP(2:DwonUp) or TOTAL_FORCE(3)
+ *c*****************************************************************************/
 bool
 seismomagnetic_field (int component, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs, double *val)
 {
@@ -64,8 +64,8 @@ seismomagnetic_field (int component, const fault_params *fault, const magnetic_p
 		exit (1);
 	}
 
-	tx = xobs;
-	ty = -yobs;
+	tx = yobs;
+	ty = - xobs;
 	if (fabs (fault->fstrike) > DBL_EPSILON) rotate (fault->fstrike, &tx, &ty);
 
 	clear_all_singular_flags ();
@@ -73,15 +73,15 @@ seismomagnetic_field (int component, const fault_params *fault, const magnetic_p
 	if (is_singular_point (singular_R)) status = false;
 	if (is_singular_point (singular_RE)) status = false;
 
-	*val = seismomagnetic_field_on_fault_coordinates (component, fault, mag, tx, ty, zobs);
+	*val = seismomagnetic_field_in_fault_coordinate (component, fault, mag, tx, ty, zobs);
 
 	return status;
 }
 
-/*c**********************************************************************
+/*c******************************************************************************
  * calculates and outputs seismomagnetic field
- * in the range [xobs1 : dx : xobs2], [yobs1 : dy : yobs2] and z = zobs
- *c**********************************************************************/
+ * in the range [xobs1 : dx : xobs2](NS), [yobs1 : dy : yobs2](EW) and z = zobs
+ *c******************************************************************************/
 void
 fprintf_seismomagnetic_field (FILE *stream, int component, const fault_params *fault, const magnetic_params *mag,
 		double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs)
@@ -98,7 +98,7 @@ fprintf_seismomagnetic_field (FILE *stream, int component, const fault_params *f
 			double val;
 
 			tx = x;
-			ty = -y;
+			ty = y;
 			if (fabs (fault->fstrike) > DBL_EPSILON) rotate (fault->fstrike, &tx, &ty);
 
 			clear_all_singular_flags ();
@@ -119,10 +119,9 @@ fprintf_seismomagnetic_field (FILE *stream, int component, const fault_params *f
 				}
 				continue;
 			}
-			val = seismomagnetic_field_on_fault_coordinates (component, fault, mag, tx, ty, zobs);
+			val = seismomagnetic_field_in_fault_coordinate (component, fault, mag, tx, ty, zobs);
 			fprintf (stream, "%.4f\t%.4f\t%.8f\n", x, y, val);
 		}
 	}
 	return;
 }
-

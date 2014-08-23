@@ -10,14 +10,14 @@
 #define DUMMY 0
 
 /* total force
- * double	hx, hy, hz: x(E+W-), y(N+S-) and z(Up-Down+) components
+ * double	hx, hy, hz: x(N+S-), y(E+W-) and z(Down+Up-) components
  * double	exf_inc, exf_dec:	inclination and declination of external field
- * double	exf_dec:	declination of external field */
+ * double	exf_dec:	declination of external field (clockwise +). */
 double
 total_force (double hx, double hy, double hz, double exf_inc, double exf_dec)
 {
-	double	f = hx * cos (deg2rad (exf_inc)) * sin (deg2rad (exf_dec))
-		- hy * cos (deg2rad (exf_inc)) * cos (deg2rad (exf_dec))
+	double	f = hx * cos (deg2rad (exf_inc)) * cos (deg2rad (exf_dec))
+		- hy * cos (deg2rad (exf_inc)) * sin (deg2rad (exf_dec))
 		+ hz * sin (deg2rad (exf_inc));
 	return f;
 }
@@ -27,8 +27,8 @@ void
 rotate (double theta, double *x, double *y)
 {
 	double theta_rad = deg2rad (theta);
-	double x1 = (*x) * cos (theta_rad) - (*y) * sin (theta_rad);
-	double y1 = (*y) * cos (theta_rad) + (*x) * sin (theta_rad);
+	double x1 = (*x) * cos (theta_rad) + (*y) * sin (theta_rad);
+	double y1 = (*y) * cos (theta_rad) - (*x) * sin (theta_rad);
 	*x = x1;
 	*y = y1;
 	return;
@@ -207,8 +207,6 @@ set_constants (fault_params *fault, magnetic_params *mag)
 {
 	double	jx, jy, jz;
 
-	fault->fstrike = 90.0 - fault->fstrike;
-
 	sd = sin (deg2rad (fault->fdip));
 	cd = cos (deg2rad (fault->fdip));
 	td = tan (deg2rad (fault->fdip));
@@ -234,13 +232,19 @@ set_constants (fault_params *fault, magnetic_params *mag)
 	alpha5 = fault->alpha * (2.0 * fault->alpha - 5.0) / alpha0;
 	alpha6 = 3.0 * fault->alpha * (1.0 - 2.0 * fault->alpha) / alpha0;
 
-	jx = mag->mgz_int * cos (deg2rad (mag->mgz_inc)) * sin (deg2rad (mag->mgz_dec));
-	jy = - mag->mgz_int * cos (deg2rad (mag->mgz_inc)) * cos (deg2rad (mag->mgz_dec));
+	jx = mag->mgz_int * cos (deg2rad (mag->mgz_inc)) * cos (deg2rad (mag->mgz_dec));
+	jy = - mag->mgz_int * cos (deg2rad (mag->mgz_inc)) * sin (deg2rad (mag->mgz_dec));
 	jz = mag->mgz_int * sin (deg2rad (mag->mgz_inc));
 	rotate (fault->fstrike, &jx, &jy);
 
-	mag->c0 = 0.25 * mag->beta * fault->mu * (3.0 * fault->lambda + 2.0 * fault->mu) / (fault->lambda + fault->mu);
-
+	// seismomagnetic moment
+	// c0 : intensity
+	{
+		double	_c1 = fault->mu * (3.0 * fault->lambda + 2.0 * fault->mu);
+		double	_c2 = fault->lambda + fault->mu;
+		mag->c0 = 0.25 * mag->beta * _c1 / _c2;
+	}
+	// cx, cy, cz : x(N+S-), y(E+W-) and z(Down+Up-) components
 	mag->cx = mag->c0 * jx;
 	mag->cy = mag->c0 * jy;
 	mag->cz = mag->c0 * jz;
@@ -410,7 +414,7 @@ fread_params (FILE *fp, fault_params *fault, magnetic_params *mag)
 
 	// todo: In here, check whether all parameters are valid
 
-	// z_obs must be < 0
+	// z_obs must be < 0, i.e. outside of medium
 	if (items[0] >= 0) {
 		fprintf (stderr, "ERROR: fread_params: z_obs must be < 0.\n");
 		fprintf (stderr, "observation point must be located outside the medium.\n");
@@ -421,7 +425,7 @@ fread_params (FILE *fp, fault_params *fault, magnetic_params *mag)
 		fprintf (stderr, "ERROR: fread_params: fdip must be in [0, 90] (deg.).");
 		return false;
 	}
-	// output_comp must be X_COMP(0), Y_COMP(1), Z_COMP(2) or TOTAL_FORCE(3)
+	// output_comp must be X_COMP(0:NS), Y_COMP(1:EW), Z_COMP(2:DownUp) or TOTAL_FORCE(3)
 	if ((int) items[SPEC_COMP] < 0 || (int) items[SPEC_COMP] >= 4) {
 		fprintf (stderr, "ERROR: fread_params: output_comp is invalid.\n");
 		return false;

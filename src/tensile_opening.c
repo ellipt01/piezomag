@@ -65,6 +65,7 @@ tensilexH0 (int flag, const fault_params *fault, const magnetic_params *mag, dou
 	double log_re_val = log_re (flag, 1.0, xi, et, qq);
 	double log_rc_val = log_rc (flag, 1.0, xi, et, qq);
 	double P1_val = P1 (flag, 1.0, xi, et, qq);
+	// todo: M2*td and N2*td are not evaluated correctly when detla = 90
 	double M2_val = M2 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
 	double N2_val = N2 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
 	double M3_val = M3 (flag, 1.0, xi, et, qq);
@@ -182,6 +183,7 @@ tensilexHI (int flag, const fault_params *fault, const magnetic_params *mag, dou
 	double log_re_val = log_re (flag, -1.0, xi, et, qq);
 	double log_rc_val = log_rc (flag, -1.0, xi, et, qq);
 	double P1_val = P1 (flag, -1.0, xi, et, qq);
+	// todo: M2*td and N2*td are not evaluated correctly when detla = 90
 	double M2_val = M2 (flag, -1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
 	double N2_val = N2 (flag, -1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
 
@@ -228,6 +230,7 @@ tensilezHI (int flag, const fault_params *fault, const magnetic_params *mag, dou
 	double P2_val = P2 (flag, -1.0, xi, et, qq);
 	double P3_val = P3 (flag, -1.0, xi, et, qq);
 
+	// todo: check sign of K9_val
 	val = (fault_is_vertical ? 1. : -1.) * alpha5 * K9_val
 		+ fault->alpha * log_rx_val * sd + alpha4 * atan_xe_qr_val * cd
 		- alpha2 * (qd * P3_val - (z - h) * P2_val * sd);
@@ -277,6 +280,7 @@ tensilexHIII (int flag, const fault_params *fault, const magnetic_params *mag, d
 	double log_re_val = log_re (flag, 1.0, xi, et, qq);
 	double log_rc_val = log_rc (flag, 1.0, xi, et, qq);
 	double P1_val = P1 (flag, 1.0, xi, et, qq);
+	// todo: M2*td and N2*td are not evaluated correctly when detla = 90
 	double M2_val = M2 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
 	double N2_val = N2 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
 
