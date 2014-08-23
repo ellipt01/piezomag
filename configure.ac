@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(piezomag, 0.2)
+AC_INIT(piezomag, 0.3)
 AC_PROG_CC
 AC_CONFIG_HEADERS([config.h])
 
