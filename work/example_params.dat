@@ -29,16 +29,16 @@ beta   = 1.0
 ############## MAGNETIC PROPERTIES ##############
 
 ### EXTERNAL GEOMAGNETIC FIELD INCLINATION, DECLINATION
-### exf_inc    : inclination of external field (degree)
-### exf_dec    : declination (degree)
+### exf_inc    : inclination of external field (deg.)
+### exf_dec    : declination (deg.)
 
 exf_inc = 45.0
 exf_dec = 0.0 
 
 ### PROPERTIES OF INITIAL CRUSTAL MAGNETIZATION
 ### mgz_int    : initial intensity of crustal magnetization (A/m)
-### mgz_inc    : inclination (degree)
-### mgz_dec    : declination (degree)
+### mgz_inc    : inclination (deg.)
+### mgz_dec    : declination (deg.)
 
 mgz_int = 1.0
 mgz_inc = 45.0 
@@ -53,7 +53,7 @@ dcurier = 15.0
 
 ### DISLOCATION VECTOR
 ### (u1, u2, u3):
-###  dislocation vector (strike-slip, dip-slip, tensile-opening). (meter)
+###  dislocation vector (strike-slip, dip-slip, tensile-opening) (meter)
 
 u1 =  1.0
 u2 =  0.0
@@ -62,15 +62,15 @@ u3 =  0.0
 ### FAULT GEOMETRIES
 
 ### STRIKE and DIP ANGLE
-### fstrike     : strike angle of fault (degree)
-### fdip        : dip angle (degree)
+### fstrike     : strike angle of fault (deg.)
+### fdip        : dip angle (deg.) (0 <= fdip <= 90 deg.)
 
 fstrike = 90.0
 fdip    = 45.0
 
 ### LENGTH, WIDTH AND DEPTH
-### flength1, flength2 : fault length (flength1 <= xi <= flength2) (km)
-### fwidth1, fwidth2   :       width (fwidth1 <= eta <= fwidth2)   (km)
+### flength1, flength2 : fault length(km)
+### fwidth1,  fwidth2  :       width (km)
 ### fdepth             :       depth (km)
 
 flength1 =  5.0

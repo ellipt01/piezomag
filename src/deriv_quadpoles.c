@@ -89,9 +89,12 @@ L2_x (double sign, double xi, double et, double qq)
 static double
 L2_y (double sign, double xi, double et, double qq)
 {
+	double	val;
 	double	r_l0 = L0 (sign, xi, et, qq);
 	double	r_l0_y = L0_y (sign, xi, et, qq);
-	return - sign * sd * (cd * ire2 + yy * ir * ire2) + r_l0 + yy * r_l0_y;
+	val = - sign * sd * yy * ir * ire2 + r_l0 + yy * r_l0_y;
+	if (!fault_is_vertical) val += - sign * sd * cd * ire2 + yy;
+	return val;
 }
 
 static double
@@ -110,13 +113,18 @@ M1_x (double sign, double xi, double et, double qq)
 static double
 M1_y (double sign, double xi, double et, double qq)
 {
-	return - xi * cd * (ir * ire2) - xi * yy * (r + re) * ir3e2;
+	double	val = - xi * yy * (r + re) * ir3e2;
+	if (!fault_is_vertical) val -= xi * cd * (ir * ire2);
+	return val;
 }
 
 static double
 M1_z (double sign, double xi, double et, double qq)
 {
-	return - sign * xi * sd * (ir * ire2) + xi * cc * (r + re) * ir3e2;
+	double	val;
+	if (fault_is_vertical) val = - sign * xi * ir3;
+	else val = - sign * xi * sd * (ir * ire2) + xi * cc * (r + re) * ir3e2;
+	return val;
 }
 
 static double
@@ -128,15 +136,21 @@ M2_x (double sign, double xi, double et, double qq)
 static double
 M2_y (double sign, double xi, double et, double qq)
 {
-	return sd2 * ire2 - (yy * cd + sign * cc * sd) * (ir * ire2)
+	double	val;
+	if (fault_is_vertical) val = ir * ire - pow (qq, 2.) * (r + re) * ir3e2;
+	else val = sd2 * ire2 - (yy * cd + sign * cc * sd) * (ir * ire2)
 		- yy * yy * (r + re) * ir3e2;
+	return val;
 }
 
 static double
 M2_z (double sign, double xi, double et, double qq)
 {
-	return - sign * sd * cd * ire2 + (cc * cd - sign * yy * sd) * (ir * ire2)
+	double	val;
+	if (fault_is_vertical) val = - sign * qq * ir3;
+	else val = - sign * sd * cd * ire2 + (cc * cd - sign * yy * sd) * (ir * ire2)
 		+ yy * cc * (r + re) * ir3e2;
+	return val;
 }
 
 static double
@@ -154,8 +168,11 @@ M3_y (double sign, double xi, double et, double qq)
 static double
 M3_z (double sign, double xi, double et, double qq)
 {
-	return cd2 * ire2 + (yy * cd + sign * cc * sd) * (ir * ire2)
+	double	val;
+	if (fault_is_vertical) val = - et * ir3;
+	else val = cd2 * ire2 + (yy * cd + sign * cc * sd) * (ir * ire2)
 		- cc * cc * (r + re) * ir3e2;
+	return val;
 }
 
 static double
@@ -258,14 +275,16 @@ static double
 P1_y (double sign, double xi, double et, double qq)
 {
 	return sign * cc * ir3 + sd * (ir * ire)
-		- xi * xi * (r + re) * sd * ir3e2;
+		- pow (xi, 2.) * (r + re) * sd * ir3e2;
 }
 
 static double
 P1_z (double sign, double xi, double et, double qq)
 {
-	return sign * (yy * ir3 - cd * (ir * ire)
-					 + xi * xi * (r + re) * cd * ir3e2);
+	double	val = sign * yy * ir3;
+	if (!fault_is_vertical)
+		val += sign * (- (ir * ire) + pow (xi, 2.) * (r + re) * ir3e2) * cd;
+	return val;
 }
 
 static double
@@ -277,16 +296,19 @@ P2_x (double sign, double xi, double et, double qq)
 static double
 P2_y (double sign, double xi, double et, double qq)
 {
-	return sign * yy * cc * (r + rx) * ir3x2
-		- xi * sd * cd * (ir * ire2)
+	double	val = sign * yy * cc * (r + rx) * ir3x2
 		- xi * yy * (r + re) * sd * ir3e2;
+	if (!fault_is_vertical) val -= xi * sd * cd * (ir * ire2);
+	return val;
 }
 
 static double
 P2_z (double sign, double xi, double et, double qq)
 {
-	return sign * ((ir * irx) - cc * cc * (r + rx) * ir3x2)
-		- sign * xi * sd2 * (ir * ire2) + xi * cc * (r + re) * sd * ir3e2;
+	double	val = sign * ((ir * irx) - pow (cc, 2.) * (r + rx) * ir3x2);
+	if (fault_is_vertical) val += - sign * xi * ir3;
+	else val += - sign * xi * sd2 * (ir * ire2) + xi * cc * (r + re) * sd * ir3e2;
+	return val;
 }
 
 static double
@@ -304,9 +326,10 @@ P3_y (double sign, double xi, double et, double qq)
 static double
 P3_z (double sign, double xi, double et, double qq)
 {
-	return - sign * yy * cc * (r + rx) * ir3x2
-		+ xi * sd * cd * (ir * ire2)
-		- sign * xi * cc * (r + re) * cd * ir3e2;
+	double	val = - sign * yy * cc * (r + rx) * ir3x2;
+	if (!fault_is_vertical)
+		val += xi * (sd * (ir * ire2) - sign * cc * (r + re) * ir3e2) * cd;
+	return val;
 }
 
 /*****************************************************/

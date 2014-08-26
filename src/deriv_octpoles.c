@@ -38,11 +38,6 @@ M1y_y (double sign, double xi, double et, double qq)
 static double
 M1y_z (double sign, double xi, double et, double qq)
 {
-	/*
-	double res = sign * 2.0 * xi * sd * cd * (ir * ire3)
-		- xi * (cc * cd - sign * yy * sd) * (3.0 * r + et) * (ir3 * ire3)
-		- xi * yy * cc * (8.0 * r2 + 9.0 * r * et + 3 * et * et) * ir5e3;
-	*/
 	double res =
 		xi * ire3 * (sign * 2.0 * sd * cd * ir
 		 - (cc * cd - sign * yy * sd) * (3.0 * r + et) * ir3
@@ -54,12 +49,6 @@ M1y_z (double sign, double xi, double et, double qq)
 static double
 M1z_x (double sign, double xi, double et, double qq)
 {
-	/*
-	double res = sign * xi * xi * sd * (3.0 * r + et) * (ir3 * ire3)
-		+ cc * (r + re) * ir3e2
-		- xi * xi * cc * (8.0 * r2 + 9.0 * r * et + 3 * et * et) * ir5e3
-		- sign * sd * (ir * ire2);
-	*/
 	double res =
 		- (sign * sd - cc * (r + re) * ir * ir) * ir * ire2
 		+ xi * xi * (sign * sd * (3.0 * r + et)
@@ -77,11 +66,6 @@ M1z_y (double sign, double xi, double et, double qq)
 static double
 M1z_z (double sign, double xi, double et, double qq)
 {
-	/*
-	double res = - 2.0 * xi * cd2 * (ir * ire3)
-		- xi * (yy * cd + sign * cc * sd) * (3.0 * r + et) * (ir3 * ire3)
-		+ xi * cc * cc * (8.0 * r2 + 9.0 * r * et + 3 * et * et) * ir5e3;
-	*/
 	double res =
 		xi * ire3 * (- 2.0 * cd2 * ir
 		 - (yy * cd + sign * cc * sd) * (3.0 * r + et) * ir3
@@ -101,15 +85,6 @@ M2y_x (double sign, double xi, double et, double qq)
 static double
 M2y_y (double sign, double xi, double et, double qq)
 {
-	/*
-	double res = - 2.0 * yy * sd2 * (ir * ire3) - cd * (ir * ire2)
-		+ yy * (yy * cd + sign * cc * sd) * (3.0 * r + et) * (ir3 * ire3)
-		- 2.0 * yy * (r + re) * (ir3 * ire2)
-		+ yy * yy * yy * (8.0 * r2 + 9.0 * et * r + 3.0 * et * et) * ir5e3
-		- 2.0 * sd2 * cd * ire3
-		+ 2.0 * (yy * cd + sign * cc * sd) * cd * (ir * ire3)
-		+ yy * yy * (3.0 * r + et) * cd * (ir3 * ire3);
-	*/
 	double res =
 		- ire2 * (cd + 2.0 * yy * (r + re) * ir * ir) * ir
 		+ ire3 * (- 2.0 * sd2 * cd

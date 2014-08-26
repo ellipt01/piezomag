@@ -405,16 +405,35 @@ dipHII (int flag, const fault_params *fault, const magnetic_params *mag, double 
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
+static double
+dip_slip_main (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+{
+	return dip0 (flag, fault, mag, x, y, z);
+}
+
+static double
+dip_slip_mirror_image (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+{
+	return dipH0 (flag, fault, mag, x, y, z);
+}
+
+static double
+dip_slip_submirror_image (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+{
+	double	val;
+	if (fault->fdepth + fault->fwidth2 * sd < mag->dcurier) val = dipHI (flag, fault, mag, x, y, z);
+	else if (fault->fdepth - fault->fwidth1 * sd > mag->dcurier) val = dipHIII (flag, fault, mag, x, y, z);
+	else val = dipHII (flag, fault, mag, x, y, z);
+	return val;
+}
+
+/*** public functions ***/
 double
 dip_slip (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
-	double res;
-
-	res = dip0 (flag, fault, mag, x, y, z);
-	res += dipH0 (flag, fault, mag, x, y, z);
-	if (fault->fdepth + fault->fwidth2 * sd < mag->dcurier) res += dipHI (flag, fault, mag, x, y, z);
-	else if (fault->fdepth - fault->fwidth1 * sd > mag->dcurier) res += dipHIII (flag, fault, mag, x, y, z);
-	else res += dipHII (flag, fault, mag, x, y, z);
-
+	double res = 0.0;
+	res += dip_slip_main (flag, fault, mag, x, y, z);
+	res += dip_slip_mirror_image (flag, fault, mag, x, y, z);
+	res += dip_slip_submirror_image (flag, fault, mag, x, y, z);
 	return res;
 }

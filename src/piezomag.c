@@ -13,6 +13,11 @@
 #include "piezomag.h"
 #include "private.h"
 
+#ifdef MIN
+#undef MIN
+#endif
+#define PIEZOMAG_MIN(x, y) ((x) <= (y)) ? (x) : (y)
+
 /* allowable distance between obs. and singular point.
  * default = 1.e-4 (km) */
 double	eps_dist = 1.e-4;
@@ -42,7 +47,7 @@ seismomagnetic_component_in_fault_coordinate (int component, const fault_params 
 bool
 seismomagnetic_field (int component, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs, double *val)
 {
-	bool	status = true;	// obs. point is singular point, status is set to false
+	bool	status = true;	// if obs. point is singular point, status is set to false
 	double	tx, ty;	// obs. point on fault coordinate system
 
 	if (component < 0 || component >= 4) {
@@ -50,6 +55,7 @@ seismomagnetic_field (int component, const fault_params *fault, const magnetic_p
 		exit (1);
 	}
 
+	// rotate coordinate system
 	tx = xobs;
 	ty = yobs;
 	if (fabs (fault->fstrike) > DBL_EPSILON) rotate (fault->fstrike, &tx, &ty);
@@ -100,8 +106,9 @@ fprintf_seismomagnetic_field (FILE *stream, int component, const fault_params *f
 	int		n_grid_y = (int) floor ((yobs2 - yobs1) / dy);
 	bool	status;
 
-	/* eps_dist = 2 * (minimum grid interval) */
-	eps_dist = 2. * MIN (dx, dy);
+	/* eps_dist is set to 2 * (minimum grid interval) */
+	eps_dist = 2. * ((double) PIEZOMAG_MIN (dx, dy));
+//	fprintf (stderr, "1: eps = %.4e, %f, %f\n", eps_dist, dx, dy);
 	for (i = 0, x = xobs1; i <= n_grid_x; i++, x += dx) {
 		for (j = 0, y = yobs1; j <= n_grid_y; j++, y += dy) {
 			double val;

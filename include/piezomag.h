@@ -4,10 +4,6 @@
 #include <stdbool.h>
 
 /**** utilities ***/
-#ifdef MIN
-#undef MIN
-#endif
-#define MIN(x, y) ((x) <= (y)) ? (x) : (y)
 
 /* degree -> radian */
 #ifdef deg2rad
@@ -107,10 +103,11 @@ struct s_magnetic_params {
 
 	double	dcurier;	// depth of Curier point isotherm
 
-	// seismomagnetic moment vector
-	double	cx;
-	double	cy;
-	double	cz;
+	// seismomagnetic moment
+	// moment vector in x(NS)-y(EW)-z(DownUp) coordinate system
+	double	cx;	// x(NS) component
+	double	cy;	// y(EW) component
+	double	cz;	// z(DownUp) component
 	double	c0; // = sqrt (cx^2 + cy^2 + cz^2)
 
 };

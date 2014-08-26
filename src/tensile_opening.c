@@ -75,9 +75,9 @@ tensilexH0 (int flag, const fault_params *fault, const magnetic_params *mag, dou
 	val =	(2.0 - alpha4) * K7_val
 		+ 2.0 * alpha3 * log_rc_val * sd - fault->alpha * log_re_val
 		+ alpha3 * (qd * P1_val - (z - h) * (M2_val + N2_val * sd))
+//		+ alpha3 * (qd * P1_val - (z - h) * (M2_val + N2_val * sd) * td)
 		+ 2.0 * alpha5 * h * (P1_val * cd + (M2_val + N2_val * sd))
-		//		+ alpha3 * (qd * P1_val - (z - h) * (M2_val + N2_val * sd) * td)
-		//		+ 2.0 * alpha5 * h * (P1_val * cd + (M2_val + N2_val * sd) * td)
+//		+ 2.0 * alpha5 * h * (P1_val * cd + (M2_val + N2_val * sd) * td)
 		+ 6.0 * alpha3 * h * M3_val
 		- 2.0 * alpha2 * h * ((qd + h * cd) * P1z_val - (z - 2.0 * h) * P1y_val * sd);
 
@@ -136,9 +136,9 @@ tensilezH0 (int flag, const fault_params *fault, const magnetic_params *mag, dou
 		+ 2.0 * alpha4 * h * (P3_val * cd + P2_val * sd)
 		+ 4.0 * alpha1 * h * M1_val * sd2
 		+ 2.0 * alpha2 * h * ((qd + h * cd) * P3z_val
-		// todo: check here (P3_val -> P2_val is correct ?)
-		// - (z - 2.0 * h) * P3y_val + 2.0 * P3_val * sd);
-		- (z - 2.0 * h) * P3y_val + 2.0 * P2_val * sd);
+		// todo: check here (P3_val * sd -> P3_val * sd * cd is correct ?)
+		// 		- (z - 2.0 * h) * P3y_val + 2.0 * P3_val * sd);
+				- (z - 2.0 * h) * P3y_val * sd + 2.0 * P2_val * sd * cd);
 
 	return val;
 }
@@ -422,17 +422,35 @@ tensileHII (int flag, const fault_params *fault, const magnetic_params *mag, dou
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
+static double
+tensile_opening_main (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+{
+	return tensile0 (flag, fault, mag, x, y, z);
+}
 
+static double
+tensile_opening_mirror_image (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+{
+	return tensileH0 (flag, fault, mag, x, y, z);
+}
+
+static double
+tensile_opening_submirror_image (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+{
+	double	val;
+	if (fault->fdepth + fault->fwidth2 * sd < mag->dcurier) val = tensileHI (flag, fault, mag, x, y, z);
+	else if (fault->fdepth - fault->fwidth1 * sd > mag->dcurier) val = tensileHIII (flag, fault, mag, x, y, z);
+	else val = tensileHII (flag, fault, mag, x, y, z);
+	return val;
+}
+
+/*** public functions ***/
 double
 tensile_opening (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
-	double res;
-
-	res = tensile0 (flag, fault, mag, x, y, z);
-	res += tensileH0 (flag, fault, mag, x, y, z);
-	if (fault->fdepth + fault->fwidth2 * sd < mag->dcurier) res += tensileHI (flag, fault, mag, x, y, z);
-	else if (fault->fdepth - fault->fwidth1 * sd > mag->dcurier) res += tensileHIII (flag, fault, mag, x, y, z);
-	else res += tensileHII (flag, fault, mag, x, y, z);
-
+	double res = 0.0;
+	res += tensile_opening_main (flag, fault, mag, x, y, z);
+	res += tensile_opening_mirror_image (flag, fault, mag, x, y, z);
+	res += tensile_opening_submirror_image (flag, fault, mag, x, y, z);
 	return res;
 }

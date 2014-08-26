@@ -388,7 +388,7 @@ fread_params (FILE *fp, fault_params *fault, magnetic_params *mag)
 	char	 buf[BUFSIZ];
 
 	if (fault == NULL || mag == NULL) {
-		fprintf (stderr, "ERROR: fread_params: structure is empty.");
+		fprintf (stderr, "ERROR: fread_params: structure is empty.\n");
 		return false;
 	}
 
@@ -422,7 +422,7 @@ fread_params (FILE *fp, fault_params *fault, magnetic_params *mag)
 	}
 	// check fault dip
 	if (items[14] < 0. || 90. < items[14]) {
-		fprintf (stderr, "ERROR: fread_params: fdip must be in [0, 90] (deg.).");
+		fprintf (stderr, "ERROR: fread_params: fdip must be in [0, 90] (deg.).\n");
 		return false;
 	}
 	// output_comp must be X_COMP(0:NS), Y_COMP(1:EW), Z_COMP(2:DownUp) or TOTAL_FORCE(3)

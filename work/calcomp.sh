@@ -39,16 +39,16 @@ gmtset LABEL_FONT_SIZE "10p"
 size=9/9
 
 # read fault parameters from input file
-L1=`cat example_params.dat | gawk '{if($1 == "flength1"){print $3}}'`
-L2=`cat example_params.dat | gawk '{if($1 == "flength2"){print $3}}'`
-W1=`cat example_params.dat | gawk '{if($1 == "fwidth1"){print $3}}'`
-W2=`cat example_params.dat | gawk '{if($1 == "fwidth2"){print $3}}'`
-STRIKE=`cat example_params.dat | gawk '{if($1 == "fstrike"){print $3}}'`
-DIP=`cat example_params.dat | gawk '{if($1 == "fdip"){print $3}}'`
+L1=`cat $fnparam | gawk '{if($1 == "flength1"){print $3}}'`
+L2=`cat $fnparam | gawk '{if($1 == "flength2"){print $3}}'`
+W1=`cat $fnparam | gawk '{if($1 == "fwidth1"){print $3}}'`
+W2=`cat $fnparam | gawk '{if($1 == "fwidth2"){print $3}}'`
+STRIKE=`cat $fnparam | gawk '{if($1 == "fstrike"){print $3}}'`
+DIP=`cat $fnparam | gawk '{if($1 == "fdip"){print $3}}'`
 
-U1=`cat example_params.dat | gawk '{if($1 == "u1"){print $3}}'`
-U2=`cat example_params.dat | gawk '{if($1 == "u2"){print $3}}'`
-U3=`cat example_params.dat | gawk '{if($1 == "u3"){print $3}}'`
+U1=`cat $fnparam | gawk '{if($1 == "u1"){print $3}}'`
+U2=`cat $fnparam | gawk '{if($1 == "u2"){print $3}}'`
+U3=`cat $fnparam | gawk '{if($1 == "u3"){print $3}}'`
 
 LENGTH=`echo $L1+$L2 | bc`
 WIDTH=`echo $W1+$W2 | bc`
