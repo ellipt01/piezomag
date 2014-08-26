@@ -53,6 +53,11 @@ bool	verbos;
 /* if fdip = 90., i.e. fault is vertical, set true */
 bool	fault_is_vertical;
 
+/* allowable distance between obs. and singular point.
+ * if |singular_point - obs. point| < eps_dist, evaluation of
+ * seismomagnetic field is avoided for this obs. point. */
+extern double	eps_dist;
+
 /*c********************
  *c    structures
  *c********************/

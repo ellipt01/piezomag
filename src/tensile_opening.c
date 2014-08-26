@@ -136,7 +136,9 @@ tensilezH0 (int flag, const fault_params *fault, const magnetic_params *mag, dou
 		+ 2.0 * alpha4 * h * (P3_val * cd + P2_val * sd)
 		+ 4.0 * alpha1 * h * M1_val * sd2
 		+ 2.0 * alpha2 * h * ((qd + h * cd) * P3z_val
-				- (z - 2.0 * h) * P3y_val + 2.0 * P3_val * sd);
+		// todo: check here (P3_val -> P2_val is correct ?)
+		// - (z - 2.0 * h) * P3y_val + 2.0 * P3_val * sd);
+		- (z - 2.0 * h) * P3y_val + 2.0 * P2_val * sd);
 
 	return val;
 }
