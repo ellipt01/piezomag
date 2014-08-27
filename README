@@ -33,7 +33,7 @@ This library provides the following public functions:
 bool
 fread_params (FILE *fp, fault_params *fault, magnetic_params *mag);
 
-This function reads user-defined parameters from input file and store them to global
+This function reads parameter file and store user-defined parameters to global
 variables and following pre-allocated structures:
 
 fault_params *fault:  structure which stores fault parameters.
@@ -46,6 +46,9 @@ fault_params *fault_params_alloc (void)
 
 magnetic_params *magnetic_params_alloc (void)
 
+For the details of the parameter file, see "work/example_params.data"
+(an example of parameter file).
+
 ---
 
 bool
@@ -54,7 +57,8 @@ seismomagnetic_field_term (MagComponent component, SeismoMagTerm term,
     double xobs, double yobs, double zobs, double *val);
 
 This function calculates the seismomagnetic field on obervation point (xobs, yobs, zobs).
-MagComponent component specifies the output magnetic component and it takes the following values:
+MagComponent component specifies the output magnetic component
+and it takes the following values:
 
 typedef enum {
  MAG_COMP_F    =  0, // total force
@@ -75,7 +79,7 @@ typedef enum {
 } SeismoMagTerm;
 
 
-If obervation point is on the singular point, returns false.
+If obervation point is on the singular point, this function returns false.
 
 ---
 
@@ -123,8 +127,7 @@ To run this program, do
 $ ./main/piez -f <parameter file name>
 
 
-For more details, see work/example_params.dat (example of parameter file) and work/calcomp.sh
-(example script to run main/piez).
+For more details, see "work/calcomp.sh" (an example script to run main/piez).
 
 ## Licence
 LGPL
