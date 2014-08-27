@@ -6,25 +6,25 @@
 
 /*** main term ***/
 static double
-strikex0 (int flag, double xi, double et, double qq)
+strikex0 (MagComponent component, double xi, double et, double qq)
 {
-	return 2.0 * K1 (flag, 1.0, xi, et, qq);
+	return 2.0 * K1 (component, 1.0, xi, et, qq);
 }
 
 static double
-strikey0 (int flag, double xi, double et, double qq)
+strikey0 (MagComponent component, double xi, double et, double qq)
 {
-	return 2.0 * K2 (flag, 1.0, xi, et, qq);
+	return 2.0 * K2 (component, 1.0, xi, et, qq);
 }
 
 static double
-strikez0 (int flag, double xi, double et, double qq)
+strikez0 (MagComponent component, double xi, double et, double qq)
 {
-	return 2.0 * K3 (flag, 1.0, xi, et, qq);
+	return 2.0 * K3 (component, 1.0, xi, et, qq);
 }
 
 static double
-strike0 (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strike0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -32,7 +32,7 @@ strike0 (int flag, const fault_params *fault, const magnetic_params *mag, double
 	double sign = 1.0;
 	double hx, hy, hz;
 
-	set_singular_flag (1);
+//	set_singular_flag (1);
 	p = y * cd - d[1] * sd;
 	q = y * sd + d[1] * cd;
 
@@ -46,9 +46,9 @@ strike0 (int flag, const fault_params *fault, const magnetic_params *mag, double
 		if (i % 2 == 0) et = p - fault->fwidth2;
 
 		set_geometry_variables (sign, xi, et, q);
-		hx = strikex0 (flag, xi, et, q);
-		hy = strikey0 (flag, xi, et, q);
-		hz = strikez0 (flag, xi, et, q);
+		hx = strikex0 (component, xi, et, q);
+		hy = strikey0 (component, xi, et, q);
+		hz = strikez0 (component, xi, et, q);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -58,18 +58,18 @@ strike0 (int flag, const fault_params *fault, const magnetic_params *mag, double
 
 /*** contributions from the mirror image H0 ***/
 static double
-strikexH0 (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+strikexH0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K1_val = K1 (flag, 1.0, xi, et, qq);
-	double atan_xe_qr_val = atan_xe_qr (flag, 1.0, xi, et, qq);
-	double J1_val = J1 (flag, 1.0, xi, et, qq);
-	double M1_val = M1 (flag, 1.0, xi, et, qq);
-	double L1_val = L1 (flag, 1.0, xi, et, qq);
-	double M1y_val = M1y (flag, 1.0, xi, et, qq);
-	double M1z_val = M1z (flag, 1.0, xi, et, qq);
+	double K1_val = K1 (component, 1.0, xi, et, qq);
+	double atan_xe_qr_val = atan_xe_qr (component, 1.0, xi, et, qq);
+	double J1_val = J1 (component, 1.0, xi, et, qq);
+	double M1_val = M1 (component, 1.0, xi, et, qq);
+	double L1_val = L1 (component, 1.0, xi, et, qq);
+	double M1y_val = M1y (component, 1.0, xi, et, qq);
+	double M1z_val = M1z (component, 1.0, xi, et, qq);
 
 	val = - (2.0 - alpha4) * K1_val
 		- alpha1 * atan_xe_qr_val - alpha3 * J1_val
@@ -82,19 +82,19 @@ strikexH0 (int flag, const fault_params *fault, const magnetic_params *mag, doub
 }
 
 static double
-strikeyH0 (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+strikeyH0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K2_val = K2 (flag, 1.0, xi, et, qq);
-	double log_re_val = log_re (flag, 1.0, xi, et, qq);
-	double J2_val = J2 (flag, 1.0, xi, et, qq);
-	double L2_val = L2 (flag, 1.0, xi, et, qq);
-	double M2_val = M2 (flag, 1.0, xi, et, qq);
-	double M3_val = M3 (flag, 1.0, xi, et, qq);
-	double M2y_val = M2y (flag, 1.0, xi, et, qq);
-	double M2z_val = M2z (flag, 1.0, xi, et, qq);
+	double K2_val = K2 (component, 1.0, xi, et, qq);
+	double log_re_val = log_re (component, 1.0, xi, et, qq);
+	double J2_val = J2 (component, 1.0, xi, et, qq);
+	double L2_val = L2 (component, 1.0, xi, et, qq);
+	double M2_val = M2 (component, 1.0, xi, et, qq);
+	double M3_val = M3 (component, 1.0, xi, et, qq);
+	double M2y_val = M2y (component, 1.0, xi, et, qq);
+	double M2z_val = M2z (component, 1.0, xi, et, qq);
 
 	val = - (2.0 - alpha4) * K2_val
 		+ alpha4 * log_re_val * sd + alpha3 * J2_val
@@ -108,17 +108,17 @@ strikeyH0 (int flag, const fault_params *fault, const magnetic_params *mag, doub
 }
 
 static double
-strikezH0 (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+strikezH0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K3_val = K3 (flag, 1.0, xi, et, qq);
-	double log_re_val = log_re (flag, 1.0, xi, et, qq);
-	double M2_val = M2 (flag, 1.0, xi, et, qq);
-	double M3_val = M3 (flag, 1.0, xi, et, qq);
-	double M3y_val = M2z (flag, 1.0, xi, et, qq);
-	double M3z_val = M2y (flag, 1.0, xi, et, qq);
+	double K3_val = K3 (component, 1.0, xi, et, qq);
+	double log_re_val = log_re (component, 1.0, xi, et, qq);
+	double M2_val = M2 (component, 1.0, xi, et, qq);
+	double M3_val = M3 (component, 1.0, xi, et, qq);
+	double M3y_val = M2z (component, 1.0, xi, et, qq);
+	double M3z_val = M2y (component, 1.0, xi, et, qq);
 
 	val = - (2.0 + alpha5) * K3_val
 		- fault->alpha * log_re_val * cd
@@ -132,7 +132,7 @@ strikezH0 (int flag, const fault_params *fault, const magnetic_params *mag, doub
 }
 
 static double
-strikeH0 (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strikeH0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -140,7 +140,7 @@ strikeH0 (int flag, const fault_params *fault, const magnetic_params *mag, doubl
 	double sign = 1.0;
 	double hx, hy, hz;
 
-	set_singular_flag (3);
+//	set_singular_flag (3);
 	p = y * cd - d[3] * sd;
 	q = y * sd + d[3] * cd;
 
@@ -154,9 +154,9 @@ strikeH0 (int flag, const fault_params *fault, const magnetic_params *mag, doubl
 		if (i % 2 == 0) et = p - fault->fwidth2;
 
 		set_geometry_variables (sign, xi, et, q);
-		hx = strikexH0 (flag, fault, mag, xi, et, q, y, z);
-		hy = strikeyH0 (flag, fault, mag, xi, et, q, y, z);
-		hz = strikezH0 (flag, fault, mag, xi, et, q, y, z);
+		hx = strikexH0 (component, fault, mag, xi, et, q, y, z);
+		hy = strikeyH0 (component, fault, mag, xi, et, q, y, z);
+		hz = strikezH0 (component, fault, mag, xi, et, q, y, z);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -166,16 +166,16 @@ strikeH0 (int flag, const fault_params *fault, const magnetic_params *mag, doubl
 
 /*** contributions from the mirror image HI ***/
 static double
-strikexHI (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+strikexHI (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K1_val = K1 (flag, -1.0, xi, et, qq);
-	double atan_xe_qr_val = atan_xe_qr (flag, -1.0, xi, et, qq);
-	double J1_val = J1 (flag, -1.0, xi, et, qq);
-	double M1_val = M1 (flag, -1.0, xi, et, qq);
-	double L1_val = L1 (flag, -1.0, xi, et, qq);
+	double K1_val = K1 (component, -1.0, xi, et, qq);
+	double atan_xe_qr_val = atan_xe_qr (component, -1.0, xi, et, qq);
+	double J1_val = J1 (component, -1.0, xi, et, qq);
+	double M1_val = M1 (component, -1.0, xi, et, qq);
+	double L1_val = L1 (component, -1.0, xi, et, qq);
 
 	val = alpha4 * K1_val
 		- alpha1 * atan_xe_qr_val - alpha3 * J1_val
@@ -185,16 +185,16 @@ strikexHI (int flag, const fault_params *fault, const magnetic_params *mag, doub
 }
 
 static double
-strikeyHI (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+strikeyHI (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K2_val = K2 (flag, -1.0, xi, et, qq);
-	double log_re_val = log_re (flag, -1.0, xi, et, qq);
-	double J2_val = J2 (flag, -1.0, xi, et, qq);
-	double L2_val = L2 (flag, -1.0, xi, et, qq);
-	double M2_val = M2 (flag, -1.0, xi, et, qq);
+	double K2_val = K2 (component, -1.0, xi, et, qq);
+	double log_re_val = log_re (component, -1.0, xi, et, qq);
+	double J2_val = J2 (component, -1.0, xi, et, qq);
+	double L2_val = L2 (component, -1.0, xi, et, qq);
+	double M2_val = M2 (component, -1.0, xi, et, qq);
 
 	val = alpha4 * K2_val + alpha6 * log_re_val * sd - alpha3 * J2_val
 		- alpha2 * (qd * M2_val + (z - h) * L2_val * sd * cd);
@@ -203,15 +203,15 @@ strikeyHI (int flag, const fault_params *fault, const magnetic_params *mag, doub
 }
 
 static double
-strikezHI (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+strikezHI (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K3_val = K3 (flag, -1.0, xi, et, qq);
-	double log_re_val = log_re (flag, -1.0, xi, et, qq);
-	double M2_val = M2 (flag, -1.0, xi, et, qq);
-	double M3_val = M3 (flag, -1.0, xi, et, qq);
+	double K3_val = K3 (component, -1.0, xi, et, qq);
+	double log_re_val = log_re (component, -1.0, xi, et, qq);
+	double M2_val = M2 (component, -1.0, xi, et, qq);
+	double M3_val = M3 (component, -1.0, xi, et, qq);
 
 	val = alpha5 * K3_val + fault->alpha * log_re_val * cd
 		+ alpha2 * (qd * M3_val - (z - h) * M2_val * sd);
@@ -220,7 +220,7 @@ strikezHI (int flag, const fault_params *fault, const magnetic_params *mag, doub
 }
 
 static double
-strikeHI (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strikeHI (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -228,7 +228,7 @@ strikeHI (int flag, const fault_params *fault, const magnetic_params *mag, doubl
 	double sign = -1.0;
 	double hx, hy, hz;
 
-	set_singular_flag (2);
+//	set_singular_flag (2);
 	p = y * cd - d[2] * sd;
 	q = y * sd + d[2] * cd;
 
@@ -242,9 +242,9 @@ strikeHI (int flag, const fault_params *fault, const magnetic_params *mag, doubl
 		if (i % 2 == 0) et = p - fault->fwidth2;
 
 		set_geometry_variables (sign, xi, et, q);
-		hx = strikexHI (flag, fault, mag, xi, et, q, y, z);
-		hy = strikeyHI (flag, fault, mag, xi, et, q, y, z);
-		hz = strikezHI (flag, fault, mag, xi, et, q, y, z);
+		hx = strikexHI (component, fault, mag, xi, et, q, y, z);
+		hy = strikeyHI (component, fault, mag, xi, et, q, y, z);
+		hz = strikezHI (component, fault, mag, xi, et, q, y, z);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -254,16 +254,16 @@ strikeHI (int flag, const fault_params *fault, const magnetic_params *mag, doubl
 
 /*** contributions from the mirror image HIII ***/
 static double
-strikexHIII (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+strikexHIII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K1_val = K1 (flag, 1.0, xi, et, qq);
-	double atan_xe_qr_val = atan_xe_qr (flag, 1.0, xi, et, qq);
-	double J1_val = J1 (flag, 1.0, xi, et, qq);
-	double M1_val = M1 (flag, 1.0, xi, et, qq);
-	double L1_val = L1 (flag, 1.0, xi, et, qq);
+	double K1_val = K1 (component, 1.0, xi, et, qq);
+	double atan_xe_qr_val = atan_xe_qr (component, 1.0, xi, et, qq);
+	double J1_val = J1 (component, 1.0, xi, et, qq);
+	double M1_val = M1 (component, 1.0, xi, et, qq);
+	double L1_val = L1 (component, 1.0, xi, et, qq);
 
 	val = - alpha4 * K1_val
 		+ alpha1 * atan_xe_qr_val + alpha3 * J1_val
@@ -273,16 +273,16 @@ strikexHIII (int flag, const fault_params *fault, const magnetic_params *mag, do
 }
 
 static double
-strikeyHIII (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+strikeyHIII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K2_val = K2 (flag, 1.0, xi, et, qq);
-	double log_re_val = log_re (flag, 1.0, xi, et, qq);
-	double J2_val = J2 (flag, 1.0, xi, et, qq);
-	double L2_val = L2 (flag, 1.0, xi, et, qq);
-	double M2_val = M2 (flag, 1.0, xi, et, qq);
+	double K2_val = K2 (component, 1.0, xi, et, qq);
+	double log_re_val = log_re (component, 1.0, xi, et, qq);
+	double J2_val = J2 (component, 1.0, xi, et, qq);
+	double L2_val = L2 (component, 1.0, xi, et, qq);
+	double M2_val = M2 (component, 1.0, xi, et, qq);
 
 	val = - alpha4 * K2_val - alpha4 * log_re_val * sd - alpha3 * J2_val
 		+ alpha3 * (qd * M2_val + (z - h) * L2_val * sd * cd);
@@ -291,15 +291,15 @@ strikeyHIII (int flag, const fault_params *fault, const magnetic_params *mag, do
 }
 
 static double
-strikezHIII (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+strikezHIII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K3_val = K3 (flag, 1.0, xi, et, qq);
-	double log_re_val = log_re (flag, 1.0, xi, et, qq);
-	double M2_val = M2 (flag, 1.0, xi, et, qq);
-	double M3_val = M3 (flag, 1.0, xi, et, qq);
+	double K3_val = K3 (component, 1.0, xi, et, qq);
+	double log_re_val = log_re (component, 1.0, xi, et, qq);
+	double M2_val = M2 (component, 1.0, xi, et, qq);
+	double M3_val = M3 (component, 1.0, xi, et, qq);
 
 	val = alpha5 * K3_val + fault->alpha * log_re_val * cd
 		+ alpha3 * (qd * M3_val - (z - h) * M2_val * sd);
@@ -308,7 +308,7 @@ strikezHIII (int flag, const fault_params *fault, const magnetic_params *mag, do
 }
 
 static double
-strikeHIII (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strikeHIII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -316,7 +316,7 @@ strikeHIII (int flag, const fault_params *fault, const magnetic_params *mag, dou
 	double sign = 1.0;
 	double hx, hy, hz;
 
-	set_singular_flag (1);
+//	set_singular_flag (1);
 	p = y * cd - d[1] * sd;
 	q = y * sd + d[1] * cd;
 
@@ -330,9 +330,9 @@ strikeHIII (int flag, const fault_params *fault, const magnetic_params *mag, dou
 		if (i % 2 == 0) et = p - fault->fwidth2;
 
 		set_geometry_variables (sign, xi, et, q);
-		hx = strikexHIII (flag, fault, mag, xi, et, q, y, z);
-		hy = strikeyHIII (flag, fault, mag, xi, et, q, y, z);
-		hz = strikezHIII (flag, fault, mag, xi, et, q, y, z);
+		hx = strikexHIII (component, fault, mag, xi, et, q, y, z);
+		hy = strikeyHIII (component, fault, mag, xi, et, q, y, z);
+		hz = strikezHIII (component, fault, mag, xi, et, q, y, z);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -342,7 +342,7 @@ strikeHIII (int flag, const fault_params *fault, const magnetic_params *mag, dou
 
 
 static double
-strikeHII (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strikeHII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -351,7 +351,7 @@ strikeHII (int flag, const fault_params *fault, const magnetic_params *mag, doub
 	double w = (mag->dcurier - fault->fdepth) / sd;
 	double hx, hy, hz;
 
-	set_singular_flag (2);
+//	set_singular_flag (2);
 	p = y * cd - d[2] * sd;
 	q = y * sd + d[2] * cd;
 
@@ -366,14 +366,14 @@ strikeHII (int flag, const fault_params *fault, const magnetic_params *mag, doub
 
 		sign = - 1.0;
 		set_geometry_variables (sign, xi, et, q);
-		hx = strikexHI (flag, fault, mag, xi, et, q, y, z);
-		hy = strikeyHI (flag, fault, mag, xi, et, q, y, z);
-		hz = strikezHI (flag, fault, mag, xi, et, q, y, z);
+		hx = strikexHI (component, fault, mag, xi, et, q, y, z);
+		hy = strikeyHI (component, fault, mag, xi, et, q, y, z);
+		hz = strikezHI (component, fault, mag, xi, et, q, y, z);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
 
-	set_singular_flag (1);
+//	set_singular_flag (1);
 	p = y * cd - d[1] * sd;
 	q = y * sd + d[1] * cd;
 
@@ -388,45 +388,45 @@ strikeHII (int flag, const fault_params *fault, const magnetic_params *mag, doub
 
 		sign = 1.0;
 		set_geometry_variables (sign, xi, et, q);
-		hx = strikexHIII (flag, fault, mag, xi, et, q, y, z);
-		hy = strikeyHIII (flag, fault, mag, xi, et, q, y, z);
-		hz = strikezHIII (flag, fault, mag, xi, et, q, y, z);
+		hx = strikexHIII (component, fault, mag, xi, et, q, y, z);
+		hy = strikeyHIII (component, fault, mag, xi, et, q, y, z);
+		hz = strikezHIII (component, fault, mag, xi, et, q, y, z);
 
 		res[i] += mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
-	set_singular_flag (0);
+//	set_singular_flag (0);
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
 static double
-strike_slip_main (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strike_slip_main (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
-	return strike0 (flag, fault, mag, x, y, z);
+	return strike0 (component, fault, mag, x, y, z);
 }
 
 static double
-strike_slip_mirror_image (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strike_slip_mirror_image (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
-	return strikeH0 (flag, fault, mag, x, y, z);
+	return strikeH0 (component, fault, mag, x, y, z);
 }
 
 static double
-strike_slip_submirror_image (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strike_slip_submirror_image (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	double	val;
-	if (fault->fdepth + fault->fwidth2 * sd < mag->dcurier) val = strikeHI (flag, fault, mag, x, y, z);
-	else if (fault->fdepth - fault->fwidth1 * sd > mag->dcurier) val = strikeHIII (flag, fault, mag, x, y, z);
-	else val = strikeHII (flag, fault, mag, x, y, z);
+	if (fault->fdepth + fault->fwidth2 * sd < mag->dcurier) val = strikeHI (component, fault, mag, x, y, z);
+	else if (fault->fdepth - fault->fwidth1 * sd > mag->dcurier) val = strikeHIII (component, fault, mag, x, y, z);
+	else val = strikeHII (component, fault, mag, x, y, z);
 	return val;
 }
 
 /*** public functions ***/
 double
-strike_slip (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strike_slip (MagComponent component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	double res = 0.;
-	res += strike_slip_main (flag, fault, mag, x, y, z);
-	res += strike_slip_mirror_image (flag, fault, mag, x, y, z);
-	res += strike_slip_submirror_image (flag, fault, mag, x, y, z);
+	if (term & SEISMO_MAG_MAIN) res += strike_slip_main (component, fault, mag, x, y, z);
+	if (term & SEISMO_MAG_MIRROR) res += strike_slip_mirror_image (component, fault, mag, x, y, z);
+	if (term & SEISMO_MAG_SUBMIRROR) res += strike_slip_submirror_image (component, fault, mag, x, y, z);
 	return res;
 }

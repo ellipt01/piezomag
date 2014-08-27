@@ -146,13 +146,4 @@ void	set_singular_flag (int i);
 bool	is_singular_point (bool *flag);
 void	check_singular_point (const fault_params *fault, double x, double y, double eps);
 
-/** strike.c **/
-double strike_slip (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
-
-/** dip.c **/
-double dip_slip (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
-
-/** tensile.c **/
-double tensile_opening (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
-
 #endif /* _PRIVATE_H_ */

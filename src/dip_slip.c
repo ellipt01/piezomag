@@ -6,25 +6,25 @@
 
 /*** main term ***/
 static double
-dipx0 (int flag, double xi, double et, double qq)
+dipx0 (MagComponent component, double xi, double et, double qq)
 {
-	return -2.0 * K4 (flag, 1.0, xi, et, qq);
+	return -2.0 * K4 (component, 1.0, xi, et, qq);
 }
 
 static double
-dipy0 (int flag, double xi, double et, double qq)
+dipy0 (MagComponent component, double xi, double et, double qq)
 {
-	return 2.0 * K5 (flag, 1.0, xi, et, qq);
+	return 2.0 * K5 (component, 1.0, xi, et, qq);
 }
 
 static double
-dipz0 (int flag, double xi, double et, double qq)
+dipz0 (MagComponent component, double xi, double et, double qq)
 {
-	return 2.0 * K6 (flag, 1.0, xi, et, qq);
+	return 2.0 * K6 (component, 1.0, xi, et, qq);
 }
 
 static double
-dip0 (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+dip0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -45,9 +45,9 @@ dip0 (int flag, const fault_params *fault, const magnetic_params *mag, double x,
 		if (i % 2 == 0) et = p - fault->fwidth2;
 
 		set_geometry_variables (sign, xi, et, q);
-		hx = dipx0 (flag, xi, et, q);
-		hy = dipy0 (flag, xi, et, q);
-		hz = dipz0 (flag, xi, et, q);
+		hx = dipx0 (component, xi, et, q);
+		hy = dipy0 (component, xi, et, q);
+		hz = dipz0 (component, xi, et, q);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -56,19 +56,19 @@ dip0 (int flag, const fault_params *fault, const magnetic_params *mag, double x,
 
 /*** contributions from the mirror image H0 ***/
 static double
-dipxH0 (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+dipxH0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K4_val = K4 (flag, 1.0, xi, et, qq);
-	double log_re_val = log_re (flag, 1.0, xi, et, qq);
-	double J2_val = J2 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
-	double O1_val = O1 (flag, 1.0, xi, et, qq);
-	double N2_val = N2 (flag, 1.0, xi, et, qq);
-	double M2_val = M2 (flag, 1.0, xi, et, qq);
-	double O2z_val = O1z (flag, 1.0, xi, et, qq);
-	double N2z_val = N2z (flag, 1.0, xi, et, qq);
+	double K4_val = K4 (component, 1.0, xi, et, qq);
+	double log_re_val = log_re (component, 1.0, xi, et, qq);
+	double J2_val = J2 (component, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
+	double O1_val = O1 (component, 1.0, xi, et, qq);
+	double N2_val = N2 (component, 1.0, xi, et, qq);
+	double M2_val = M2 (component, 1.0, xi, et, qq);
+	double O2z_val = O1z (component, 1.0, xi, et, qq);
+	double N2z_val = N2z (component, 1.0, xi, et, qq);
 
 	val =	(2.0 - alpha4) * K4_val
 		+ alpha3 * (log_re_val * s2d - J2_val * c2d)
@@ -81,22 +81,22 @@ dipxH0 (int flag, const fault_params *fault, const magnetic_params *mag, double 
 }
 
 static double
-dipyH0 (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+dipyH0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K5_val = K5 (flag, 1.0, xi, et, qq);
-	double log_rx_val = log_rx (flag, 1.0, xi, et, qq);
-	double atan_xe_qr_val = atan_xe_qr (flag, 1.0, xi, et, qq);
-	double J1_val = J1 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
-	double O2_val = O2 (flag, 1.0, xi, et, qq);
-	double O3_val = O3 (flag, 1.0, xi, et, qq);
-	double N1_val = N1 (flag, 1.0, xi, et, qq);
-	double L1_val = L1 (flag, 1.0, xi, et, qq);
-	double O2z_val = O2z (flag, 1.0, xi, et, qq);
-	double O3z_val = O3z (flag, 1.0, xi, et, qq);
-	double N1z_val = N1z (flag, 1.0, xi, et, qq);
+	double K5_val = K5 (component, 1.0, xi, et, qq);
+	double log_rx_val = log_rx (component, 1.0, xi, et, qq);
+	double atan_xe_qr_val = atan_xe_qr (component, 1.0, xi, et, qq);
+	double J1_val = J1 (component, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
+	double O2_val = O2 (component, 1.0, xi, et, qq);
+	double O3_val = O3 (component, 1.0, xi, et, qq);
+	double N1_val = N1 (component, 1.0, xi, et, qq);
+	double L1_val = L1 (component, 1.0, xi, et, qq);
+	double O2z_val = O2z (component, 1.0, xi, et, qq);
+	double O3z_val = O3z (component, 1.0, xi, et, qq);
+	double N1z_val = N1z (component, 1.0, xi, et, qq);
 
 	val = - (2.0 - alpha4) * K5_val
 		- fault->alpha * log_rx_val * sd + alpha4 * atan_xe_qr_val * cd
@@ -112,19 +112,19 @@ dipyH0 (int flag, const fault_params *fault, const magnetic_params *mag, double 
 }
 
 static double
-dipzH0 (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+dipzH0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K6_val = K6 (flag, 1.0, xi, et, qq);
-	double log_rx_val = log_rx (flag, 1.0, xi, et, qq);
-	double atan_xe_qr_val = atan_xe_qr (flag, 1.0, xi, et, qq);
-	double O2_val = O2 (flag, 1.0, xi, et, qq);
-	double O3_val = O3 (flag, 1.0, xi, et, qq);
-	double M1_val = M1 (flag, 1.0, xi, et, qq);
-	double O2z_val = O2z (flag, 1.0, xi, et, qq);
-	double O3z_val = O3z (flag, 1.0, xi, et, qq);
+	double K6_val = K6 (component, 1.0, xi, et, qq);
+	double log_rx_val = log_rx (component, 1.0, xi, et, qq);
+	double atan_xe_qr_val = atan_xe_qr (component, 1.0, xi, et, qq);
+	double O2_val = O2 (component, 1.0, xi, et, qq);
+	double O3_val = O3 (component, 1.0, xi, et, qq);
+	double M1_val = M1 (component, 1.0, xi, et, qq);
+	double O2z_val = O2z (component, 1.0, xi, et, qq);
+	double O3z_val = O3z (component, 1.0, xi, et, qq);
 
 	val = - (2.0 + alpha5) * K6_val
 		+ fault->alpha * log_rx_val * cd + alpha4 * atan_xe_qr_val * sd
@@ -138,7 +138,7 @@ dipzH0 (int flag, const fault_params *fault, const magnetic_params *mag, double 
 }
 
 static double
-dipH0 (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+dipH0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -159,9 +159,9 @@ dipH0 (int flag, const fault_params *fault, const magnetic_params *mag, double x
 		if (i % 2 == 0) et = p - fault->fwidth2;
 
 		set_geometry_variables (sign, xi, et, q);
-		hx = dipxH0 (flag, fault, mag, xi, et, q, y, z);
-		hy = dipyH0 (flag, fault, mag, xi, et, q, y, z);
-		hz = dipzH0 (flag, fault, mag, xi, et, q, y, z);
+		hx = dipxH0 (component, fault, mag, xi, et, q, y, z);
+		hy = dipyH0 (component, fault, mag, xi, et, q, y, z);
+		hz = dipzH0 (component, fault, mag, xi, et, q, y, z);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -170,16 +170,16 @@ dipH0 (int flag, const fault_params *fault, const magnetic_params *mag, double x
 
 /*** contributions from the mirror image HI ***/
 static double
-dipxHI (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+dipxHI (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K4_val = K4 (flag, -1.0, xi, et, qq);
-	double log_re_val = log_re (flag, -1.0, xi, et, qq);
-	double J2_val = J2 (flag, -1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
-	double O1_val = O1 (flag, -1.0, xi, et, qq);
-	double N2_val = N2 (flag, -1.0, xi, et, qq);
+	double K4_val = K4 (component, -1.0, xi, et, qq);
+	double log_re_val = log_re (component, -1.0, xi, et, qq);
+	double J2_val = J2 (component, -1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
+	double O1_val = O1 (component, -1.0, xi, et, qq);
+	double N2_val = N2 (component, -1.0, xi, et, qq);
 
 	val = - alpha4 * K4_val + alpha3 * (log_re_val * s2d + J2_val * c2d)
 		- alpha2 * (qd * O1_val + (z - h) * N2_val * sd);
@@ -188,18 +188,18 @@ dipxHI (int flag, const fault_params *fault, const magnetic_params *mag, double 
 }
 
 static double
-dipyHI (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+dipyHI (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K5_val = K5 (flag, -1.0, xi, et, qq);
-	double log_rx_val = log_rx (flag, -1.0, xi, et, qq);
-	double atan_xe_qr_val = atan_xe_qr (flag, -1.0, xi, et, qq);
-	double J1_val = J1 (flag, -1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
-	double O2_val = O2 (flag, -1.0, xi, et, qq);
-	double O3_val = O3 (flag, -1.0, xi, et, qq);
-	double N1_val = N1 (flag, -1.0, xi, et, qq);
+	double K5_val = K5 (component, -1.0, xi, et, qq);
+	double log_rx_val = log_rx (component, -1.0, xi, et, qq);
+	double atan_xe_qr_val = atan_xe_qr (component, -1.0, xi, et, qq);
+	double J1_val = J1 (component, -1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
+	double O2_val = O2 (component, -1.0, xi, et, qq);
+	double O3_val = O3 (component, -1.0, xi, et, qq);
+	double N1_val = N1 (component, -1.0, xi, et, qq);
 
 	val = alpha4 * K5_val + fault->alpha * log_rx_val * sd
 		+ alpha4 * atan_xe_qr_val * cd
@@ -210,16 +210,16 @@ dipyHI (int flag, const fault_params *fault, const magnetic_params *mag, double 
 }
 
 static double
-dipzHI (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+dipzHI (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K6_val = K6 (flag, -1.0, xi, et, qq);
-	double log_rx_val = log_rx (flag, -1.0, xi, et, qq);
-	double atan_xe_qr_val = atan_xe_qr (flag, -1.0, xi, et, qq);
-	double O2_val = O2 (flag, -1.0, xi, et, qq);
-	double O3_val = O3 (flag, -1.0, xi, et, qq);
+	double K6_val = K6 (component, -1.0, xi, et, qq);
+	double log_rx_val = log_rx (component, -1.0, xi, et, qq);
+	double atan_xe_qr_val = atan_xe_qr (component, -1.0, xi, et, qq);
+	double O2_val = O2 (component, -1.0, xi, et, qq);
+	double O3_val = O3 (component, -1.0, xi, et, qq);
 
 	val = - alpha5 * K6_val
 		- fault->alpha * log_rx_val * cd + alpha4 * atan_xe_qr_val * sd
@@ -229,7 +229,7 @@ dipzHI (int flag, const fault_params *fault, const magnetic_params *mag, double 
 }
 
 static double
-dipHI (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+dipHI (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -250,9 +250,9 @@ dipHI (int flag, const fault_params *fault, const magnetic_params *mag, double x
 		if (i % 2 == 0) et = p - fault->fwidth2;
 
 		set_geometry_variables (sign, xi, et, q);
-		hx = dipxHI (flag, fault, mag, xi, et, q, y, z);
-		hy = dipyHI (flag, fault, mag, xi, et, q, y, z);
-		hz = dipzHI (flag, fault, mag, xi, et, q, y, z);
+		hx = dipxHI (component, fault, mag, xi, et, q, y, z);
+		hy = dipyHI (component, fault, mag, xi, et, q, y, z);
+		hz = dipzHI (component, fault, mag, xi, et, q, y, z);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -261,16 +261,16 @@ dipHI (int flag, const fault_params *fault, const magnetic_params *mag, double x
 
 /*** contributions from the mirror image HIII ***/
 static double
-dipxHIII (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+dipxHIII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K4_val = K4 (flag, 1.0, xi, et, qq);
-	double log_re_val = log_re (flag, 1.0, xi, et, qq);
-	double J2_val = J2 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
-	double O1_val = O1 (flag, 1.0, xi, et, qq);
-	double N2_val = N2 (flag, 1.0, xi, et, qq);
+	double K4_val = K4 (component, 1.0, xi, et, qq);
+	double log_re_val = log_re (component, 1.0, xi, et, qq);
+	double J2_val = J2 (component, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
+	double O1_val = O1 (component, 1.0, xi, et, qq);
+	double N2_val = N2 (component, 1.0, xi, et, qq);
 
 	val = alpha4 * K4_val - alpha3 * (log_re_val * s2d - J2_val * c2d)
 		- alpha3 * (qd * O1_val + (z - h) * N2_val * sd);
@@ -279,18 +279,18 @@ dipxHIII (int flag, const fault_params *fault, const magnetic_params *mag, doubl
 }
 
 static double
-dipyHIII (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+dipyHIII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K5_val = K5 (flag, 1.0, xi, et, qq);
-	double log_rx_val = log_rx (flag, 1.0, xi, et, qq);
-	double atan_xe_qr_val = atan_xe_qr (flag, 1.0, xi, et, qq);
-	double J1_val = J1 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
-	double O2_val = O2 (flag, 1.0, xi, et, qq);
-	double O3_val = O3 (flag, 1.0, xi, et, qq);
-	double N1_val = N1 (flag, 1.0, xi, et, qq);
+	double K5_val = K5 (component, 1.0, xi, et, qq);
+	double log_rx_val = log_rx (component, 1.0, xi, et, qq);
+	double atan_xe_qr_val = atan_xe_qr (component, 1.0, xi, et, qq);
+	double J1_val = J1 (component, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
+	double O2_val = O2 (component, 1.0, xi, et, qq);
+	double O3_val = O3 (component, 1.0, xi, et, qq);
+	double N1_val = N1 (component, 1.0, xi, et, qq);
 
 	val = - alpha4 * K5_val + fault->alpha * log_rx_val * sd
 		- alpha4 * atan_xe_qr_val * cd
@@ -301,16 +301,16 @@ dipyHIII (int flag, const fault_params *fault, const magnetic_params *mag, doubl
 }
 
 static double
-dipzHIII (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+dipzHIII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K6_val = K6 (flag, 1.0, xi, et, qq);
-	double log_rx_val = log_rx (flag, 1.0, xi, et, qq);
-	double atan_xe_qr_val = atan_xe_qr (flag, 1.0, xi, et, qq);
-	double O2_val = O2 (flag, 1.0, xi, et, qq);
-	double O3_val = O3 (flag, 1.0, xi, et, qq);
+	double K6_val = K6 (component, 1.0, xi, et, qq);
+	double log_rx_val = log_rx (component, 1.0, xi, et, qq);
+	double atan_xe_qr_val = atan_xe_qr (component, 1.0, xi, et, qq);
+	double O2_val = O2 (component, 1.0, xi, et, qq);
+	double O3_val = O3 (component, 1.0, xi, et, qq);
 
 	val = alpha5 * K6_val
 		- fault->alpha * log_rx_val * cd - alpha4 * atan_xe_qr_val * sd
@@ -320,7 +320,7 @@ dipzHIII (int flag, const fault_params *fault, const magnetic_params *mag, doubl
 }
 
 static double
-dipHIII (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+dipHIII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -341,9 +341,9 @@ dipHIII (int flag, const fault_params *fault, const magnetic_params *mag, double
 		if (i % 2 == 0) et = p - fault->fwidth2;
 
 		set_geometry_variables (sign, xi, et, q);
-		hx = dipxHIII (flag, fault, mag, xi, et, q, y, z);
-		hy = dipyHIII (flag, fault, mag, xi, et, q, y, z);
-		hz = dipzHIII (flag, fault, mag, xi, et, q, y, z);
+		hx = dipxHIII (component, fault, mag, xi, et, q, y, z);
+		hy = dipyHIII (component, fault, mag, xi, et, q, y, z);
+		hz = dipzHIII (component, fault, mag, xi, et, q, y, z);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -352,7 +352,7 @@ dipHIII (int flag, const fault_params *fault, const magnetic_params *mag, double
 
 
 static double
-dipHII (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+dipHII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -375,9 +375,9 @@ dipHII (int flag, const fault_params *fault, const magnetic_params *mag, double 
 
 		sign = - 1.0;
 		set_geometry_variables (sign, xi, et, q);
-		hx = dipxHI (flag, fault, mag, xi, et, q, y, z);
-		hy = dipyHI (flag, fault, mag, xi, et, q, y, z);
-		hz = dipzHI (flag, fault, mag, xi, et, q, y, z);
+		hx = dipxHI (component, fault, mag, xi, et, q, y, z);
+		hy = dipyHI (component, fault, mag, xi, et, q, y, z);
+		hz = dipzHI (component, fault, mag, xi, et, q, y, z);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -396,9 +396,9 @@ dipHII (int flag, const fault_params *fault, const magnetic_params *mag, double 
 
 		sign = 1.0;
 		set_geometry_variables (sign, xi, et, q);
-		hx = dipxHIII (flag, fault, mag, xi, et, q, y, z);
-		hy = dipyHIII (flag, fault, mag, xi, et, q, y, z);
-		hz = dipzHIII (flag, fault, mag, xi, et, q, y, z);
+		hx = dipxHIII (component, fault, mag, xi, et, q, y, z);
+		hy = dipyHIII (component, fault, mag, xi, et, q, y, z);
+		hz = dipzHIII (component, fault, mag, xi, et, q, y, z);
 
 		res[i] += mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -406,34 +406,34 @@ dipHII (int flag, const fault_params *fault, const magnetic_params *mag, double 
 }
 
 static double
-dip_slip_main (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+dip_slip_main (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
-	return dip0 (flag, fault, mag, x, y, z);
+	return dip0 (component, fault, mag, x, y, z);
 }
 
 static double
-dip_slip_mirror_image (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+dip_slip_mirror_image (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
-	return dipH0 (flag, fault, mag, x, y, z);
+	return dipH0 (component, fault, mag, x, y, z);
 }
 
 static double
-dip_slip_submirror_image (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+dip_slip_submirror_image (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	double	val;
-	if (fault->fdepth + fault->fwidth2 * sd < mag->dcurier) val = dipHI (flag, fault, mag, x, y, z);
-	else if (fault->fdepth - fault->fwidth1 * sd > mag->dcurier) val = dipHIII (flag, fault, mag, x, y, z);
-	else val = dipHII (flag, fault, mag, x, y, z);
+	if (fault->fdepth + fault->fwidth2 * sd < mag->dcurier) val = dipHI (component, fault, mag, x, y, z);
+	else if (fault->fdepth - fault->fwidth1 * sd > mag->dcurier) val = dipHIII (component, fault, mag, x, y, z);
+	else val = dipHII (component, fault, mag, x, y, z);
 	return val;
 }
 
 /*** public functions ***/
 double
-dip_slip (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+dip_slip (MagComponent component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	double res = 0.0;
-	res += dip_slip_main (flag, fault, mag, x, y, z);
-	res += dip_slip_mirror_image (flag, fault, mag, x, y, z);
-	res += dip_slip_submirror_image (flag, fault, mag, x, y, z);
+	if (term & SEISMO_MAG_MAIN) res += dip_slip_main (component, fault, mag, x, y, z);
+	if (term & SEISMO_MAG_MIRROR) res += dip_slip_mirror_image (component, fault, mag, x, y, z);
+	if (term & SEISMO_MAG_SUBMIRROR) res += dip_slip_submirror_image (component, fault, mag, x, y, z);
 	return res;
 }

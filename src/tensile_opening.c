@@ -6,25 +6,25 @@
 
 /*** main term ***/
 double
-tensilex0 (int flag, double xi, double et, double qq)
+tensilex0 (MagComponent component, double xi, double et, double qq)
 {
-	return -2.0 * K7 (flag, 1.0, xi, et, qq);
+	return -2.0 * K7 (component, 1.0, xi, et, qq);
 }
 
 double
-tensiley0 (int flag, double xi, double et, double qq)
+tensiley0 (MagComponent component, double xi, double et, double qq)
 {
-	return 2.0 * K8 (flag, 1.0, xi, et, qq);
+	return 2.0 * K8 (component, 1.0, xi, et, qq);
 }
 
 double
-tensilez0 (int flag, double xi, double et, double qq)
+tensilez0 (MagComponent component, double xi, double et, double qq)
 {
-	return 2.0 * K9 (flag, 1.0, xi, et, qq);
+	return 2.0 * K9 (component, 1.0, xi, et, qq);
 }
 
 static double
-tensile0 (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensile0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -45,9 +45,9 @@ tensile0 (int flag, const fault_params *fault, const magnetic_params *mag, doubl
 		if (i % 2 == 0) et = p - fault->fwidth2;
 
 		set_geometry_variables (sign, xi, et, q);
-		hx = tensilex0 (flag, xi, et, q);
-		hy = tensiley0 (flag, xi, et, q);
-		hz = tensilez0 (flag, xi, et, q);
+		hx = tensilex0 (component, xi, et, q);
+		hy = tensiley0 (component, xi, et, q);
+		hz = tensilez0 (component, xi, et, q);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -56,21 +56,21 @@ tensile0 (int flag, const fault_params *fault, const magnetic_params *mag, doubl
 
 /*** contributions from the mirror image H0 ***/
 static double
-tensilexH0 (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+tensilexH0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K7_val = K7 (flag, 1.0, xi, et, qq);
-	double log_re_val = log_re (flag, 1.0, xi, et, qq);
-	double log_rc_val = log_rc (flag, 1.0, xi, et, qq);
-	double P1_val = P1 (flag, 1.0, xi, et, qq);
+	double K7_val = K7 (component, 1.0, xi, et, qq);
+	double log_re_val = log_re (component, 1.0, xi, et, qq);
+	double log_rc_val = log_rc (component, 1.0, xi, et, qq);
+	double P1_val = P1 (component, 1.0, xi, et, qq);
 	// todo: M2*td and N2*td are not evaluated correctly when detla = 90
-	double M2_val = M2 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
-	double N2_val = N2 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
-	double M3_val = M3 (flag, 1.0, xi, et, qq);
-	double P1z_val = P1z (flag, 1.0, xi, et, qq);
-	double P1y_val = P1y (flag, 1.0, xi, et, qq);
+	double M2_val = M2 (component, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
+	double N2_val = N2 (component, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
+	double M3_val = M3 (component, 1.0, xi, et, qq);
+	double P1z_val = P1z (component, 1.0, xi, et, qq);
+	double P1y_val = P1y (component, 1.0, xi, et, qq);
 
 	val =	(2.0 - alpha4) * K7_val
 		+ 2.0 * alpha3 * log_rc_val * sd - fault->alpha * log_re_val
@@ -85,22 +85,22 @@ tensilexH0 (int flag, const fault_params *fault, const magnetic_params *mag, dou
 }
 
 static double
-tensileyH0 (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+tensileyH0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K8_val = K8 (flag, 1.0, xi, et, qq);
-	double log_rx_val = log_rx (flag, 1.0, xi, et, qq);
-	double atan_xe_qr_val = atan_xe_qr (flag, 1.0, xi, et, qq);
-	double J1_val = J1 (flag, 1.0, xi, et, qq);
-	double O2_val = O2 (flag, 1.0, xi, et, qq);
-	double O3_val = O3 (flag, 1.0, xi, et, qq);
-	double M1_val = M1 (flag, 1.0, xi, et, qq);
-	double L1_val = L1 (flag, 1.0, xi, et, qq);
-	double O2y_val = O2y (flag, 1.0, xi, et, qq);
-	double O2z_val = O2z (flag, 1.0, xi, et, qq);
-	double M1y_val = M1y (flag, 1.0, xi, et, qq);
+	double K8_val = K8 (component, 1.0, xi, et, qq);
+	double log_rx_val = log_rx (component, 1.0, xi, et, qq);
+	double atan_xe_qr_val = atan_xe_qr (component, 1.0, xi, et, qq);
+	double J1_val = J1 (component, 1.0, xi, et, qq);
+	double O2_val = O2 (component, 1.0, xi, et, qq);
+	double O3_val = O3 (component, 1.0, xi, et, qq);
+	double M1_val = M1 (component, 1.0, xi, et, qq);
+	double L1_val = L1 (component, 1.0, xi, et, qq);
+	double O2y_val = O2y (component, 1.0, xi, et, qq);
+	double O2z_val = O2z (component, 1.0, xi, et, qq);
+	double M1y_val = M1y (component, 1.0, xi, et, qq);
 
 	val = - (2.0 - alpha4) * K8_val
 		- alpha4 * atan_xe_qr_val * sd - fault->alpha * log_rx_val * cd
@@ -116,19 +116,19 @@ tensileyH0 (int flag, const fault_params *fault, const magnetic_params *mag, dou
 }
 
 static double
-tensilezH0 (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+tensilezH0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K9_val = K9 (flag, 1.0, xi, et, qq);
-	double log_rx_val = log_rx (flag, 1.0, xi, et, qq);
-	double atan_xe_qr_val = atan_xe_qr (flag, 1.0, xi, et, qq);
-	double P2_val = P2 (flag, 1.0, xi, et, qq);
-	double P3_val = P3 (flag, 1.0, xi, et, qq);
-	double M1_val = M1 (flag, 1.0, xi, et, qq);
-	double P3y_val = P3y (flag, 1.0, xi, et, qq);
-	double P3z_val = P3z (flag, 1.0, xi, et, qq);
+	double K9_val = K9 (component, 1.0, xi, et, qq);
+	double log_rx_val = log_rx (component, 1.0, xi, et, qq);
+	double atan_xe_qr_val = atan_xe_qr (component, 1.0, xi, et, qq);
+	double P2_val = P2 (component, 1.0, xi, et, qq);
+	double P3_val = P3 (component, 1.0, xi, et, qq);
+	double M1_val = M1 (component, 1.0, xi, et, qq);
+	double P3y_val = P3y (component, 1.0, xi, et, qq);
+	double P3z_val = P3z (component, 1.0, xi, et, qq);
 
 	val = - (2.0 + alpha5) * K9_val
 		- fault->alpha * log_rx_val * sd + alpha4 * atan_xe_qr_val * cd
@@ -144,7 +144,7 @@ tensilezH0 (int flag, const fault_params *fault, const magnetic_params *mag, dou
 }
 
 static double
-tensileH0 (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensileH0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -165,9 +165,9 @@ tensileH0 (int flag, const fault_params *fault, const magnetic_params *mag, doub
 		if (i % 2 == 0) et = p - fault->fwidth2;
 
 		set_geometry_variables (sign, xi, et, q);
-		hx = tensilexH0 (flag, fault, mag, xi, et, q, y, z);
-		hy = tensileyH0 (flag, fault, mag, xi, et, q, y, z);
-		hz = tensilezH0 (flag, fault, mag, xi, et, q, y, z);
+		hx = tensilexH0 (component, fault, mag, xi, et, q, y, z);
+		hy = tensileyH0 (component, fault, mag, xi, et, q, y, z);
+		hz = tensilezH0 (component, fault, mag, xi, et, q, y, z);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -176,18 +176,18 @@ tensileH0 (int flag, const fault_params *fault, const magnetic_params *mag, doub
 
 /*** contributions from the mirror image HI ***/
 static double
-tensilexHI (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+tensilexHI (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K7_val = K7 (flag, -1.0, xi, et, qq);
-	double log_re_val = log_re (flag, -1.0, xi, et, qq);
-	double log_rc_val = log_rc (flag, -1.0, xi, et, qq);
-	double P1_val = P1 (flag, -1.0, xi, et, qq);
+	double K7_val = K7 (component, -1.0, xi, et, qq);
+	double log_re_val = log_re (component, -1.0, xi, et, qq);
+	double log_rc_val = log_rc (component, -1.0, xi, et, qq);
+	double P1_val = P1 (component, -1.0, xi, et, qq);
 	// todo: M2*td and N2*td are not evaluated correctly when detla = 90
-	double M2_val = M2 (flag, -1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
-	double N2_val = N2 (flag, -1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
+	double M2_val = M2 (component, -1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
+	double N2_val = N2 (component, -1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
 
 	val =	- alpha4 * K7_val
 		- 2.0 * alpha3 * log_rc_val * sd + fault->alpha * log_re_val
@@ -198,19 +198,19 @@ tensilexHI (int flag, const fault_params *fault, const magnetic_params *mag, dou
 }
 
 static double
-tensileyHI (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+tensileyHI (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K8_val = K8 (flag, -1.0, xi, et, qq);
-	double log_rx_val = log_rx (flag, -1.0, xi, et, qq);
-	double atan_xe_qr_val = atan_xe_qr (flag, -1.0, xi, et, qq);
-	double J1_val = J1 (flag, -1.0, xi, et, qq);
-	double O2_val = O2 (flag, -1.0, xi, et, qq);
-	double O3_val = O3 (flag, -1.0, xi, et, qq);
-	double M1_val = M1 (flag, -1.0, xi, et, qq);
-	double L1_val = L1 (flag, -1.0, xi, et, qq);
+	double K8_val = K8 (component, -1.0, xi, et, qq);
+	double log_rx_val = log_rx (component, -1.0, xi, et, qq);
+	double atan_xe_qr_val = atan_xe_qr (component, -1.0, xi, et, qq);
+	double J1_val = J1 (component, -1.0, xi, et, qq);
+	double O2_val = O2 (component, -1.0, xi, et, qq);
+	double O3_val = O3 (component, -1.0, xi, et, qq);
+	double M1_val = M1 (component, -1.0, xi, et, qq);
+	double L1_val = L1 (component, -1.0, xi, et, qq);
 
 	val = alpha4 * K8_val
 		- alpha4 * atan_xe_qr_val * sd + fault->alpha * log_rx_val * cd
@@ -221,16 +221,16 @@ tensileyHI (int flag, const fault_params *fault, const magnetic_params *mag, dou
 }
 
 static double
-tensilezHI (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+tensilezHI (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K9_val = K9 (flag, -1.0, xi, et, qq);
-	double log_rx_val = log_rx (flag, -1.0, xi, et, qq);
-	double atan_xe_qr_val = atan_xe_qr (flag, -1.0, xi, et, qq);
-	double P2_val = P2 (flag, -1.0, xi, et, qq);
-	double P3_val = P3 (flag, -1.0, xi, et, qq);
+	double K9_val = K9 (component, -1.0, xi, et, qq);
+	double log_rx_val = log_rx (component, -1.0, xi, et, qq);
+	double atan_xe_qr_val = atan_xe_qr (component, -1.0, xi, et, qq);
+	double P2_val = P2 (component, -1.0, xi, et, qq);
+	double P3_val = P3 (component, -1.0, xi, et, qq);
 
 	// todo: check sign of K9_val
 	val = (fault_is_vertical ? 1. : -1.) * alpha5 * K9_val
@@ -241,7 +241,7 @@ tensilezHI (int flag, const fault_params *fault, const magnetic_params *mag, dou
 }
 
 static double
-tensileHI (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensileHI (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -262,9 +262,9 @@ tensileHI (int flag, const fault_params *fault, const magnetic_params *mag, doub
 		if (i % 2 == 0) et = p - fault->fwidth2;
 
 		set_geometry_variables (sign, xi, et, q);
-		hx = tensilexHI (flag, fault, mag, xi, et, q, y, z);
-		hy = tensileyHI (flag, fault, mag, xi, et, q, y, z);
-		hz = tensilezHI (flag, fault, mag, xi, et, q, y, z);
+		hx = tensilexHI (component, fault, mag, xi, et, q, y, z);
+		hy = tensileyHI (component, fault, mag, xi, et, q, y, z);
+		hz = tensilezHI (component, fault, mag, xi, et, q, y, z);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -273,18 +273,18 @@ tensileHI (int flag, const fault_params *fault, const magnetic_params *mag, doub
 
 /*** contributions from the mirror image HIII ***/
 static double
-tensilexHIII (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+tensilexHIII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K7_val = K7 (flag, 1.0, xi, et, qq);
-	double log_re_val = log_re (flag, 1.0, xi, et, qq);
-	double log_rc_val = log_rc (flag, 1.0, xi, et, qq);
-	double P1_val = P1 (flag, 1.0, xi, et, qq);
+	double K7_val = K7 (component, 1.0, xi, et, qq);
+	double log_re_val = log_re (component, 1.0, xi, et, qq);
+	double log_rc_val = log_rc (component, 1.0, xi, et, qq);
+	double P1_val = P1 (component, 1.0, xi, et, qq);
 	// todo: M2*td and N2*td are not evaluated correctly when detla = 90
-	double M2_val = M2 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
-	double N2_val = N2 (flag, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
+	double M2_val = M2 (component, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
+	double N2_val = N2 (component, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : td);
 
 	val =	alpha4 * K7_val
 		- 2.0 * alpha3 * log_rc_val * sd + fault->alpha * log_re_val
@@ -295,19 +295,19 @@ tensilexHIII (int flag, const fault_params *fault, const magnetic_params *mag, d
 }
 
 static double
-tensileyHIII (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+tensileyHIII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K8_val = K8 (flag, 1.0, xi, et, qq);
-	double log_rx_val = log_rx (flag, 1.0, xi, et, qq);
-	double atan_xe_qr_val = atan_xe_qr (flag, 1.0, xi, et, qq);
-	double J1_val = J1 (flag, 1.0, xi, et, qq);
-	double O2_val = O2 (flag, 1.0, xi, et, qq);
-	double O3_val = O3 (flag, 1.0, xi, et, qq);
-	double M1_val = M1 (flag, 1.0, xi, et, qq);
-	double L1_val = L1 (flag, 1.0, xi, et, qq);
+	double K8_val = K8 (component, 1.0, xi, et, qq);
+	double log_rx_val = log_rx (component, 1.0, xi, et, qq);
+	double atan_xe_qr_val = atan_xe_qr (component, 1.0, xi, et, qq);
+	double J1_val = J1 (component, 1.0, xi, et, qq);
+	double O2_val = O2 (component, 1.0, xi, et, qq);
+	double O3_val = O3 (component, 1.0, xi, et, qq);
+	double M1_val = M1 (component, 1.0, xi, et, qq);
+	double L1_val = L1 (component, 1.0, xi, et, qq);
 
 	val = - alpha4 * K8_val
 		+ alpha4 * atan_xe_qr_val * sd + fault->alpha * log_rx_val * cd
@@ -318,16 +318,16 @@ tensileyHIII (int flag, const fault_params *fault, const magnetic_params *mag, d
 }
 
 static double
-tensilezHIII (int flag, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+tensilezHIII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
 	double qd = y * sd + (fault->fdepth - h) * cd;
-	double K9_val = K9 (flag, 1.0, xi, et, qq);
-	double log_rx_val = log_rx (flag, 1.0, xi, et, qq);
-	double atan_xe_qr_val = atan_xe_qr (flag, 1.0, xi, et, qq);
-	double P2_val = P2 (flag, 1.0, xi, et, qq);
-	double P3_val = P3 (flag, 1.0, xi, et, qq);
+	double K9_val = K9 (component, 1.0, xi, et, qq);
+	double log_rx_val = log_rx (component, 1.0, xi, et, qq);
+	double atan_xe_qr_val = atan_xe_qr (component, 1.0, xi, et, qq);
+	double P2_val = P2 (component, 1.0, xi, et, qq);
+	double P3_val = P3 (component, 1.0, xi, et, qq);
 
 	val = alpha5 * K9_val
 		+ fault->alpha * log_rx_val * sd - alpha4 * atan_xe_qr_val * cd
@@ -337,7 +337,7 @@ tensilezHIII (int flag, const fault_params *fault, const magnetic_params *mag, d
 }
 
 static double
-tensileHIII (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensileHIII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -358,9 +358,9 @@ tensileHIII (int flag, const fault_params *fault, const magnetic_params *mag, do
 		if (i % 2 == 0) et = p - fault->fwidth2;
 
 		set_geometry_variables (sign, xi, et, q);
-		hx = tensilexHIII (flag, fault, mag, xi, et, q, y, z);
-		hy = tensileyHIII (flag, fault, mag, xi, et, q, y, z);
-		hz = tensilezHIII (flag, fault, mag, xi, et, q, y, z);
+		hx = tensilexHIII (component, fault, mag, xi, et, q, y, z);
+		hy = tensileyHIII (component, fault, mag, xi, et, q, y, z);
+		hz = tensilezHIII (component, fault, mag, xi, et, q, y, z);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	} 
@@ -369,7 +369,7 @@ tensileHIII (int flag, const fault_params *fault, const magnetic_params *mag, do
 
 
 static double
-tensileHII (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensileHII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -392,9 +392,9 @@ tensileHII (int flag, const fault_params *fault, const magnetic_params *mag, dou
 
 		sign = - 1.0;
 		set_geometry_variables (sign, xi, et, q);
-		hx = tensilexHI (flag, fault, mag, xi, et, q, y, z);
-		hy = tensileyHI (flag, fault, mag, xi, et, q, y, z);
-		hz = tensilezHI (flag, fault, mag, xi, et, q, y, z);
+		hx = tensilexHI (component, fault, mag, xi, et, q, y, z);
+		hy = tensileyHI (component, fault, mag, xi, et, q, y, z);
+		hz = tensilezHI (component, fault, mag, xi, et, q, y, z);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -413,9 +413,9 @@ tensileHII (int flag, const fault_params *fault, const magnetic_params *mag, dou
 
 		sign = 1.0;
 		set_geometry_variables (sign, xi, et, q);
-		hx = tensilexHIII (flag, fault, mag, xi, et, q, y, z);
-		hy = tensileyHIII (flag, fault, mag, xi, et, q, y, z);
-		hz = tensilezHIII (flag, fault, mag, xi, et, q, y, z);
+		hx = tensilexHIII (component, fault, mag, xi, et, q, y, z);
+		hy = tensileyHIII (component, fault, mag, xi, et, q, y, z);
+		hz = tensilezHIII (component, fault, mag, xi, et, q, y, z);
 
 		res[i] += mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -423,34 +423,34 @@ tensileHII (int flag, const fault_params *fault, const magnetic_params *mag, dou
 }
 
 static double
-tensile_opening_main (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensile_opening_main (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
-	return tensile0 (flag, fault, mag, x, y, z);
+	return tensile0 (component, fault, mag, x, y, z);
 }
 
 static double
-tensile_opening_mirror_image (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensile_opening_mirror_image (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
-	return tensileH0 (flag, fault, mag, x, y, z);
+	return tensileH0 (component, fault, mag, x, y, z);
 }
 
 static double
-tensile_opening_submirror_image (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensile_opening_submirror_image (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	double	val;
-	if (fault->fdepth + fault->fwidth2 * sd < mag->dcurier) val = tensileHI (flag, fault, mag, x, y, z);
-	else if (fault->fdepth - fault->fwidth1 * sd > mag->dcurier) val = tensileHIII (flag, fault, mag, x, y, z);
-	else val = tensileHII (flag, fault, mag, x, y, z);
+	if (fault->fdepth + fault->fwidth2 * sd < mag->dcurier) val = tensileHI (component, fault, mag, x, y, z);
+	else if (fault->fdepth - fault->fwidth1 * sd > mag->dcurier) val = tensileHIII (component, fault, mag, x, y, z);
+	else val = tensileHII (component, fault, mag, x, y, z);
 	return val;
 }
 
 /*** public functions ***/
 double
-tensile_opening (int flag, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensile_opening (MagComponent component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	double res = 0.0;
-	res += tensile_opening_main (flag, fault, mag, x, y, z);
-	res += tensile_opening_mirror_image (flag, fault, mag, x, y, z);
-	res += tensile_opening_submirror_image (flag, fault, mag, x, y, z);
+	if (term & SEISMO_MAG_MAIN) res += tensile_opening_main (component, fault, mag, x, y, z);
+	if (term & SEISMO_MAG_MIRROR) res += tensile_opening_mirror_image (component, fault, mag, x, y, z);
+	if (term & SEISMO_MAG_SUBMIRROR) res += tensile_opening_submirror_image (component, fault, mag, x, y, z);
 	return res;
 }

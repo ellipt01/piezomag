@@ -11,10 +11,6 @@
 #include "piezomag.h"
 #include "private.h"
 
-#define DERIV_X 1
-#define DERIV_Y 2
-#define DERIV_Z 3
-
 /*c***************************
  *c******** octpoles *********
  *c***************************/
@@ -411,152 +407,152 @@ P3z_z (double sign, double xi, double et, double qq)
 
 /*****************************************************/
 double
-M1y (int flag, double sign, double xi, double et, double qq)
+M1y (MagComponent component, double sign, double xi, double et, double qq)
 {
 	if (singular_RE[0]) return 0.;
-	if (flag == DERIV_X) return M1y_x (sign, xi, et, qq);
-	else if (flag == DERIV_Y) return M1y_y (sign, xi, et, qq);
-	else if (flag == DERIV_Z) return M1y_z (sign, xi, et, qq);
+	if (component == MAG_COMP_X) return M1y_x (sign, xi, et, qq);
+	else if (component == MAG_COMP_Y) return M1y_y (sign, xi, et, qq);
+	else if (component == MAG_COMP_Z) return M1y_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
-M1z (int flag, double sign, double xi, double et, double qq)
+M1z (MagComponent component, double sign, double xi, double et, double qq)
 {
 	if (singular_RE[0]) return 0.;
-	if (flag == DERIV_X) return M1z_x (sign, xi, et, qq);
-	else if (flag == DERIV_Y) return M1z_y (sign, xi, et, qq);
-	else if (flag == DERIV_Z) return M1z_z (sign, xi, et, qq);
+	if (component == MAG_COMP_X) return M1z_x (sign, xi, et, qq);
+	else if (component == MAG_COMP_Y) return M1z_y (sign, xi, et, qq);
+	else if (component == MAG_COMP_Z) return M1z_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
-M2y (int flag, double sign, double xi, double et, double qq)
+M2y (MagComponent component, double sign, double xi, double et, double qq)
 {
 	if (singular_RE[0]) return 0.;
-	if (flag == DERIV_X) return M2y_x (sign, xi, et, qq);
-	else if (flag == DERIV_Y) return M2y_y (sign, xi, et, qq);
-	else if (flag == DERIV_Z) return M2y_z (sign, xi, et, qq);
+	if (component == MAG_COMP_X) return M2y_x (sign, xi, et, qq);
+	else if (component == MAG_COMP_Y) return M2y_y (sign, xi, et, qq);
+	else if (component == MAG_COMP_Z) return M2y_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
-M2z (int flag, double sign, double xi, double et, double qq)
+M2z (MagComponent component, double sign, double xi, double et, double qq)
 {
 	if (singular_RE[0]) return 0.;
-	if (flag == DERIV_X) return M2z_x (sign, xi, et, qq);
-	else if (flag == DERIV_Y) return M2z_y (sign, xi, et, qq);
-	else if (flag == DERIV_Z) return M2z_z (sign, xi, et, qq);
+	if (component == MAG_COMP_X) return M2z_x (sign, xi, et, qq);
+	else if (component == MAG_COMP_Y) return M2z_y (sign, xi, et, qq);
+	else if (component == MAG_COMP_Z) return M2z_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
-M3y (int flag, double sign, double xi, double et, double qq)
+M3y (MagComponent component, double sign, double xi, double et, double qq)
 {
 	if (singular_RE[0]) return 0.;
-	if (flag == DERIV_X) return M3y_x (sign, xi, et, qq);
-	else if (flag == DERIV_Y) return M3y_y (sign, xi, et, qq);
-	else if (flag == DERIV_Z) return M3y_z (sign, xi, et, qq);
+	if (component == MAG_COMP_X) return M3y_x (sign, xi, et, qq);
+	else if (component == MAG_COMP_Y) return M3y_y (sign, xi, et, qq);
+	else if (component == MAG_COMP_Z) return M3y_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
-M3z (int flag, double sign, double xi, double et, double qq)
+M3z (MagComponent component, double sign, double xi, double et, double qq)
 {
 	if (singular_RE[0]) return 0.;
-	if (flag == DERIV_X) return M3z_x (sign, xi, et, qq);
-	else if (flag == DERIV_Y) return M3z_y (sign, xi, et, qq);
-	else if (flag == DERIV_Z) return M3z_z (sign, xi, et, qq);
+	if (component == MAG_COMP_X) return M3z_x (sign, xi, et, qq);
+	else if (component == MAG_COMP_Y) return M3z_y (sign, xi, et, qq);
+	else if (component == MAG_COMP_Z) return M3z_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
-N1z (int flag, double sign, double xi, double et, double qq)
+N1z (MagComponent component, double sign, double xi, double et, double qq)
 {
-	if (flag == DERIV_X) return N1z_x (sign, xi, et, qq);
-	else if (flag == DERIV_Y) return N1z_y (sign, xi, et, qq);
-	else if (flag == DERIV_Z) return N1z_z (sign, xi, et, qq);
+	if (component == MAG_COMP_X) return N1z_x (sign, xi, et, qq);
+	else if (component == MAG_COMP_Y) return N1z_y (sign, xi, et, qq);
+	else if (component == MAG_COMP_Z) return N1z_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
-N2z (int flag, double sign, double xi, double et, double qq)
+N2z (MagComponent component, double sign, double xi, double et, double qq)
 {
-	if (flag == DERIV_X) return N2z_x (sign, xi, et, qq);
-	else if (flag == DERIV_Y) return N2z_y (sign, xi, et, qq);
-	else if (flag == DERIV_Z) return N2z_z (sign, xi, et, qq);
+	if (component == MAG_COMP_X) return N2z_x (sign, xi, et, qq);
+	else if (component == MAG_COMP_Y) return N2z_y (sign, xi, et, qq);
+	else if (component == MAG_COMP_Z) return N2z_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
-O1z (int flag, double sign, double xi, double et, double qq)
+O1z (MagComponent component, double sign, double xi, double et, double qq)
 {
-	if (flag == DERIV_X) return O1z_x (sign, xi, et, qq);
-	else if (flag == DERIV_Y) return O1z_y (sign, xi, et, qq);
-	else if (flag == DERIV_Z) return O1z_z (sign, xi, et, qq);
+	if (component == MAG_COMP_X) return O1z_x (sign, xi, et, qq);
+	else if (component == MAG_COMP_Y) return O1z_y (sign, xi, et, qq);
+	else if (component == MAG_COMP_Z) return O1z_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
-O2y (int flag, double sign, double xi, double et, double qq)
+O2y (MagComponent component, double sign, double xi, double et, double qq)
 {
-	if (flag == DERIV_X) return O2y_x (sign, xi, et, qq);
-	else if (flag == DERIV_Y) return O2y_y (sign, xi, et, qq);
-	else if (flag == DERIV_Z) return O2y_z (sign, xi, et, qq);
+	if (component == MAG_COMP_X) return O2y_x (sign, xi, et, qq);
+	else if (component == MAG_COMP_Y) return O2y_y (sign, xi, et, qq);
+	else if (component == MAG_COMP_Z) return O2y_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
-O2z (int flag, double sign, double xi, double et, double qq)
+O2z (MagComponent component, double sign, double xi, double et, double qq)
 {
-	if (flag == DERIV_X) return O2z_x (sign, xi, et, qq);
-	if (flag == DERIV_Y) return O2z_y (sign, xi, et, qq);
-	if (flag == DERIV_Z) return O2z_z (sign, xi, et, qq);
+	if (component == MAG_COMP_X) return O2z_x (sign, xi, et, qq);
+	if (component == MAG_COMP_Y) return O2z_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return O2z_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
-O3z (int flag, double sign, double xi, double et, double qq)
+O3z (MagComponent component, double sign, double xi, double et, double qq)
 {
-	if (flag == DERIV_X) return O3z_x (sign, xi, et, qq);
-	if (flag == DERIV_Y) return O3z_y (sign, xi, et, qq);
-	if (flag == DERIV_Z) return O3z_z (sign, xi, et, qq);
+	if (component == MAG_COMP_X) return O3z_x (sign, xi, et, qq);
+	if (component == MAG_COMP_Y) return O3z_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return O3z_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
-P1y (int flag, double sign, double xi, double et, double qq)
+P1y (MagComponent component, double sign, double xi, double et, double qq)
 {
-	if (flag == DERIV_X) return P1y_x (sign, xi, et, qq);
-	if (flag == DERIV_Y) return P1y_y (sign, xi, et, qq);
-	if (flag == DERIV_Z) return P1y_z (sign, xi, et, qq);
+	if (component == MAG_COMP_X) return P1y_x (sign, xi, et, qq);
+	if (component == MAG_COMP_Y) return P1y_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return P1y_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
-P1z (int flag, double sign, double xi, double et, double qq)
+P1z (MagComponent component, double sign, double xi, double et, double qq)
 {
-	if (flag == DERIV_X) return P1z_x (sign, xi, et, qq);
-	if (flag == DERIV_Y) return P1z_y (sign, xi, et, qq);
-	if (flag == DERIV_Z) return P1z_z (sign, xi, et, qq);
+	if (component == MAG_COMP_X) return P1z_x (sign, xi, et, qq);
+	if (component == MAG_COMP_Y) return P1z_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return P1z_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
-P3y (int flag, double sign, double xi, double et, double qq)
+P3y (MagComponent component, double sign, double xi, double et, double qq)
 {
-	if (flag == DERIV_X) return P3y_x (sign, xi, et, qq);
-	if (flag == DERIV_Y) return P3y_y (sign, xi, et, qq);
-	if (flag == DERIV_Z) return P3y_z (sign, xi, et, qq);
+	if (component == MAG_COMP_X) return P3y_x (sign, xi, et, qq);
+	if (component == MAG_COMP_Y) return P3y_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return P3y_z (sign, xi, et, qq);
 	return 0.;
 }
 
 double
-P3z (int flag, double sign, double xi, double et, double qq)
+P3z (MagComponent component, double sign, double xi, double et, double qq)
 {
-	if (flag == DERIV_X) return P3z_x (sign, xi, et, qq);
-	if (flag == DERIV_Y) return P3z_y (sign, xi, et, qq);
-	if (flag == DERIV_Z) return P3z_z (sign, xi, et, qq);
+	if (component == MAG_COMP_X) return P3z_x (sign, xi, et, qq);
+	if (component == MAG_COMP_Y) return P3z_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return P3z_z (sign, xi, et, qq);
 	return 0.;
 }
 

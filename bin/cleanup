@@ -5,6 +5,9 @@ if [ -e Makefile ]; then
 	make clean > /dev/null 2>&1
 fi
 
+echo "rm -f work/results.eps"
+rm -f work/results.eps
+
 echo "rm -rf autom4te.cache"
 rm -rf autom4te.cache
 

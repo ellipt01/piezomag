@@ -5,7 +5,7 @@ change caused by earthquake due to piezomagnetic effect.
 
 ## Description
 This package contains library for calculating seismomagnetic field due to a vertical
-or inclined rectangular fault located inside the perfectly elastic half space.
+or inclined rectangular fault located inside magnetized perfectly-elastic half space.
 Using this library, you can calculate seismomagnetic field easily,
 and any dip angle and all types of fault motion, strike-slip, dip-slip and tensile
 opening is available for this library.
@@ -34,7 +34,7 @@ bool
 fread_params (FILE *fp, fault_params *fault, magnetic_params *mag);
 ```
 This function reads user-defined parameters from input file and store them to global
-variables and pre-allocated structures:
+variables and following pre-allocated structures:
 
 ```fault_params *fault: ``` structure which stores fault parameters.
 
@@ -49,25 +49,71 @@ These structures are allocated by the following functions, respectivly:
 ---
 ```
 bool
-seismomagnetic_field (int component,
+seismomagnetic_field_term (MagComponent component, SeismoMagTerm term,
     const fault_params *fault, const magnetic_params *mag,
     double xobs, double yobs, double zobs, double *val);
 ```
 This function calculates the seismomagnetic field on obervation point ```(xobs, yobs, zobs)```.
-```int component``` specifies the output magnetic component and
-it takes ```X_COMP (=0:N+S-)```, ```Y_COMP (=1:E+W-)```, ```Z_COMP (=3:Down+Up-)``` or
-```TOTAL_FORCE (=0)```. If obervation point is on the singular point, returns ```false```.
+```MagComponent component``` specifies the output magnetic component and it takes the following values:
+```
+typedef enum {
+ MAG_COMP_F    =  0, // total force
+ MAG_COMP_X    =  1, // x component
+ MAG_COMP_Y    =  2, // y component
+ MAG_COMP_Z    =  3, // z component
+} MagComponent;
+```
+
+```SeismoMagTerm term``` specifies the output seismomagnetic term:
+```
+typedef enum {
+ SEISMO_MAG_MAIN       =  1 << 0, // main term (0)
+ SEISMO_MAG_MIRROR     =  1 << 1, // mirror image (H0)
+ SEISMO_MAG_SUBMIRROR  =  1 << 2, // sub-mirror image(HI, HIII or HII)
+ // total seismomagnetic field (0 + H0 + (HI, HIII or HII))
+ SEISMO_MAG_TOTAL = SEISMO_MAG_MAIN | SEISMO_MAG_MIRROR | SEISMO_MAG_SUBMIRROR
+} SeismoMagTerm;
+```
+
+If obervation point is on the singular point, returns ```false```.
 
 ---
 ```
 void
-fprintf_seismomagnetic_field (FILE *stream, int component,
+fprintf_seismomagnetic_field_term (FILE *stream,
+    MagComponent component, SeismoMagTerm term,
     const fault_params *fault, const magnetic_params *mag,
     double xobs1, double xobs2, double dx,
     double yobs1, double yobs2, double dy, double zobs);
 ```
 This function calculates the seismomagnetic field on the grid ```x=[xobs1:dx:xobs2]```,
 ```y=[yobs1:dy:yobs2]``` and ```z=zobs```. Output format is ``` X(NS)  Y(EW)  VAL```.
+
+---
+```
+bool
+seismomagnetic_field (MagComponent component,
+    const fault_params *fault, const magnetic_params *mag,
+    double xobs, double yobs, double zobs, double *val);
+```
+```
+void
+fprintf_seismomagnetic_field (FILE *stream,
+    MagComponent component,
+    const fault_params *fault, const magnetic_params *mag,
+    double xobs1, double xobs2, double dx,
+    double yobs1, double yobs2, double dy, double zobs);
+```
+These are equivalent to the followings, respectively:
+```
+seismomagnetic_field_term (component, SEISMO_MAG_TOTAL, fault, mag,
+    xobs, yobs, zobs, &val);
+```
+```
+fprintf_seismomagnetic_field_term (component, SEISMO_MAG_TOTAL, fault, mag,
+    xobs1, xobs2, dx, yobs1, yobs2, dy, zobs);
+```
+
 
 ## Sample program
 

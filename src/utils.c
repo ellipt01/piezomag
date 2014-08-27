@@ -16,9 +16,9 @@
 double
 total_force (double hx, double hy, double hz, double exf_inc, double exf_dec)
 {
-	double	f = hx * cos (deg2rad (exf_inc)) * cos (deg2rad (exf_dec))
-		- hy * cos (deg2rad (exf_inc)) * sin (deg2rad (exf_dec))
-		+ hz * sin (deg2rad (exf_inc));
+	double	f = hx * cos (_deg2rad_ (exf_inc)) * cos (_deg2rad_ (exf_dec))
+		- hy * cos (_deg2rad_ (exf_inc)) * sin (_deg2rad_ (exf_dec))
+		+ hz * sin (_deg2rad_ (exf_inc));
 	return f;
 }
 
@@ -26,7 +26,7 @@ total_force (double hx, double hy, double hz, double exf_inc, double exf_dec)
 void
 rotate (double theta, double *x, double *y)
 {
-	double theta_rad = deg2rad (theta);
+	double theta_rad = _deg2rad_ (theta);
 	double x1 = (*x) * cos (theta_rad) + (*y) * sin (theta_rad);
 	double y1 = (*y) * cos (theta_rad) - (*x) * sin (theta_rad);
 	*x = x1;
@@ -207,14 +207,14 @@ set_constants (fault_params *fault, magnetic_params *mag)
 {
 	double	jx, jy, jz;
 
-	sd = sin (deg2rad (fault->fdip));
-	cd = cos (deg2rad (fault->fdip));
-	td = tan (deg2rad (fault->fdip));
+	sd = sin (_deg2rad_ (fault->fdip));
+	cd = cos (_deg2rad_ (fault->fdip));
+	td = tan (_deg2rad_ (fault->fdip));
 	secd = 1.0 / cd;
 	sd2 = pow (sd, 2.0);
 	cd2 = pow (cd, 2.0);
-	s2d = sin (deg2rad (2.0 * fault->fdip));
-	c2d = cos (deg2rad (2.0 * fault->fdip));
+	s2d = sin (_deg2rad_ (2.0 * fault->fdip));
+	c2d = cos (_deg2rad_ (2.0 * fault->fdip));
 
 	d[0] = DUMMY;	// not referred
 	d[1] = fault->fdepth - z_obs;	// source depth
@@ -232,9 +232,9 @@ set_constants (fault_params *fault, magnetic_params *mag)
 	alpha5 = fault->alpha * (2.0 * fault->alpha - 5.0) / alpha0;
 	alpha6 = 3.0 * fault->alpha * (1.0 - 2.0 * fault->alpha) / alpha0;
 
-	jx = mag->mgz_int * cos (deg2rad (mag->mgz_inc)) * cos (deg2rad (mag->mgz_dec));
-	jy = - mag->mgz_int * cos (deg2rad (mag->mgz_inc)) * sin (deg2rad (mag->mgz_dec));
-	jz = mag->mgz_int * sin (deg2rad (mag->mgz_inc));
+	jx = mag->mgz_int * cos (_deg2rad_ (mag->mgz_inc)) * cos (_deg2rad_ (mag->mgz_dec));
+	jy = - mag->mgz_int * cos (_deg2rad_ (mag->mgz_inc)) * sin (_deg2rad_ (mag->mgz_dec));
+	jz = mag->mgz_int * sin (_deg2rad_ (mag->mgz_inc));
 	rotate (fault->fstrike, &jx, &jy);
 
 	// seismomagnetic moment
@@ -359,10 +359,10 @@ fwrite_params (FILE *stream, const fault_params *fault, const magnetic_params *m
 		}
 		fprintf (stream, "%s\t : %s", key_string[i], key[i]);
 		if (i == 20) {
-			if (output_comp == X_COMP) fprintf (stream, " = X_COMP\n");
-			else if (output_comp == Y_COMP) fprintf (stream, " = Y_COMP\n");
-			else if (output_comp == Z_COMP) fprintf (stream, " = Z_COMP\n");
-			else if (output_comp == TOTAL_FORCE) fprintf (stream, " = TOTAL_FORCE\n");
+			if (output_comp == MAG_COMP_X) fprintf (stream, " = X_COMP\n");
+			else if (output_comp == MAG_COMP_Y) fprintf (stream, " = Y_COMP\n");
+			else if (output_comp == MAG_COMP_Z) fprintf (stream, " = Z_COMP\n");
+			else if (output_comp == MAG_COMP_F) fprintf (stream, " = TOTAL_FORCE\n");
 		} else fprintf (stream, " = %f\n", val);
 	}
 	return;
