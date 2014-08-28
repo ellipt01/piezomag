@@ -24,6 +24,9 @@ fi
 fnparam="$1"
 fnout="results.eps"
 
+range="-10/10/-10/10"
+inc="0.1/0.1"
+
 # GMT settings
 gmtset PAGE_ORIENTATION "portrait"
 gmtset PAPER_MEDIA "a4"
@@ -61,7 +64,7 @@ makecpt -T-5/5/0.25 -Z >| mg.cpt
 
 # main title
 title="FAULT PARAMETERS: dimension (L,W)=($LENGTH, $WIDTH)"
-echo "8 48 14 0 4 TC $title" | pstext -JX"$size" -R-10/10/-10/10 -N -K >| $fnout
+echo "8 48 14 0 4 TC $title" | pstext -JX"$size" -R"$range" -N -K >| $fnout
 
 title="dislocation=($U1, $U2, $U3), strike and dip angle=($STRIKE, $DIP)"
 echo "8 46.5 14 0 4 TC $title" | pstext -JX"$size" -R -N -K -O >> $fnout
@@ -101,10 +104,10 @@ for i in 1 2 3 0; do
 	sed s'/VAL/'$i'/'g $fnparam >| _tmp_infile_
 
 	# calculate seismomagnetic field in range x=[-10:0.1:10], y=[-10:0.1:10]
-	../main/piez -f _tmp_infile_ -r -10/10/-10/10 -i 0.1/0.1 >| res
+	../main/piez -f _tmp_infile_ -r $range -i $inc >| res
 
 	# create contour figure
-	surface -Gres.grd -I0.1/0.1 -R-10/10/-10/10 -: res
+	surface -Gres.grd -I"$inc" -R -: res
 
 	# draw color contour
 	grdimage res.grd -JX -R -P -Cmg.cpt -B5nSWe -X"$shiftx" -Y"$shifty" -K -O >> $fnout
