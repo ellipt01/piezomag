@@ -40,14 +40,15 @@ fault_params *fault:  structure which stores fault parameters.
 
 magnetic_params *mag: structure which stores crustal magnetic properties.
 
+For the global variables and members of these structures, see "include/piezomag.h",
+and for the details of the parameter file, see "work/example_params.data"
+(an example of parameter file).
+
 These structures are allocated by the following functions, respectivly:
 
 fault_params *fault_params_alloc (void)
 
 magnetic_params *magnetic_params_alloc (void)
-
-For the details of the parameter file, see "work/example_params.data"
-(an example of parameter file).
 
 ---
 
@@ -116,7 +117,6 @@ seismomagnetic_field_term (component, SEISMO_MAG_TOTAL, fault, mag,
 
 fprintf_seismomagnetic_field_term (component, SEISMO_MAG_TOTAL, fault, mag,
     xobs1, xobs2, dx, yobs1, yobs2, dy, zobs);
-
 
 
 ## Sample program
