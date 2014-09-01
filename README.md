@@ -122,12 +122,20 @@ fprintf_seismomagnetic_field_term (component, SEISMO_MAG_TOTAL, fault, mag,
 ## Sample program
 
 An example program "main/piez" is also contained in this package.
+This prograrm calls the function `fprintf_seismomagnetic_field ()` and outputs
+seismomagnetic field on the grid of ```x=[xobs1:dx:xobs2]```, ```y=[yobs1:dy:yobs2]```.
 To run this program, do
 ```
-$ ./main/piez -f <parameter file name>
+$ ./main/piez -f <parameter file name> -r <xobs1/xobs2/yobs1/yobs2> -i <dx/dy>
 ```
 
 For more details, see "work/calcomp.sh" (an example script to run main/piez).
 
 ## Licence
 LGPL
+
+## References
+M. Utsugi, Y. Nishida and Y. Sasai, Piezomagnetic potentials due to an inclined
+rectangular fault in a semi-infinite medium, Geophysical Journal International,
+Vol. 140, Issue 3, pp.479–492, 2000.
+DOI: 10.1046/j.1365-246X.2000.00953.x
