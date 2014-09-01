@@ -53,31 +53,32 @@ These structures are allocated by the following functions, respectivly:
 ---
 ```
 bool
-seismomagnetic_field_term (MagComponent component, SeismoMagTerm term,
+seismomagnetic_field_term (int component, int term,
     const fault_params *fault, const magnetic_params *mag,
     double xobs, double yobs, double zobs, double *val);
 ```
 This function calculates the seismomagnetic field on obervation point ```(xobs, yobs, zobs)```.
-```MagComponent component``` specifies the output magnetic component
+
+```int component``` specifies the output magnetic component
 and it takes the following values:
 ```
-typedef enum {
+enum {
  MAG_COMP_F    =  0, // total force
  MAG_COMP_X    =  1, // x component
  MAG_COMP_Y    =  2, // y component
  MAG_COMP_Z    =  3, // z component
-} MagComponent;
+};
 ```
 
-```SeismoMagTerm term``` specifies the output seismomagnetic term:
+```int term``` specifies the output seismomagnetic term:
 ```
-typedef enum {
+enum {
  SEISMO_MAG_MAIN       =  1 << 0, // main term (0)
  SEISMO_MAG_MIRROR     =  1 << 1, // mirror image (H0)
  SEISMO_MAG_SUBMIRROR  =  1 << 2, // sub-mirror image(HI, HIII or HII)
  // total seismomagnetic field (0 + H0 + (HI, HIII or HII))
  SEISMO_MAG_TOTAL = SEISMO_MAG_MAIN | SEISMO_MAG_MIRROR | SEISMO_MAG_SUBMIRROR
-} SeismoMagTerm;
+};
 ```
 
 If obervation point is on the singular point, this function returns ```false```.
@@ -86,7 +87,7 @@ If obervation point is on the singular point, this function returns ```false```.
 ```
 void
 fprintf_seismomagnetic_field_term (FILE *stream,
-    MagComponent component, SeismoMagTerm term,
+    int component, int term,
     const fault_params *fault, const magnetic_params *mag,
     double xobs1, double xobs2, double dx,
     double yobs1, double yobs2, double dy, double zobs);
@@ -97,14 +98,14 @@ This function calculates the seismomagnetic field on the grid ```x=[xobs1:dx:xob
 ---
 ```
 bool
-seismomagnetic_field (MagComponent component,
+seismomagnetic_field (int component,
     const fault_params *fault, const magnetic_params *mag,
     double xobs, double yobs, double zobs, double *val);
 ```
 ```
 void
 fprintf_seismomagnetic_field (FILE *stream,
-    MagComponent component,
+    int component,
     const fault_params *fault, const magnetic_params *mag,
     double xobs1, double xobs2, double dx,
     double yobs1, double yobs2, double dy, double zobs);

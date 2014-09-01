@@ -6,25 +6,25 @@
 
 /*** main term ***/
 static double
-strikex0 (MagComponent component, double xi, double et, double qq)
+strikex0 (int component, double xi, double et, double qq)
 {
 	return 2.0 * K1 (component, 1.0, xi, et, qq);
 }
 
 static double
-strikey0 (MagComponent component, double xi, double et, double qq)
+strikey0 (int component, double xi, double et, double qq)
 {
 	return 2.0 * K2 (component, 1.0, xi, et, qq);
 }
 
 static double
-strikez0 (MagComponent component, double xi, double et, double qq)
+strikez0 (int component, double xi, double et, double qq)
 {
 	return 2.0 * K3 (component, 1.0, xi, et, qq);
 }
 
 static double
-strike0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strike0 (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -58,7 +58,7 @@ strike0 (MagComponent component, const fault_params *fault, const magnetic_param
 
 /*** contributions from the mirror image H0 ***/
 static double
-strikexH0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+strikexH0 (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -82,7 +82,7 @@ strikexH0 (MagComponent component, const fault_params *fault, const magnetic_par
 }
 
 static double
-strikeyH0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+strikeyH0 (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -108,7 +108,7 @@ strikeyH0 (MagComponent component, const fault_params *fault, const magnetic_par
 }
 
 static double
-strikezH0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+strikezH0 (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -132,7 +132,7 @@ strikezH0 (MagComponent component, const fault_params *fault, const magnetic_par
 }
 
 static double
-strikeH0 (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strikeH0 (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -166,7 +166,7 @@ strikeH0 (MagComponent component, const fault_params *fault, const magnetic_para
 
 /*** contributions from the mirror image HI ***/
 static double
-strikexHI (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+strikexHI (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -185,7 +185,7 @@ strikexHI (MagComponent component, const fault_params *fault, const magnetic_par
 }
 
 static double
-strikeyHI (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+strikeyHI (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -203,7 +203,7 @@ strikeyHI (MagComponent component, const fault_params *fault, const magnetic_par
 }
 
 static double
-strikezHI (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+strikezHI (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -220,7 +220,7 @@ strikezHI (MagComponent component, const fault_params *fault, const magnetic_par
 }
 
 static double
-strikeHI (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strikeHI (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -254,7 +254,7 @@ strikeHI (MagComponent component, const fault_params *fault, const magnetic_para
 
 /*** contributions from the mirror image HIII ***/
 static double
-strikexHIII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+strikexHIII (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -273,7 +273,7 @@ strikexHIII (MagComponent component, const fault_params *fault, const magnetic_p
 }
 
 static double
-strikeyHIII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+strikeyHIII (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -291,7 +291,7 @@ strikeyHIII (MagComponent component, const fault_params *fault, const magnetic_p
 }
 
 static double
-strikezHIII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+strikezHIII (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -308,7 +308,7 @@ strikezHIII (MagComponent component, const fault_params *fault, const magnetic_p
 }
 
 static double
-strikeHIII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strikeHIII (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -342,7 +342,7 @@ strikeHIII (MagComponent component, const fault_params *fault, const magnetic_pa
 
 
 static double
-strikeHII (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strikeHII (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -399,19 +399,19 @@ strikeHII (MagComponent component, const fault_params *fault, const magnetic_par
 }
 
 static double
-strike_slip_main (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strike_slip_main (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	return strike0 (component, fault, mag, x, y, z);
 }
 
 static double
-strike_slip_mirror_image (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strike_slip_mirror_image (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	return strikeH0 (component, fault, mag, x, y, z);
 }
 
 static double
-strike_slip_submirror_image (MagComponent component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strike_slip_submirror_image (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	double	val;
 	if (fault->fdepth + fault->fwidth2 * sd < mag->dcurier) val = strikeHI (component, fault, mag, x, y, z);
@@ -422,9 +422,17 @@ strike_slip_submirror_image (MagComponent component, const fault_params *fault, 
 
 /*** public functions ***/
 double
-strike_slip (MagComponent component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strike_slip (int component, int term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	double res = 0.;
+	if (!check_mag_component (component)) {
+		fprintf (stderr, "ERROR: strike_slip: component must be MAG_COMP_X, MAG_COMP_Y, MAG_COMP_Z or MAG_COMP_F\n");
+		return 0.0;
+	}
+	if (!check_seismo_mag_term (term)) {
+		fprintf (stderr, "ERROR: strike_slip: term must be SEISMO_MAG_MAIN, SEISMO_MAG_MIRROR, SEISMO_MAG_SUBMIRROR\n");
+		return 0.0;
+	}
 	if (term & SEISMO_MAG_MAIN) res += strike_slip_main (component, fault, mag, x, y, z);
 	if (term & SEISMO_MAG_MIRROR) res += strike_slip_mirror_image (component, fault, mag, x, y, z);
 	if (term & SEISMO_MAG_SUBMIRROR) res += strike_slip_submirror_image (component, fault, mag, x, y, z);

@@ -140,10 +140,11 @@ void	set_geometry_variables (double sign, double xi, double et, double qq);
 /** utils.c **/
 double	total_force (double hx, double hy, double hz, double exf_inc, double exf_dec);
 void	rotate (double theta, double *x, double *y);
-//void	clear_singular_flag (int i);
 void	clear_all_singular_flags (void);
 void	set_singular_flag (int i);
 bool	is_singular_point (bool *flag);
 void	check_singular_point (const fault_params *fault, double x, double y, double eps);
+bool	check_mag_component (int component);
+bool	check_seismo_mag_term (int term);
 
 #endif /* _PRIVATE_H_ */

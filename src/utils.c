@@ -584,3 +584,21 @@ check_singular_point (const fault_params *fault, double x, double y, double eps)
 	}
 	return;
 }
+
+/* check specified magnetic component is valid */
+bool
+check_mag_component (int component)
+{
+	if (MAG_COMP_F <= component && component <= MAG_COMP_Z) return true;
+	return false;
+}
+
+/* check specified seismomagnetic term is valid */
+bool
+check_seismo_mag_term (int term)
+{
+	if (term & SEISMO_MAG_MAIN) return true;
+	if (term & SEISMO_MAG_MIRROR) return true;
+	if (term & SEISMO_MAG_SUBMIRROR) return true;
+	return false;
+}

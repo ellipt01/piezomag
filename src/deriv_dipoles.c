@@ -475,7 +475,7 @@ K9_z (double sign, double xi, double et, double qq)
 
 /*****************************************************/
 double
-log_rx (MagComponent component, double sign, double xi, double et, double qq)
+log_rx (int component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return log_rx_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return log_rx_y (sign, xi, et, qq);
@@ -484,7 +484,7 @@ log_rx (MagComponent component, double sign, double xi, double et, double qq)
 }
 
 double
-log_re (MagComponent component, double sign, double xi, double et, double qq)
+log_re (int component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return log_re_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return log_re_y (sign, xi, et, qq);
@@ -493,7 +493,7 @@ log_re (MagComponent component, double sign, double xi, double et, double qq)
 }
 
 double
-log_rc (MagComponent component, double sign, double xi, double et, double qq)
+log_rc (int component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return log_rc_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return log_rc_y (sign, xi, et, qq);
@@ -502,7 +502,7 @@ log_rc (MagComponent component, double sign, double xi, double et, double qq)
 }
 
 double
-atan_xe_qr (MagComponent component, double sign, double xi, double et, double qq)
+atan_xe_qr (int component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return atan_xe_qr_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return atan_xe_qr_y (sign, xi, et, qq);
@@ -511,7 +511,7 @@ atan_xe_qr (MagComponent component, double sign, double xi, double et, double qq
 }
 
 double
-J1 (MagComponent component, double sign, double xi, double et, double qq)
+J1 (int component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return J1_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return J1_y (sign, xi, et, qq);
@@ -520,7 +520,7 @@ J1 (MagComponent component, double sign, double xi, double et, double qq)
 }
 
 double
-J2 (MagComponent component, double sign, double xi, double et, double qq)
+J2 (int component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return J2_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return J2_y (sign, xi, et, qq);
@@ -529,7 +529,7 @@ J2 (MagComponent component, double sign, double xi, double et, double qq)
 }
 
 double
-K1 (MagComponent component, double sign, double xi, double et, double qq)
+K1 (int component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return K1_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return K1_y (sign, xi, et, qq);
@@ -538,7 +538,7 @@ K1 (MagComponent component, double sign, double xi, double et, double qq)
 }
 
 double
-K2 (MagComponent component, double sign, double xi, double et, double qq)
+K2 (int component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return K2_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return K2_y (sign, xi, et, qq);
@@ -547,7 +547,7 @@ K2 (MagComponent component, double sign, double xi, double et, double qq)
 }
 
 double
-K3 (MagComponent component, double sign, double xi, double et, double qq)
+K3 (int component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return K3_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return K3_y (sign, xi, et, qq);
@@ -556,7 +556,7 @@ K3 (MagComponent component, double sign, double xi, double et, double qq)
 }
 
 double
-K4 (MagComponent component, double sign, double xi, double et, double qq)
+K4 (int component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return K4_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return K4_y (sign, xi, et, qq);
@@ -565,7 +565,7 @@ K4 (MagComponent component, double sign, double xi, double et, double qq)
 }
 
 double
-K5 (MagComponent component, double sign, double xi, double et, double qq)
+K5 (int component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return K5_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return K5_y (sign, xi, et, qq);
@@ -574,7 +574,7 @@ K5 (MagComponent component, double sign, double xi, double et, double qq)
 }
 
 double
-K6 (MagComponent component, double sign, double xi, double et, double qq)
+K6 (int component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return K6_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return K6_y (sign, xi, et, qq);
@@ -583,7 +583,7 @@ K6 (MagComponent component, double sign, double xi, double et, double qq)
 }
 
 double
-K7 (MagComponent component, double sign, double xi, double et, double qq)
+K7 (int component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return K7_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return K7_y (sign, xi, et, qq);
@@ -592,7 +592,7 @@ K7 (MagComponent component, double sign, double xi, double et, double qq)
 }
 
 double
-K8 (MagComponent component, double sign, double xi, double et, double qq)
+K8 (int component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return K8_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return K8_y (sign, xi, et, qq);
@@ -601,7 +601,7 @@ K8 (MagComponent component, double sign, double xi, double et, double qq)
 }
 
 double
-K9 (MagComponent component, double sign, double xi, double et, double qq)
+K9 (int component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return K9_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return K9_y (sign, xi, et, qq);
