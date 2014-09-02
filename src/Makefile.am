@@ -9,6 +9,7 @@ AM_CFLAGS =\
 lib_LTLIBRARIES = libpiezomag.la
 
 libpiezomag_la_SOURCES =\
+	private.c\
 	utils.c\
 	deriv_dipoles.c\
 	deriv_quadpoles.c\

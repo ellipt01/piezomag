@@ -28,7 +28,7 @@ double	eps_dist = 1.e-4;
  * calculated magnetic component is also in fault coordinate system
   *c*********************************************************************/
 static double
-seismomagnetic_component_in_fault_coordinate (int component, int term, const fault_params *fault, const magnetic_params *mag, double tx, double ty, double zobs)
+seismomagnetic_component_in_fault_coordinate (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double tx, double ty, double zobs)
 {
 	double	val = 0.0;
 
@@ -44,19 +44,19 @@ seismomagnetic_component_in_fault_coordinate (int component, int term, const fau
 /*c***************************************************************************
  * calculates specified component and term of seismomagnetic field
  * on obs. point (xobs, yobs, zobs)
- * int component: output magnetic component
+ * MagComp component: output magnetic component
  *         MAG_COMP_X(1:NS)
  *         MAG_COMP_Y(2:EW)
  *         MAG_COMP_Z(3:DwonUp)
  *         MAG_COMP_F(0)
- * int term: output seismomagnetic term
+ * SeismoMagTerm term: output seismomagnetic term
  *         SEISMO_MAG_MAIN      (0: main term (0))
  *         SEISMO_MAG_MIRROR    (1: mirror image term (H0))
  *         SEISMO_MAG_SUBMIRROR (2: sub-mirror image term (HI, HIII or HII))
  *         SEISMO_MAG_TOTAL     (3: total seismomagnetic field)
  *c***************************************************************************/
 bool
-seismomagnetic_field_term (int component, int term, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs, double *val)
+seismomagnetic_field_term (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs, double *val)
 {
 	bool	status = true;	// if obs. point is singular point, status is set to false
 	double	tx, ty;	// obs. point on fault coordinate system
@@ -110,14 +110,14 @@ seismomagnetic_field_term (int component, int term, const fault_params *fault, c
 /*c*******************************************************
  * calculates specified component of seismomagnetic field
  * on obs. point (xobs, yobs, zobs)
- * int component: output magnetic component
+ * MagComp component: output magnetic component
  *         MAG_COMP_X(1:NS)
  *         MAG_COMP_Y(2:EW)
  *         MAG_COMP_Z(3:DwonUp)
  *         MAG_COMP_F(0)
  *c*******************************************************/
 bool
-seismomagnetic_field (int component, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs, double *val)
+seismomagnetic_field (MagComp component, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs, double *val)
 {
 	if (!check_mag_component (component)) {
 		fprintf (stderr, "ERROR: seismomagnetic_field: component must be MAG_COMP_X, MAG_COMP_Y, MAG_COMP_Z or MAG_COMP_F\n");
@@ -131,7 +131,7 @@ seismomagnetic_field (int component, const fault_params *fault, const magnetic_p
  * in the range [xobs1:dx:xobs2](NS), [yobs1:dy:yobs2](EW) and z = zobs
  *c****************************************************************************/
 void
-fprintf_seismomagnetic_field_term (FILE *stream, int component, int term,
+fprintf_seismomagnetic_field_term (FILE *stream, MagComp component, SeismoMagTerm term,
 		const fault_params *fault, const magnetic_params *mag,
 		double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs)
 {
@@ -188,7 +188,7 @@ fprintf_seismomagnetic_field_term (FILE *stream, int component, int term,
  * in the range [xobs1:dx:xobs2](NS), [yobs1:dy:yobs2](EW) and z = zobs
  *c**********************************************************************/
 void
-fprintf_seismomagnetic_field (FILE *stream, int component,
+fprintf_seismomagnetic_field (FILE *stream, MagComp component,
 		const fault_params *fault, const magnetic_params *mag,
 		double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs)
 {

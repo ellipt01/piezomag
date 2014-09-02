@@ -16,21 +16,22 @@
  *c*******/
 
 /* definition of magnetic component */
-enum {
+typedef enum {
+	MAG_COMP_NONE = -1,	// dummy
 	MAG_COMP_F    =  0,	// total force
 	MAG_COMP_X    =  1,	// x component
 	MAG_COMP_Y    =  2,	// y component
 	MAG_COMP_Z    =  3,	// z component
-};
+} MagComp;
 
 /* flag of seismomagnetic term */
-enum {
+typedef enum {
 	SEISMO_MAG_MAIN       =  1 << 0,	// main term (0)
 	SEISMO_MAG_MIRROR     =  1 << 1,	// mirror image (H0)
 	SEISMO_MAG_SUBMIRROR  =  1 << 2,	// sub-mirror image (HI, HIII or HII)
 	// total seismomagnetic field (0 + H0 + (HI, HIII or HII))
 	SEISMO_MAG_TOTAL =  SEISMO_MAG_MAIN | SEISMO_MAG_MIRROR | SEISMO_MAG_SUBMIRROR
-};
+} SeismoMagTerm;
 
 
 /*c********************
@@ -41,7 +42,7 @@ enum {
 double			z_obs;
 
 /* specify component of output : X_COMP (1), Y_COMP (2), Z_COMP (3) or TOTAL_FORCE (0) */
-int				output_comp;
+MagComp		output_comp;
 
 /* verbos mide */
 bool			verbos;
@@ -130,24 +131,25 @@ bool	fread_params (FILE *fp, fault_params *fault, magnetic_params *mag);
 /** piezomag.c **/
 /* calculate seismomagnetic field on observation point (xobs, yobs, zobs)
    output specified seismomagnetic term: main (0), mirror image (H0) or sub-mirror image term (HI, HIII or HII) */
-bool	seismomagnetic_field_term (int component, int term, const fault_params *fault, const magnetic_params *mag,
+bool	seismomagnetic_field_term (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag,
 			double xobs, double yobs, double zobs, double *val);
-bool	seismomagnetic_field (int component, const fault_params *fault, const magnetic_params *mag,
+bool	seismomagnetic_field (MagComp component, const fault_params *fault, const magnetic_params *mag,
 			double xobs, double yobs, double zobs, double *val);
 
 /* calculate seismomagnetic field on grid x=[xobs1:dx:xobs2], y=[yobs1:dy:yobs2], z=zobs */
-void	fprintf_seismomagnetic_field_term (FILE *stream, int component, int term, const fault_params *fault, const magnetic_params *mag,
+/*
+void	fprintf_seismomagnetic_field_term (FILE *stream, MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag,
 			double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs);
-void	fprintf_seismomagnetic_field (FILE *stream, int component, const fault_params *fault, const magnetic_params *mag,
+void	fprintf_seismomagnetic_field (FILE *stream, MagComp component, const fault_params *fault, const magnetic_params *mag,
 			double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs);
-
+*/
 /** strike.c **/
-double	strike_slip (int component, int term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
+double	strike_slip (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
 
 /** dip.c **/
-double	dip_slip (int component, int term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
+double	dip_slip (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
 
 /** tensile.c **/
-double	tensile_opening (int component, int term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
+double	tensile_opening (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
 
 #endif	// _PIEZOMAG_H_

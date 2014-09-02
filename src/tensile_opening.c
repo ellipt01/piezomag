@@ -6,25 +6,25 @@
 
 /*** main term ***/
 double
-tensilex0 (int component, double xi, double et, double qq)
+tensilex0 (MagComp component, double xi, double et, double qq)
 {
 	return -2.0 * K7 (component, 1.0, xi, et, qq);
 }
 
 double
-tensiley0 (int component, double xi, double et, double qq)
+tensiley0 (MagComp component, double xi, double et, double qq)
 {
 	return 2.0 * K8 (component, 1.0, xi, et, qq);
 }
 
 double
-tensilez0 (int component, double xi, double et, double qq)
+tensilez0 (MagComp component, double xi, double et, double qq)
 {
 	return 2.0 * K9 (component, 1.0, xi, et, qq);
 }
 
 static double
-tensile0 (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensile0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -56,7 +56,7 @@ tensile0 (int component, const fault_params *fault, const magnetic_params *mag, 
 
 /*** contributions from the mirror image H0 ***/
 static double
-tensilexH0 (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+tensilexH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -85,7 +85,7 @@ tensilexH0 (int component, const fault_params *fault, const magnetic_params *mag
 }
 
 static double
-tensileyH0 (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+tensileyH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -116,7 +116,7 @@ tensileyH0 (int component, const fault_params *fault, const magnetic_params *mag
 }
 
 static double
-tensilezH0 (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+tensilezH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -144,7 +144,7 @@ tensilezH0 (int component, const fault_params *fault, const magnetic_params *mag
 }
 
 static double
-tensileH0 (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensileH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -176,7 +176,7 @@ tensileH0 (int component, const fault_params *fault, const magnetic_params *mag,
 
 /*** contributions from the mirror image HI ***/
 static double
-tensilexHI (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+tensilexHI (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -198,7 +198,7 @@ tensilexHI (int component, const fault_params *fault, const magnetic_params *mag
 }
 
 static double
-tensileyHI (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+tensileyHI (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -221,7 +221,7 @@ tensileyHI (int component, const fault_params *fault, const magnetic_params *mag
 }
 
 static double
-tensilezHI (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+tensilezHI (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -241,7 +241,7 @@ tensilezHI (int component, const fault_params *fault, const magnetic_params *mag
 }
 
 static double
-tensileHI (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensileHI (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -273,7 +273,7 @@ tensileHI (int component, const fault_params *fault, const magnetic_params *mag,
 
 /*** contributions from the mirror image HIII ***/
 static double
-tensilexHIII (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+tensilexHIII (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -295,7 +295,7 @@ tensilexHIII (int component, const fault_params *fault, const magnetic_params *m
 }
 
 static double
-tensileyHIII (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+tensileyHIII (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -318,7 +318,7 @@ tensileyHIII (int component, const fault_params *fault, const magnetic_params *m
 }
 
 static double
-tensilezHIII (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+tensilezHIII (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -337,7 +337,7 @@ tensilezHIII (int component, const fault_params *fault, const magnetic_params *m
 }
 
 static double
-tensileHIII (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensileHIII (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -369,7 +369,7 @@ tensileHIII (int component, const fault_params *fault, const magnetic_params *ma
 
 
 static double
-tensileHII (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensileHII (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -423,19 +423,19 @@ tensileHII (int component, const fault_params *fault, const magnetic_params *mag
 }
 
 static double
-tensile_opening_main (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensile_opening_main (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	return tensile0 (component, fault, mag, x, y, z);
 }
 
 static double
-tensile_opening_mirror_image (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensile_opening_mirror_image (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	return tensileH0 (component, fault, mag, x, y, z);
 }
 
 static double
-tensile_opening_submirror_image (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensile_opening_submirror_image (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	double	val;
 	if (fault->fdepth + fault->fwidth2 * sd < mag->dcurier) val = tensileHI (component, fault, mag, x, y, z);
@@ -446,7 +446,7 @@ tensile_opening_submirror_image (int component, const fault_params *fault, const
 
 /*** public functions ***/
 double
-tensile_opening (int component, int term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensile_opening (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	double res = 0.0;
 	if (!check_mag_component (component)) {

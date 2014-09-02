@@ -6,25 +6,25 @@
 
 /*** main term ***/
 static double
-dipx0 (int component, double xi, double et, double qq)
+dipx0 (MagComp component, double xi, double et, double qq)
 {
 	return -2.0 * K4 (component, 1.0, xi, et, qq);
 }
 
 static double
-dipy0 (int component, double xi, double et, double qq)
+dipy0 (MagComp component, double xi, double et, double qq)
 {
 	return 2.0 * K5 (component, 1.0, xi, et, qq);
 }
 
 static double
-dipz0 (int component, double xi, double et, double qq)
+dipz0 (MagComp component, double xi, double et, double qq)
 {
 	return 2.0 * K6 (component, 1.0, xi, et, qq);
 }
 
 static double
-dip0 (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+dip0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -56,7 +56,7 @@ dip0 (int component, const fault_params *fault, const magnetic_params *mag, doub
 
 /*** contributions from the mirror image H0 ***/
 static double
-dipxH0 (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+dipxH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -81,7 +81,7 @@ dipxH0 (int component, const fault_params *fault, const magnetic_params *mag, do
 }
 
 static double
-dipyH0 (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+dipyH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -112,7 +112,7 @@ dipyH0 (int component, const fault_params *fault, const magnetic_params *mag, do
 }
 
 static double
-dipzH0 (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+dipzH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -138,7 +138,7 @@ dipzH0 (int component, const fault_params *fault, const magnetic_params *mag, do
 }
 
 static double
-dipH0 (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+dipH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -170,7 +170,7 @@ dipH0 (int component, const fault_params *fault, const magnetic_params *mag, dou
 
 /*** contributions from the mirror image HI ***/
 static double
-dipxHI (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+dipxHI (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -188,7 +188,7 @@ dipxHI (int component, const fault_params *fault, const magnetic_params *mag, do
 }
 
 static double
-dipyHI (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+dipyHI (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -210,7 +210,7 @@ dipyHI (int component, const fault_params *fault, const magnetic_params *mag, do
 }
 
 static double
-dipzHI (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+dipzHI (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -229,7 +229,7 @@ dipzHI (int component, const fault_params *fault, const magnetic_params *mag, do
 }
 
 static double
-dipHI (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+dipHI (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -261,7 +261,7 @@ dipHI (int component, const fault_params *fault, const magnetic_params *mag, dou
 
 /*** contributions from the mirror image HIII ***/
 static double
-dipxHIII (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+dipxHIII (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -279,7 +279,7 @@ dipxHIII (int component, const fault_params *fault, const magnetic_params *mag, 
 }
 
 static double
-dipyHIII (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+dipyHIII (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -301,7 +301,7 @@ dipyHIII (int component, const fault_params *fault, const magnetic_params *mag, 
 }
 
 static double
-dipzHIII (int component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+dipzHIII (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double val;
 	double h = mag->dcurier;
@@ -320,7 +320,7 @@ dipzHIII (int component, const fault_params *fault, const magnetic_params *mag, 
 }
 
 static double
-dipHIII (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+dipHIII (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -352,7 +352,7 @@ dipHIII (int component, const fault_params *fault, const magnetic_params *mag, d
 
 
 static double
-dipHII (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+dipHII (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4];
@@ -406,19 +406,19 @@ dipHII (int component, const fault_params *fault, const magnetic_params *mag, do
 }
 
 static double
-dip_slip_main (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+dip_slip_main (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	return dip0 (component, fault, mag, x, y, z);
 }
 
 static double
-dip_slip_mirror_image (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+dip_slip_mirror_image (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	return dipH0 (component, fault, mag, x, y, z);
 }
 
 static double
-dip_slip_submirror_image (int component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+dip_slip_submirror_image (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	double	val;
 	if (fault->fdepth + fault->fwidth2 * sd < mag->dcurier) val = dipHI (component, fault, mag, x, y, z);
@@ -429,7 +429,7 @@ dip_slip_submirror_image (int component, const fault_params *fault, const magnet
 
 /*** public functions ***/
 double
-dip_slip (int component, int term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+dip_slip (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	double res = 0.0;
 	if (!check_mag_component (component)) {
