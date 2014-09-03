@@ -71,16 +71,16 @@ is_singular_point (bool *flag)
 }
 
 void
-check_singular_point (const fault_params *fault, double x, double y, double eps)
+check_singular_point (const fault_params *fault, double x, double y, double z, double eps)
 {
-	int	i;
-
 	if (fabs (x + fault->flength1) < eps || fabs (x - fault->flength2) < eps) {
-		for (i = 0; i < 3; i++) {
-			double p = y * cd - d[i + 1] * sd;
-			double q = y * sd + d[i + 1] * cd;
-			if ((fabs (p + fault->fwidth1) < eps || fabs (p - fault->fwidth2) < eps) && fabs (q) < eps) singular_R[i + 1] = true;
-			if ((p + fault->fwidth1 < 0.0 || p < fault->fwidth2) && fabs (q) < eps) singular_RE[i + 1] = true;
+		int		i;
+		for (i = 1; i <= 3; i++) {
+			double	di = d[i] + ((i == 2) ? z : -z);
+			double p = y * cd - di * sd;
+			double q = y * sd + di * cd;
+			if ((fabs (p + fault->fwidth1) < eps || fabs (p - fault->fwidth2) < eps) && fabs (q) < eps) singular_R[i] = true;
+			if ((p + fault->fwidth1 < 0.0 || p < fault->fwidth2) && fabs (q) < eps) singular_RE[i] = true;
 		}
 	}
 	return;
@@ -150,9 +150,9 @@ set_geometry_variables (double sign, double xi, double et, double qq)
 	ir3 = 0.0;
 	ir5 = 0.0;
 	if (!singular_R[0]) {
-		if (fabs (r) > DBL_EPSILON)  ir  = 1.0 / r;
-		if (fabs (r3) > DBL_EPSILON) ir3 = 1.0 / r3;
-		if (fabs (r5) > DBL_EPSILON) ir5 = 1.0 / r5;
+		ir  = 1.0 / r;
+		ir3 = 1.0 / r3;
+		ir5 = 1.0 / r5;
 	}
 
 	irx   = 0.0;
@@ -174,11 +174,11 @@ set_geometry_variables (double sign, double xi, double et, double qq)
 	ir3e2 = 0.0;
 	ir5e3 = 0.0;
 	if (!singular_RE[0]) {
-		if (fabs (re) > DBL_EPSILON)   ire   = 1.0 / re;
-		if (fabs (re2) > DBL_EPSILON)  ire2  = 1.0 / re2;
-		if (fabs (r3e2) > DBL_EPSILON) ir3e2 = 1.0 / r3e2;
-		if (fabs (re3) > DBL_EPSILON)  ire3  = 1.0 / re3;
-		if (fabs (r5e3) > DBL_EPSILON) ir5e3 = 1.0 / r5e3;
+		ire   = 1.0 / re;
+		ire2  = 1.0 / re2;
+		ir3e2 = 1.0 / r3e2;
+		ire3  = 1.0 / re3;
+		ir5e3 = 1.0 / r5e3;
 	}
 
 	irc   = 0.0;

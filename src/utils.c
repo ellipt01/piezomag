@@ -24,9 +24,8 @@ magnetic_params_alloc (void)
 }
 
 /* keywords for parameters */
-const int	n_key = 21;
+const int	n_key = 19;
 const char *key[] = {
-	"z_obs",
 	"lambda",
 	"mu",
 	"beta",
@@ -46,12 +45,10 @@ const char *key[] = {
 	"fwidth1",
 	"fwidth2",
 	"fdepth",
-	"output_comp"
 };
 
 /* descriptions of keyword */
 const char *key_string[] = {
-	"z coordinates of observation point",
 	"lame's constants (lambda)",
 	"rigidity (mu)",
 	"stress sensitivity",
@@ -71,31 +68,7 @@ const char *key_string[] = {
 	"fault width1",
 	"fault width2",
 	"fault depth",
-	"component of output result"
 };
-
-static void
-set_output_comp (int val)
-{
-	switch (val) {
-	case 0:
-		output_comp = MAG_COMP_F;
-		break;
-	case 1:
-		output_comp = MAG_COMP_X;
-		break;
-	case 2:
-		output_comp = MAG_COMP_Y;
-		break;
-	case 3:
-		output_comp = MAG_COMP_Z;
-		break;
-	default:
-		output_comp = MAG_COMP_NONE;
-		break;
-	}
-	return;
-}
 
 /* store parameters to global variables and structures */
 static bool
@@ -110,87 +83,79 @@ set_params (double *items, fault_params *fault, magnetic_params *mag)
 		double val = items[i];
 		switch (i) {
 			case 0:
-				z_obs = val;
-				break;
-
-			case 1:
 				fault->lambda = val;
 				break;
 
-			case 2:
+			case 1:
 				fault->mu = val;
 				break;
 
-			case 3:
+			case 2:
 				mag->beta = val;
 				break;
 
-			case 4:
+			case 3:
 				mag->exf_inc = val;
 				break;
 
-			case 5:
+			case 4:
 				mag->exf_dec = val;
 				break;
 
-			case 6:
+			case 5:
 				mag->mgz_int = val;
 				break;
 
-			case 7:
+			case 6:
 				mag->mgz_inc = val;
 				break;
 
-			case 8:
+			case 7:
 				mag->mgz_dec = val;
 				break;
 
-			case 9:
+			case 8:
 				mag->dcurier = val;
 				break;
 
-			case 10:
+			case 9:
 				fault->u1 = val;
 				break;
 
-			case 11:
+			case 10:
 				fault->u2 = val;
 				break;
 
-			case 12:
+			case 11:
 				fault->u3 = val;
 				break;
 
-			case 13:
+			case 12:
 				fault->fstrike = val;
 				break;
 
-			case 14:
+			case 13:
 				fault->fdip = val;
 				break;
 
-			case 15:
+			case 14:
 				fault->flength1 = val;
 				break;
 
-			case 16:
+			case 15:
 				fault->flength2 = val;
 				break;
 
-			case 17:
+			case 16:
 				fault->fwidth1 = val;
 				break;
 
-			case 18:
+			case 17:
 				fault->fwidth2 = val;
 				break;
 
-			case 19:
+			case 18:
 				fault->fdepth = val;
-				break;
-
-			case 20:
-				set_output_comp (val);
 				break;
 
 			default:
@@ -216,9 +181,9 @@ set_constants (fault_params *fault, magnetic_params *mag)
 	c2d = cos (_deg2rad_ (2.0 * fault->fdip));
 
 	d[0] = DUMMY;	// not referred
-	d[1] = fault->fdepth - z_obs;	// source depth
-	d[2] = fault->fdepth - 2.0 * mag->dcurier + z_obs;	// depth of mirror image
-	d[3] = fault->fdepth + 2.0 * mag->dcurier - z_obs;	// depth of sub-mirror image
+	d[1] = fault->fdepth;	// source depth
+	d[2] = fault->fdepth - 2.0 * mag->dcurier;	// depth of mirror image
+	d[3] = fault->fdepth + 2.0 * mag->dcurier;	// depth of sub-mirror image
 
 	fault->alpha = (fault->lambda + fault->mu) / (fault->lambda + 2.0 * fault->mu);
 
@@ -316,20 +281,9 @@ fread_params (FILE *fp, fault_params *fault, magnetic_params *mag)
 
 	// todo: In here, check whether all parameters are valid
 
-	// z_obs must be < 0, i.e. outside of medium
-	if (z_obs >= 0.) {
-		fprintf (stderr, "ERROR: fread_params: z_obs must be < 0.\n");
-		fprintf (stderr, "observation point must be located outside the medium.\n");
-		return false;
-	}
 	// check fault dip
 	if (fault->fdip < 0. || 90. < fault->fdip) {
 		fprintf (stderr, "ERROR: fread_params: fdip must be in [0, 90] (deg.).\n");
-		return false;
-	}
-	// output_comp must be X_COMP(0:NS), Y_COMP(1:EW), Z_COMP(2:DownUp) or TOTAL_FORCE(3)
-	if (!check_mag_component (output_comp)) {
-		fprintf (stderr, "ERROR: fread_params: output_comp is invalid.\n");
 		return false;
 	}
 
@@ -345,99 +299,85 @@ fwrite_params (FILE *stream, const fault_params *fault, const magnetic_params *m
 		double val = 0.;
 		switch (i) {
 			case 0:
-				val = z_obs;
-				break;
-
-			case 1:
 				val = fault->lambda;
 				break;
 
-			case 2:
+			case 1:
 				val = fault->mu;
 				break;
 
-			case 3:
+			case 2:
 				val = mag->beta;
 				break;
 
-			case 4:
+			case 3:
 				val = mag->exf_inc;
 				break;
 
-			case 5:
+			case 4:
 				val = mag->exf_dec;
 				break;
 
-			case 6:
+			case 5:
 				val = mag->mgz_int;
 				break;
 
-			case 7:
+			case 6:
 				val = mag->mgz_inc;
 				break;
 
-			case 8:
+			case 7:
 				val = mag->mgz_dec;
 				break;
 
-			case 9:
+			case 8:
 				val = mag->dcurier;
 				break;
 
-			case 10:
+			case 9:
 				val = fault->u1;
 				break;
 
-			case 11:
+			case 10:
 				val = fault->u2;
 				break;
 
-			case 12:
+			case 11:
 				val = fault->u3;
 				break;
 
-			case 13:
+			case 12:
 				val = fault->fstrike;
 				break;
 
-			case 14:
+			case 13:
 				val = fault->fdip;
 				break;
 
-			case 15:
+			case 14:
 				val = fault->flength1;
 				break;
 
-			case 16:
+			case 15:
 				val = fault->flength2;
 				break;
 
-			case 17:
+			case 16:
 				val = fault->fwidth1;
 				break;
 
-			case 18:
+			case 17:
 				val = fault->fwidth2;
 				break;
 
-			case 19:
+			case 18:
 				val = fault->fdepth;
-				break;
-
-			case 20:
-				val = output_comp;
 				break;
 
 			default:
 				break;
 		}
-		fprintf (stream, "%s\t : %s", key_string[i], key[i]);
-		if (i == 20) {
-			if (output_comp == MAG_COMP_X) fprintf (stream, " = MAG_COMP_X\n");
-			else if (output_comp == MAG_COMP_Y) fprintf (stream, " = MAG_COMP_Y\n");
-			else if (output_comp == MAG_COMP_Z) fprintf (stream, " = MAG_COMP_Z\n");
-			else if (output_comp == MAG_COMP_F) fprintf (stream, " = MAG_COMP_F\n");
-		} else fprintf (stream, " = %f\n", val);
+		fprintf (stream, "%s\t : %s = %f\n", key_string[i], key[i], val);
 	}
 	return;
 }

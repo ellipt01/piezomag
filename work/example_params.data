@@ -66,7 +66,7 @@ u3 =  0.0
 ### fdip        : dip angle (deg.) (0 <= fdip <= 90 deg.)
 
 fstrike = 90.0
-fdip    = 45.0
+fdip    = 80.0
 
 ### LENGTH, WIDTH AND DEPTH
 ### flength1, flength2 : fault length(km)
@@ -79,17 +79,3 @@ fwidth1  =  0.0
 fwidth2  =  5.0
 fdepth   =  0.5
 
-############## PARAMETERS FOR CALCULATION ##############
-
-### HEIGHT OF OBSERVATION POINT
-### z_obs   : z coordinate of obs. point (< 0: outside medium) (km)
-
-z_obs = -0.002
-
-### OUTPUT COMPONENT
-### output_comp = 0 : total force
-###               1 : x component
-###               2 : y component
-###               3 : z component
-
-output_comp = VAL

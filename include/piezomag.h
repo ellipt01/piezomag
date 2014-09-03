@@ -34,15 +34,9 @@ typedef enum {
 } SeismoMagTerm;
 
 
-/*c********************
- *c  global variables
- *c********************/
-
-/* z-coordinate of observation point ***/
-double			z_obs;
-
-/* specify component of output : X_COMP (1), Y_COMP (2), Z_COMP (3) or TOTAL_FORCE (0) */
-MagComp		output_comp;
+/*c*********
+ *c  flags
+ *c*********/
 
 /* verbos mide */
 bool			verbos;

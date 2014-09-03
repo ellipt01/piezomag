@@ -30,6 +30,35 @@ double		ysouth = -10.;
 double		ynorth = 10.;
 double		dy = 0.1;
 
+/* z-coordinate of observation point ***/
+double		zobs;
+
+/* specify component of output : X_COMP (1), Y_COMP (2), Z_COMP (3) or TOTAL_FORCE (0) */
+MagComp	output_comp;
+
+static void
+set_output_comp (int val)
+{
+	switch (val) {
+	case 0:
+		output_comp = MAG_COMP_F;
+		break;
+	case 1:
+		output_comp = MAG_COMP_X;
+		break;
+	case 2:
+		output_comp = MAG_COMP_Y;
+		break;
+	case 3:
+		output_comp = MAG_COMP_Z;
+		break;
+	default:
+		output_comp = MAG_COMP_NONE;
+		break;
+	}
+	return;
+}
+
 static void
 usage (char *toolname)
 {
@@ -42,6 +71,7 @@ usage (char *toolname)
 	fprintf (stderr, "The seismomagnetic field is calculated on the grid [x0:dx:x1][y0:dy:y1].\n");
 	return;
 }
+
 
 /*** set parameters from command-line options ***/
 static bool
@@ -61,7 +91,7 @@ initialize (int argc, char **argv, fault_params **fault, magnetic_params **mag)
 	}
 
 	verbos = false;
-	while ((c = getopt (argc, argv, "f:r:i:v")) != -1) {
+	while ((c = getopt (argc, argv, "f:r:i:z:o:v")) != -1) {
 
 		switch (c) {
 			case 'f':
@@ -77,6 +107,16 @@ initialize (int argc, char **argv, fault_params **fault, magnetic_params **mag)
 			case 'i':
 			case 'I':
 				sscanf (optarg, "%lf/%lf", &dx, &dy);
+				break;
+
+			case 'z':
+			case 'Z':
+				zobs = (double) atof (optarg);
+				break;
+
+			case 'o':
+			case 'O':
+				set_output_comp (atoi (optarg));
 				break;
 
 			case 'v':
@@ -126,7 +166,7 @@ main (int argc, char **argv)
 		exit (1);
 	}
 
-	fprintf_seismomagnetic_field (stdout, output_comp, fault, mag, xwest, xeast, dx, ysouth, ynorth, dy, z_obs);
+	fprintf_seismomagnetic_field (stdout, output_comp, fault, mag, xwest, xeast, dx, ysouth, ynorth, dy, zobs);
 
 	free (fault);
 	free (mag);

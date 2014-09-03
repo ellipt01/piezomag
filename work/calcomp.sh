@@ -104,10 +104,10 @@ for i in 1 2 3 0; do
 	sed s'/VAL/'$i'/'g $fnparam >| _tmp_infile_
 
 	# calculate seismomagnetic field in range x=[-10:0.1:10], y=[-10:0.1:10]
-	../main/piez -f _tmp_infile_ -r $range -i $inc >| res
+	../main/piez -f _tmp_infile_ -r $range -i $inc -z -0.001 -o $i >| res
 
 	# create contour figure
-	surface -Gres.grd -I"$inc" -R -: res
+	xyz2grd -Gres.grd -I"$inc" -R -: res
 
 	# draw color contour
 	grdimage res.grd -JX -R -P -Cmg.cpt -B5nSWe -X"$shiftx" -Y"$shifty" -K -O >> $fnout
@@ -137,4 +137,4 @@ psscale -Cmg.cpt -D0/-1.5/5/0.5h -B2.5:"(nT)": -O >> $fnout
 
 evince $fnout &
 
-rm -f res res.grd _tmp_infile_ _tmp_fault_ mg.cpt
+rm -f res.grd _tmp_infile_ _tmp_fault_ mg.cpt

@@ -32,8 +32,9 @@ tensile0 (MagComp component, const fault_params *fault, const magnetic_params *m
 	double sign = 1.0;
 	double hx, hy, hz;
 
-	p = y * cd - d[1] * sd;
-	q = y * sd + d[1] * cd;
+	set_singular_flag (1);
+	p = y * cd - (d[1] - z) * sd;
+	q = y * sd + (d[1] - z) * cd;
 
 	for (i = 0; i < 4; i++) {
 		double xi, et;
@@ -152,8 +153,9 @@ tensileH0 (MagComp component, const fault_params *fault, const magnetic_params *
 	double sign = 1.0;
 	double hx, hy, hz;
 
-	p = y * cd - d[3] * sd;
-	q = y * sd + d[3] * cd;
+	set_singular_flag (3);
+	p = y * cd - (d[3] - z) * sd;
+	q = y * sd + (d[3] - z) * cd;
 
 	for (i = 0; i < 4; i++) {
 		double xi, et;
@@ -249,8 +251,9 @@ tensileHI (MagComp component, const fault_params *fault, const magnetic_params *
 	double sign = -1.0;
 	double hx, hy, hz;
 
-	p = y * cd - d[2] * sd;
-	q = y * sd + d[2] * cd;
+	set_singular_flag (2);
+	p = y * cd - (d[2] + z) * sd;
+	q = y * sd + (d[2] + z) * cd;
 
 	for (i = 0; i < 4; i++) {
 		double xi, et;
@@ -345,8 +348,9 @@ tensileHIII (MagComp component, const fault_params *fault, const magnetic_params
 	double sign = 1.0;
 	double hx, hy, hz;
 
-	p = y * cd - d[1] * sd;
-	q = y * sd + d[1] * cd;
+	set_singular_flag (1);
+	p = y * cd - (d[1] - z) * sd;
+	q = y * sd + (d[1] - z) * cd;
 
 	for (i = 0; i < 4; i++) {
 		double xi, et;
@@ -378,8 +382,9 @@ tensileHII (MagComp component, const fault_params *fault, const magnetic_params 
 	double w = (mag->dcurier - fault->fdepth) / sd;
 	double hx, hy, hz;
 
-	p = y * cd - d[2] * sd;
-	q = y * sd + d[2] * cd;
+	set_singular_flag (2);
+	p = y * cd - (d[2] + z) * sd;
+	q = y * sd + (d[2] + z) * cd;
 
 	for (i = 0; i < 4; i++) {
 		double xi, et;
@@ -399,8 +404,9 @@ tensileHII (MagComp component, const fault_params *fault, const magnetic_params 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
 
-	p = y * cd - d[1] * sd;
-	q = y * sd + d[1] * cd;
+	set_singular_flag (1);
+	p = y * cd - (d[1] - z) * sd;
+	q = y * sd + (d[1] - z) * cd;
 
 	for (i = 0; i < 4; i++) {
 		double xi, et;

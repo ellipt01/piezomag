@@ -32,9 +32,9 @@ strike0 (MagComp component, const fault_params *fault, const magnetic_params *ma
 	double sign = 1.0;
 	double hx, hy, hz;
 
-//	set_singular_flag (1);
-	p = y * cd - d[1] * sd;
-	q = y * sd + d[1] * cd;
+	set_singular_flag (1);
+	p = y * cd - (d[1] - z) * sd;
+	q = y * sd + (d[1] - z) * cd;
 
 	for (i = 0; i < 4; i++) {
 		double xi, et;
@@ -52,7 +52,6 @@ strike0 (MagComp component, const fault_params *fault, const magnetic_params *ma
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
-//	clear_singular_flag (0);
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
@@ -140,9 +139,9 @@ strikeH0 (MagComp component, const fault_params *fault, const magnetic_params *m
 	double sign = 1.0;
 	double hx, hy, hz;
 
-//	set_singular_flag (3);
-	p = y * cd - d[3] * sd;
-	q = y * sd + d[3] * cd;
+	set_singular_flag (3);
+	p = y * cd - (d[3] - z) * sd;
+	q = y * sd + (d[3] - z) * cd;
 
 	for (i = 0; i < 4; i++) {
 		double xi, et;
@@ -160,7 +159,6 @@ strikeH0 (MagComp component, const fault_params *fault, const magnetic_params *m
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
-//	clear_singular_flag (0);
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
@@ -228,9 +226,9 @@ strikeHI (MagComp component, const fault_params *fault, const magnetic_params *m
 	double sign = -1.0;
 	double hx, hy, hz;
 
-//	set_singular_flag (2);
-	p = y * cd - d[2] * sd;
-	q = y * sd + d[2] * cd;
+	set_singular_flag (2);
+	p = y * cd - (d[2] + z) * sd;
+	q = y * sd + (d[2] + z) * cd;
 
 	for (i = 0; i < 4; i++) {
 		double xi, et;
@@ -248,7 +246,6 @@ strikeHI (MagComp component, const fault_params *fault, const magnetic_params *m
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
-//	clear_singular_flag (0);
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
@@ -316,9 +313,9 @@ strikeHIII (MagComp component, const fault_params *fault, const magnetic_params 
 	double sign = 1.0;
 	double hx, hy, hz;
 
-//	set_singular_flag (1);
-	p = y * cd - d[1] * sd;
-	q = y * sd + d[1] * cd;
+	set_singular_flag (1);
+	p = y * cd - (d[1] - z) * sd;
+	q = y * sd + (d[1] - z) * cd;
 
 	for (i = 0; i < 4; i++) {
 		double xi, et;
@@ -336,7 +333,6 @@ strikeHIII (MagComp component, const fault_params *fault, const magnetic_params 
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
-//	clear_singular_flag (0);
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
@@ -351,9 +347,9 @@ strikeHII (MagComp component, const fault_params *fault, const magnetic_params *
 	double w = (mag->dcurier - fault->fdepth) / sd;
 	double hx, hy, hz;
 
-//	set_singular_flag (2);
-	p = y * cd - d[2] * sd;
-	q = y * sd + d[2] * cd;
+	set_singular_flag (2);
+	p = y * cd - (d[2] + z) * sd;
+	q = y * sd + (d[2] + z) * cd;
 
 	for (i = 0; i < 4; i++) {
 		double xi, et;
@@ -373,9 +369,9 @@ strikeHII (MagComp component, const fault_params *fault, const magnetic_params *
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
 
-//	set_singular_flag (1);
-	p = y * cd - d[1] * sd;
-	q = y * sd + d[1] * cd;
+	set_singular_flag (1);
+	p = y * cd - (d[1] - z) * sd;
+	q = y * sd + (d[1] - z) * cd;
 
 	for (i = 0; i < 4; i++) {
 		double xi, et;

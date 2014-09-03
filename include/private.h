@@ -141,7 +141,7 @@ void	rotate (double theta, double *x, double *y);
 void	clear_all_singular_flags (void);
 void	set_singular_flag (int i);
 bool	is_singular_point (bool *flag);
-void	check_singular_point (const fault_params *fault, double x, double y, double eps);
+void	check_singular_point (const fault_params *fault, double x, double y, double z, double eps);
 bool	check_mag_component (MagComp component);
 bool	check_seismo_mag_term (SeismoMagTerm term);
 void	set_geometry_variables (double sign, double xi, double et, double qq);
