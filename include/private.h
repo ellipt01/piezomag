@@ -14,9 +14,11 @@
  *c
  *c*********************************************************/
 
-/* flags */
-bool	singular_R[4];	// R is singular?
-bool	singular_RE[4];	// R + eta is singular?
+/* flags for singularity */
+bool	singular_iR;	// is 1 / R_i singular?
+bool	singular_iRX;	// is 1 / (R_i + xi) singular?
+bool	singular_iRE;	// is 1 / (R_i + eta_i) singular?
+bool	singular_iRC;	// is 1 / (R_i + c_i) singular?
 
 /* trigonometric functions */
 double	sd;		// sin (delta)
@@ -30,9 +32,9 @@ double	c2d;	// cos (2 * delta)
 
 // depth of source and mirror images
 // d0 = dummy (not used)
-// d1 = fdepth - z_obs
-// d2 = fdepth - 2 * dcurier + z_obs
-// d3 = fdepth + 2 * dcurier - z_obs
+// d1 = fdepth
+// d2 = fdepth - 2 * dcurier
+// d3 = fdepth + 2 * dcurier
 double	d[4];
 
 // alpha;
@@ -139,11 +141,20 @@ double P3z (MagComp component, double sign, double xi, double et, double qq);
 double	total_force (double hx, double hy, double hz, double exf_inc, double exf_dec);
 void	rotate (double theta, double *x, double *y);
 void	clear_all_singular_flags (void);
-void	set_singular_flag (int i);
-bool	is_singular_point (bool *flag);
-void	check_singular_point (const fault_params *fault, double x, double y, double z, double eps);
+//void	set_singular_flag (int i);
+bool	is_singular_point (void);
+//void	check_singular_point (const fault_params *fault, double x, double y, double z, double eps);
 bool	check_mag_component (MagComp component);
 bool	check_seismo_mag_term (SeismoMagTerm term);
 void	set_geometry_variables (double sign, double xi, double et, double qq);
+
+/** strike.c **/
+double	strike_slip (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
+
+/** dip.c **/
+double	dip_slip (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
+
+/** tensile.c **/
+double	tensile_opening (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
 
 #endif /* _PRIVATE_H_ */

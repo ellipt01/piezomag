@@ -8,8 +8,7 @@
  *c**********/
 
 /* degree -> radian */
-#define _deg2rad_(a) ((a) * M_PI / 180.)
-
+#define deg2rad_(a) ((a) * M_PI / 180.)
 
 /*c*******
  *  enums
@@ -33,22 +32,12 @@ typedef enum {
 	SEISMO_MAG_TOTAL =  SEISMO_MAG_MAIN | SEISMO_MAG_MIRROR | SEISMO_MAG_SUBMIRROR
 } SeismoMagTerm;
 
-
 /*c*********
  *c  flags
  *c*********/
 
-/* verbos mide */
-bool			verbos;
-
 /* if fdip = 90., i.e. fault is vertical, set true */
-bool			fault_is_vertical;
-
-/* allowable distance between obs. and singular point.
- * if |singular_point - obs. point| < eps_dist, evaluation of
- * seismomagnetic field is avoided for this obs. point. */
-extern double	eps_dist;
-
+bool	fault_is_vertical;
 
 /*c********************
  *c    structures
@@ -131,19 +120,9 @@ bool	seismomagnetic_field (MagComp component, const fault_params *fault, const m
 			double xobs, double yobs, double zobs, double *val);
 
 /* calculate seismomagnetic field on grid x=[xobs1:dx:xobs2], y=[yobs1:dy:yobs2], z=zobs */
-/*
 void	fprintf_seismomagnetic_field_term (FILE *stream, MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag,
 			double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs);
 void	fprintf_seismomagnetic_field (FILE *stream, MagComp component, const fault_params *fault, const magnetic_params *mag,
 			double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs);
-*/
-/** strike.c **/
-double	strike_slip (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
-
-/** dip.c **/
-double	dip_slip (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
-
-/** tensile.c **/
-double	tensile_opening (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
 
 #endif	// _PIEZOMAG_H_

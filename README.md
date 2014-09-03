@@ -33,14 +33,14 @@ This library provides the following public functions:
 bool
 fread_params (FILE *fp, fault_params *fault, magnetic_params *mag);
 ```
-This function reads parameter file and store user-defined parameters to global
-variables and following pre-allocated structures:
+This function reads parameter file and store user-defined parameters to the
+following pre-allocated structures:
 
 ```fault_params *fault: ``` structure which stores fault parameters.
 
 ```magnetic_params *mag:``` structure which stores crustal magnetic properties.
 
-For the global variables and members of these structures, see "include/piezomag.h",
+For the details of the members of above structures, see "include/piezomag.h",
 and for the details of the parameter file, see "work/example_params.data"
 (an example of parameter file).
 
@@ -128,6 +128,7 @@ seismomagnetic field on the grid of ```x=[xobs1:dx:xobs2]```, ```y=[yobs1:dy:yob
 To run this program, do
 ```
 $ ./main/piez -f <parameter file name> -r <xobs1/xobs2/yobs1/yobs2> -i <dx/dy>
+  -z <zobs> -o <output component: 0 = total force, 1 = X, 2 = Y and 3 = Z>
 ```
 
 For more details, see "work/calcomp.sh" (an example script to run main/piez).

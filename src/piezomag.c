@@ -13,14 +13,7 @@
 #include "piezomag.h"
 #include "private.h"
 
-#ifdef MIN
-#undef MIN
-#endif
 #define PIEZOMAG_MIN(x, y) ((x) <= (y)) ? (x) : (y)
-
-/* allowable distance between obs. and singular point.
- * default = 1.e-4 (km) */
-double	eps_dist = 1.e-4;
 
 /*c*********************************************************************
  * calculates specified component of seismomagnetic field
@@ -72,6 +65,7 @@ seismomagnetic_field_term (MagComp component, SeismoMagTerm term, const fault_pa
 		fprintf (stderr, "ERROR: seismomagnetic_field_term: component must be MAG_COMP_X, MAG_COMP_Y, MAG_COMP_Z or MAG_COMP_F\n");
 		return false;
 	}
+	// term must be SEISMO_MAG_MAIN, SEISMO_MAG_MIRROR, SEISMO_MAG_SUBMIRROR or SEISMO_MAG_TOTAL
 	if (!check_seismo_mag_term (term)) {
 		fprintf (stderr, "ERROR: seismomagnetic_field_term: term must be SEISMO_MAG_MAIN, SEISMO_MAG_MIRROR, SEISMO_MAG_SUBMIRROR\n");
 		return false;
@@ -83,9 +77,6 @@ seismomagnetic_field_term (MagComp component, SeismoMagTerm term, const fault_pa
 	if (fabs (fault->fstrike) > DBL_EPSILON) rotate (fault->fstrike, &tx, &ty);
 
 	clear_all_singular_flags ();
-	check_singular_point (fault, tx, ty, zobs, eps_dist);
-	if (is_singular_point (singular_R)) status = false;
-	if (is_singular_point (singular_RE)) status = false;
 
 	if (component == MAG_COMP_Z) {
 		*val = seismomagnetic_component_in_fault_coordinate (MAG_COMP_Z, term, fault, mag, tx, ty, zobs);
@@ -110,6 +101,7 @@ seismomagnetic_field_term (MagComp component, SeismoMagTerm term, const fault_pa
 		if (fabs (fault->fstrike) > DBL_EPSILON) rotate (-fault->fstrike, &hx, &hy);
 		*val = total_force (hx, hy, hz, mag->exf_inc, mag->exf_dec);
 	}
+	if (is_singular_point ()) status = false;
 
 	return status;
 }
@@ -165,6 +157,7 @@ fprintf_seismomagnetic_field_term (FILE *stream, MagComp component, SeismoMagTer
 		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field_term: component must be MAG_COMP_X, MAG_COMP_Y, MAG_COMP_Z or MAG_COMP_F\n");
 		return;
 	}
+	// term must be SEISMO_MAG_MAIN, SEISMO_MAG_MIRROR, SEISMO_MAG_SUBMIRROR or SEISMO_MAG_TOTAL
 	if (!check_seismo_mag_term (term)) {
 		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field_term: term must be SEISMO_MAG_MAIN, SEISMO_MAG_MIRROR, SEISMO_MAG_SUBMIRROR\n");
 		return;
@@ -173,31 +166,13 @@ fprintf_seismomagnetic_field_term (FILE *stream, MagComp component, SeismoMagTer
 	n_grid_x = (int) floor ((xobs2 - xobs1) / dx);
 	n_grid_y = (int) floor ((yobs2 - yobs1) / dy);
 
-	/* eps_dist is set to 2 * (minimum grid interval) */
-	eps_dist = 2. * ((double) PIEZOMAG_MIN (dx, dy));
-
 	for (i = 0, x = xobs1; i <= n_grid_x; i++, x += dx) {
 		for (j = 0, y = yobs1; j <= n_grid_y; j++, y += dy) {
 			double val;
 
 			clear_all_singular_flags ();
 			status = seismomagnetic_field_term (component, term, fault, mag, x, y, zobs, &val);
-			if (!status && is_singular_point (singular_R)) {
-				if (verbos) {
-					fprintf (stderr, "## SINGULAR: R: ");
-					fprintf (stderr, "x = %f, y = %f", x, y);
-					fprintf (stderr, " evaluation skiped ##\n");
-				}
-				continue;
-			}
-			if (!status && is_singular_point (singular_RE)) {
-				if (verbos) {
-					fprintf (stderr, "## SINGULAR: R + ETA: ");
-					fprintf (stderr, "x = %f, y = %f", x, y);
-					fprintf (stderr, " evaluation skiped ##\n");
-				}
-				continue;
-			}
+			if (!status) continue;
 			fprintf (stream, "%.4f\t%.4f\t%.8f\n", x, y, val);
 		}
 	}
@@ -224,6 +199,7 @@ fprintf_seismomagnetic_field (FILE *stream, MagComp component,
 		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field: component must be MAG_COMP_X, MAG_COMP_Y, MAG_COMP_Z or MAG_COMP_F\n");
 		return;
 	}
+
 	fprintf_seismomagnetic_field_term (stream, component, SEISMO_MAG_TOTAL, fault, mag, xobs1, xobs2, dx, yobs1, yobs2, dy, zobs);
 	return;
 }

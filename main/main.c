@@ -36,6 +36,10 @@ double		zobs;
 /* specify component of output : X_COMP (1), Y_COMP (2), Z_COMP (3) or TOTAL_FORCE (0) */
 MagComp	output_comp;
 
+/* verbos mide */
+bool		verbos;
+
+
 static void
 set_output_comp (int val)
 {

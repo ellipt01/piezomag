@@ -32,7 +32,6 @@ dip0 (MagComp component, const fault_params *fault, const magnetic_params *mag, 
 	double sign = 1.0;
 	double hx, hy, hz;
 
-	set_singular_flag (1);
 	p = y * cd - (d[1] - z) * sd;
 	q = y * sd + (d[1] - z) * cd;
 
@@ -147,7 +146,6 @@ dipH0 (MagComp component, const fault_params *fault, const magnetic_params *mag,
 	double sign = 1.0;
 	double hx, hy, hz;
 
-	set_singular_flag (3);
 	p = y * cd - (d[3] - z) * sd;
 	q = y * sd + (d[3] - z) * cd;
 
@@ -239,7 +237,6 @@ dipHI (MagComp component, const fault_params *fault, const magnetic_params *mag,
 	double sign = -1.0;
 	double hx, hy, hz;
 
-	set_singular_flag (2);
 	p = y * cd - (d[2] + z) * sd;
 	q = y * sd + (d[2] + z) * cd;
 
@@ -331,7 +328,6 @@ dipHIII (MagComp component, const fault_params *fault, const magnetic_params *ma
 	double sign = 1.0;
 	double hx, hy, hz;
 
-	set_singular_flag (1);
 	p = y * cd - (d[1] - z) * sd;
 	q = y * sd + (d[1] - z) * cd;
 
@@ -365,7 +361,6 @@ dipHII (MagComp component, const fault_params *fault, const magnetic_params *mag
 	double w = (mag->dcurier - fault->fdepth) / sd;
 	double hx, hy, hz;
 
-	set_singular_flag (2);
 	p = y * cd - (d[2] + z) * sd;
 	q = y * sd + (d[2] + z) * cd;
 
@@ -387,7 +382,6 @@ dipHII (MagComp component, const fault_params *fault, const magnetic_params *mag
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
 
-	set_singular_flag (1);
 	p = y * cd - (d[1] - z) * sd;
 	q = y * sd + (d[1] - z) * cd;
 

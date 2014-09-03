@@ -66,7 +66,7 @@ u3 =  0.0
 ### fdip        : dip angle (deg.) (0 <= fdip <= 90 deg.)
 
 fstrike = 90.0
-fdip    = 80.0
+fdip    = 45.0
 
 ### LENGTH, WIDTH AND DEPTH
 ### flength1, flength2 : fault length(km)

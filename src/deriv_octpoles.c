@@ -410,7 +410,7 @@ P3z_z (double sign, double xi, double et, double qq)
 double
 M1y (MagComp component, double sign, double xi, double et, double qq)
 {
-	if (singular_RE[0]) return 0.;
+	if (is_singular_point ()) return 0.;
 	if (component == MAG_COMP_X) return M1y_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return M1y_y (sign, xi, et, qq);
 	else if (component == MAG_COMP_Z) return M1y_z (sign, xi, et, qq);
@@ -420,7 +420,7 @@ M1y (MagComp component, double sign, double xi, double et, double qq)
 double
 M1z (MagComp component, double sign, double xi, double et, double qq)
 {
-	if (singular_RE[0]) return 0.;
+	if (is_singular_point ()) return 0.;
 	if (component == MAG_COMP_X) return M1z_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return M1z_y (sign, xi, et, qq);
 	else if (component == MAG_COMP_Z) return M1z_z (sign, xi, et, qq);
@@ -430,7 +430,7 @@ M1z (MagComp component, double sign, double xi, double et, double qq)
 double
 M2y (MagComp component, double sign, double xi, double et, double qq)
 {
-	if (singular_RE[0]) return 0.;
+	if (is_singular_point ()) return 0.;
 	if (component == MAG_COMP_X) return M2y_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return M2y_y (sign, xi, et, qq);
 	else if (component == MAG_COMP_Z) return M2y_z (sign, xi, et, qq);
@@ -440,7 +440,7 @@ M2y (MagComp component, double sign, double xi, double et, double qq)
 double
 M2z (MagComp component, double sign, double xi, double et, double qq)
 {
-	if (singular_RE[0]) return 0.;
+	if (is_singular_point ()) return 0.;
 	if (component == MAG_COMP_X) return M2z_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return M2z_y (sign, xi, et, qq);
 	else if (component == MAG_COMP_Z) return M2z_z (sign, xi, et, qq);
@@ -450,7 +450,7 @@ M2z (MagComp component, double sign, double xi, double et, double qq)
 double
 M3y (MagComp component, double sign, double xi, double et, double qq)
 {
-	if (singular_RE[0]) return 0.;
+	if (is_singular_point ()) return 0.;
 	if (component == MAG_COMP_X) return M3y_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return M3y_y (sign, xi, et, qq);
 	else if (component == MAG_COMP_Z) return M3y_z (sign, xi, et, qq);
@@ -460,7 +460,7 @@ M3y (MagComp component, double sign, double xi, double et, double qq)
 double
 M3z (MagComp component, double sign, double xi, double et, double qq)
 {
-	if (singular_RE[0]) return 0.;
+	if (is_singular_point ()) return 0.;
 	if (component == MAG_COMP_X) return M3z_x (sign, xi, et, qq);
 	else if (component == MAG_COMP_Y) return M3z_y (sign, xi, et, qq);
 	else if (component == MAG_COMP_Z) return M3z_z (sign, xi, et, qq);
