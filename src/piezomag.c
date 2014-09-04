@@ -6,7 +6,6 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <math.h>
 #include <float.h>
 
@@ -51,7 +50,6 @@ seismomagnetic_component_in_fault_coordinate (MagComp component, SeismoMagTerm t
 bool
 seismomagnetic_field_term (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs, double *val)
 {
-	bool	status = true;	// if obs. point is singular point, status is set to false
 	double	tx, ty;	// obs. point on fault coordinate system
 
 	// z_obs must be < 0, i.e. outside of medium
@@ -101,9 +99,7 @@ seismomagnetic_field_term (MagComp component, SeismoMagTerm term, const fault_pa
 		if (fabs (fault->fstrike) > DBL_EPSILON) rotate (-fault->fstrike, &hx, &hy);
 		*val = total_force (hx, hy, hz, mag->exf_inc, mag->exf_dec);
 	}
-	if (is_singular_point ()) status = false;
-
-	return status;
+	return (is_singular_point ()) ? false : true;
 }
 
 /*c*******************************************************

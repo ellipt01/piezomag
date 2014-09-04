@@ -3,16 +3,17 @@
 
 #include <stdbool.h>
 
-/*c**********
- * utilities
- *c**********/
+/*c***************
+ *c   utilities
+ *c***************/
 
 /* degree -> radian */
 #define deg2rad_(a) ((a) * M_PI / 180.)
 
-/*c*******
- *  enums
- *c*******/
+
+/*c***********
+ *c   enums
+ *c***********/
 
 /* definition of magnetic component */
 typedef enum {
@@ -32,16 +33,10 @@ typedef enum {
 	SEISMO_MAG_TOTAL =  SEISMO_MAG_MAIN | SEISMO_MAG_MIRROR | SEISMO_MAG_SUBMIRROR
 } SeismoMagTerm;
 
-/*c*********
- *c  flags
- *c*********/
 
-/* if fdip = 90., i.e. fault is vertical, set true */
-bool	fault_is_vertical;
-
-/*c********************
- *c    structures
- *c********************/
+/*c****************
+ *c   structures
+ *c****************/
 
 /* fault parameters */
 typedef struct s_fault_params	fault_params;
@@ -98,30 +93,34 @@ struct s_magnetic_params {
 };
 
 
-/*c********************
- *c  public functions
- *c********************/
+/*c**********************
+ *c   public functions
+ *c**********************/
 
-/** util.c **/
+/*** params_io.c ***/
+
 /* allocate structures */
 fault_params		*fault_params_alloc (void);
 magnetic_params	*magnetic_params_alloc (void);
 
-/* read parameters from file FILE *fp and store them to global variables
-   and pre-allocated structures: fault_params *fault, magnetic_params *mag. */
+/* read parameters from file FILE *fp and store them to
+ * pre-allocated structures: fault_params *fault, magnetic_params *mag. */
 bool	fread_params (FILE *fp, fault_params *fault, magnetic_params *mag);
 
-/** piezomag.c **/
-/* calculate seismomagnetic field on observation point (xobs, yobs, zobs)
-   output specified seismomagnetic term: main (0), mirror image (H0) or sub-mirror image term (HI, HIII or HII) */
+/*** piezomag.c ***/
+
+/* calculate seismomagnetic term (main(0), mirror image(H0) or sub-mirror image(HI, HIII or HII))
+ * on observation point (xobs, yobs, zobs) */
 bool	seismomagnetic_field_term (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag,
 			double xobs, double yobs, double zobs, double *val);
+/* calculate seismomagnetic field on observation point (xobs, yobs, zobs) */
 bool	seismomagnetic_field (MagComp component, const fault_params *fault, const magnetic_params *mag,
 			double xobs, double yobs, double zobs, double *val);
 
-/* calculate seismomagnetic field on grid x=[xobs1:dx:xobs2], y=[yobs1:dy:yobs2], z=zobs */
+/* calculate and fprintf seismomagnetic term on grid x=[xobs1:dx:xobs2], y=[yobs1:dy:yobs2], z=zobs */
 void	fprintf_seismomagnetic_field_term (FILE *stream, MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag,
 			double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs);
+/* calculate and fprintf seismomagnetic field on grid x=[xobs1:dx:xobs2], y=[yobs1:dy:yobs2], z=zobs */
 void	fprintf_seismomagnetic_field (FILE *stream, MagComp component, const fault_params *fault, const magnetic_params *mag,
 			double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs);
 

@@ -137,4 +137,4 @@ psscale -Cmg.cpt -D0/-1.5/5/0.5h -B2.5:"(nT)": -O >> $fnout
 
 evince $fnout &
 
-rm -f res.grd _tmp_infile_ _tmp_fault_ mg.cpt
+rm -f res res.grd _tmp_infile_ _tmp_fault_ mg.cpt

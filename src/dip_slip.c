@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <math.h>
+#include <float.h>
 
 #include "piezomag.h"
 #include "private.h"
@@ -29,14 +30,14 @@ dip0 (MagComp component, const fault_params *fault, const magnetic_params *mag, 
 	int		i;
 	double res[4];
 	double p, q;
-	double sign = 1.0;
-	double hx, hy, hz;
 
 	p = y * cd - (d[1] - z) * sd;
 	q = y * sd + (d[1] - z) * cd;
 
 	for (i = 0; i < 4; i++) {
 		double xi, et;
+		double hx = 0., hy = 0., hz = 0.;
+		double sign = 1.0;
 
 		xi = x + fault->flength1;
 		et = p + fault->fwidth1;
@@ -44,10 +45,10 @@ dip0 (MagComp component, const fault_params *fault, const magnetic_params *mag, 
 		if (i >= 2)		 xi = x - fault->flength2;
 		if (i % 2 == 0) et = p - fault->fwidth2;
 
-		set_geometry_variables (sign, xi, et, q);
-		hx = dipx0 (component, xi, et, q);
-		hy = dipy0 (component, xi, et, q);
-		hz = dipz0 (component, xi, et, q);
+		calc_geometry_variables (sign, xi, et, q);
+		if (fabs (mag->cx) > DBL_EPSILON) hx = dipx0 (component, xi, et, q);
+		if (fabs (mag->cy) > DBL_EPSILON) hy = dipy0 (component, xi, et, q);
+		if (fabs (mag->cz) > DBL_EPSILON) hz = dipz0 (component, xi, et, q);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -143,14 +144,14 @@ dipH0 (MagComp component, const fault_params *fault, const magnetic_params *mag,
 	int		i;
 	double res[4];
 	double p, q;
-	double sign = 1.0;
-	double hx, hy, hz;
 
 	p = y * cd - (d[3] - z) * sd;
 	q = y * sd + (d[3] - z) * cd;
 
 	for (i = 0; i < 4; i++) {
 		double xi, et;
+		double hx = 0., hy = 0., hz = 0.;
+		double sign = 1.0;
 
 		xi = x + fault->flength1;
 		et = p + fault->fwidth1;
@@ -158,10 +159,10 @@ dipH0 (MagComp component, const fault_params *fault, const magnetic_params *mag,
 		if (i >= 2)		 xi = x - fault->flength2;
 		if (i % 2 == 0) et = p - fault->fwidth2;
 
-		set_geometry_variables (sign, xi, et, q);
-		hx = dipxH0 (component, fault, mag, xi, et, q, y, z);
-		hy = dipyH0 (component, fault, mag, xi, et, q, y, z);
-		hz = dipzH0 (component, fault, mag, xi, et, q, y, z);
+		calc_geometry_variables (sign, xi, et, q);
+		if (fabs (mag->cx) > DBL_EPSILON) hx = dipxH0 (component, fault, mag, xi, et, q, y, z);
+		if (fabs (mag->cy) > DBL_EPSILON) hy = dipyH0 (component, fault, mag, xi, et, q, y, z);
+		if (fabs (mag->cz) > DBL_EPSILON) hz = dipzH0 (component, fault, mag, xi, et, q, y, z);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -234,14 +235,14 @@ dipHI (MagComp component, const fault_params *fault, const magnetic_params *mag,
 	int		i;
 	double res[4];
 	double p, q;
-	double sign = -1.0;
-	double hx, hy, hz;
 
 	p = y * cd - (d[2] + z) * sd;
 	q = y * sd + (d[2] + z) * cd;
 
 	for (i = 0; i < 4; i++) {
 		double xi, et;
+		double hx = 0., hy = 0., hz = 0.;
+		double sign = -1.0;
 
 		xi = x + fault->flength1;
 		et = p + fault->fwidth1;
@@ -249,10 +250,10 @@ dipHI (MagComp component, const fault_params *fault, const magnetic_params *mag,
 		if (i >= 2)		 xi = x - fault->flength2;
 		if (i % 2 == 0) et = p - fault->fwidth2;
 
-		set_geometry_variables (sign, xi, et, q);
-		hx = dipxHI (component, fault, mag, xi, et, q, y, z);
-		hy = dipyHI (component, fault, mag, xi, et, q, y, z);
-		hz = dipzHI (component, fault, mag, xi, et, q, y, z);
+		calc_geometry_variables (sign, xi, et, q);
+		if (fabs (mag->cx) > DBL_EPSILON) hx = dipxHI (component, fault, mag, xi, et, q, y, z);
+		if (fabs (mag->cy) > DBL_EPSILON) hy = dipyHI (component, fault, mag, xi, et, q, y, z);
+		if (fabs (mag->cz) > DBL_EPSILON) hz = dipzHI (component, fault, mag, xi, et, q, y, z);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -325,14 +326,14 @@ dipHIII (MagComp component, const fault_params *fault, const magnetic_params *ma
 	int		i;
 	double res[4];
 	double p, q;
-	double sign = 1.0;
-	double hx, hy, hz;
 
 	p = y * cd - (d[1] - z) * sd;
 	q = y * sd + (d[1] - z) * cd;
 
 	for (i = 0; i < 4; i++) {
 		double xi, et;
+		double hx = 0., hy = 0., hz = 0.;
+		double sign = 1.0;
 
 		xi = x + fault->flength1;
 		et = p + fault->fwidth1;
@@ -340,10 +341,10 @@ dipHIII (MagComp component, const fault_params *fault, const magnetic_params *ma
 		if (i >= 2)		 xi = x - fault->flength2;
 		if (i % 2 == 0) et = p - fault->fwidth2;
 
-		set_geometry_variables (sign, xi, et, q);
-		hx = dipxHIII (component, fault, mag, xi, et, q, y, z);
-		hy = dipyHIII (component, fault, mag, xi, et, q, y, z);
-		hz = dipzHIII (component, fault, mag, xi, et, q, y, z);
+		calc_geometry_variables (sign, xi, et, q);
+		if (fabs (mag->cx) > DBL_EPSILON) hx = dipxHIII (component, fault, mag, xi, et, q, y, z);
+		if (fabs (mag->cy) > DBL_EPSILON) hy = dipyHIII (component, fault, mag, xi, et, q, y, z);
+		if (fabs (mag->cz) > DBL_EPSILON) hz = dipzHIII (component, fault, mag, xi, et, q, y, z);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -357,15 +358,15 @@ dipHII (MagComp component, const fault_params *fault, const magnetic_params *mag
 	int		i;
 	double res[4];
 	double p, q;
-	double sign;
 	double w = (mag->dcurier - fault->fdepth) / sd;
-	double hx, hy, hz;
 
 	p = y * cd - (d[2] + z) * sd;
 	q = y * sd + (d[2] + z) * cd;
 
 	for (i = 0; i < 4; i++) {
 		double xi, et;
+		double hx = 0., hy = 0., hz = 0.;
+		double sign = -1.0;
 
 		xi = x + fault->flength1;
 		et = p + fault->fwidth1;
@@ -373,11 +374,10 @@ dipHII (MagComp component, const fault_params *fault, const magnetic_params *mag
 		if (i >= 2)		 xi = x - fault->flength2;
 		if (i % 2 == 0) et = p - w;
 
-		sign = - 1.0;
-		set_geometry_variables (sign, xi, et, q);
-		hx = dipxHI (component, fault, mag, xi, et, q, y, z);
-		hy = dipyHI (component, fault, mag, xi, et, q, y, z);
-		hz = dipzHI (component, fault, mag, xi, et, q, y, z);
+		calc_geometry_variables (sign, xi, et, q);
+		if (fabs (mag->cx) > DBL_EPSILON) hx = dipxHI (component, fault, mag, xi, et, q, y, z);
+		if (fabs (mag->cy) > DBL_EPSILON) hy = dipyHI (component, fault, mag, xi, et, q, y, z);
+		if (fabs (mag->cz) > DBL_EPSILON) hz = dipzHI (component, fault, mag, xi, et, q, y, z);
 
 		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -387,6 +387,8 @@ dipHII (MagComp component, const fault_params *fault, const magnetic_params *mag
 
 	for (i = 0; i < 4; i++) {
 		double xi, et;
+		double hx = 0., hy = 0., hz = 0.;
+		double sign = 1.0;
 
 		xi = x + fault->flength1;
 		et = p - w;
@@ -394,11 +396,10 @@ dipHII (MagComp component, const fault_params *fault, const magnetic_params *mag
 		if (i >= 2)		 xi = x - fault->flength2;
 		if (i % 2 == 0) et = p - fault->fwidth2;
 
-		sign = 1.0;
-		set_geometry_variables (sign, xi, et, q);
-		hx = dipxHIII (component, fault, mag, xi, et, q, y, z);
-		hy = dipyHIII (component, fault, mag, xi, et, q, y, z);
-		hz = dipzHIII (component, fault, mag, xi, et, q, y, z);
+		calc_geometry_variables (sign, xi, et, q);
+		if (fabs (mag->cx) > DBL_EPSILON) hx = dipxHIII (component, fault, mag, xi, et, q, y, z);
+		if (fabs (mag->cy) > DBL_EPSILON) hy = dipyHIII (component, fault, mag, xi, et, q, y, z);
+		if (fabs (mag->cz) > DBL_EPSILON) hz = dipzHIII (component, fault, mag, xi, et, q, y, z);
 
 		res[i] += mag->cx * hx + mag->cy * hy + mag->cz * hz;
 	}
@@ -421,8 +422,8 @@ static double
 dip_slip_submirror_image (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	double	val;
-	if (fault->fdepth + fault->fwidth2 * sd < mag->dcurier) val = dipHI (component, fault, mag, x, y, z);
-	else if (fault->fdepth - fault->fwidth1 * sd > mag->dcurier) val = dipHIII (component, fault, mag, x, y, z);
+	if (fault->fdepth + fault->fwidth2 * sd <= mag->dcurier) val = dipHI (component, fault, mag, x, y, z);
+	else if (fault->fdepth - fault->fwidth1 * sd >= mag->dcurier) val = dipHIII (component, fault, mag, x, y, z);
 	else val = dipHII (component, fault, mag, x, y, z);
 	return val;
 }
@@ -437,7 +438,7 @@ dip_slip (MagComp component, SeismoMagTerm term, const fault_params *fault, cons
 		return 0.0;
 	}
 	if (!check_seismo_mag_term (term)) {
-		fprintf (stderr, "ERROR: dip_slip: term must be SEISMO_MAG_MAIN, SEISMO_MAG_MIRROR, SEISMO_MAG_SUBMIRROR\n");
+		fprintf (stderr, "ERROR: dip_slip: term must be SEISMO_MAG_MAIN, SEISMO_MAG_MIRROR, SEISMO_MAG_SUBMIRROR or SEISMO_MAG_TOTAL\n");
 		return 0.0;
 	}
 	if (term & SEISMO_MAG_MAIN) res += dip_slip_main (component, fault, mag, x, y, z);

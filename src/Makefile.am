@@ -10,6 +10,7 @@ lib_LTLIBRARIES = libpiezomag.la
 
 libpiezomag_la_SOURCES =\
 	private.c\
+	params_io.c\
 	utils.c\
 	deriv_dipoles.c\
 	deriv_quadpoles.c\
