@@ -1,8 +1,10 @@
 /*
- * piezomag.c
+ * main.c
  *
  *  Created on: 2014/08/14
  *      Author: utsugi
+ *
+ * An example program
  *
  * Description:
  * reads fault and magnetic parameters from file and calculate seismomagnetic field
@@ -21,7 +23,7 @@
 
 #include "piezomag.h"
 
-/*** range of calculation. By default, x=[-10:0.1:10], y=[-10:0.1:10](km) ***/
+/*** range of calculation. By default, x=[-10:0.1:10], y=[-10:0.1:10] (km) ***/
 double		xwest = -10.;
 double		xeast = 10.;
 double		dx = 0.1;
@@ -30,14 +32,14 @@ double		ysouth = -10.;
 double		ynorth = 10.;
 double		dy = 0.1;
 
-/* z-coordinate of observation point ***/
-double		zobs;
+/* z-coordinate of observation point. By default, z = -0.001 (km) ***/
+double		zobs = -0.001;
 
-/* specify component of output : X_COMP (1), Y_COMP (2), Z_COMP (3) or TOTAL_FORCE (0) */
-MagComp	output_comp;
+/* specify component of output : MAG_COMP_F(default), MAG_COMP_X, MAG_COMP_Y or MAG_COMP_Z */
+MagComp	output_comp = MAG_COMP_F;
 
 /* verbos mide */
-bool		verbos;
+bool		verbos = false;
 
 
 static void
@@ -69,10 +71,18 @@ usage (char *toolname)
 	char	*p = strrchr (toolname, '/');
 	if (p) p++;
 	else p = toolname;
-	fprintf (stderr, "USAGE	 : %s -f <parameter file name> -r <x0/x1/y0/y1> -i <dx/dy>\n", p);
-	fprintf (stderr, "optional: -v (verbos mode)\n");
-	fprintf (stderr, "-r and -i specify the range of calculation.\n");
-	fprintf (stderr, "The seismomagnetic field is calculated on the grid [x0:dx:x1][y0:dy:y1].\n");
+	fprintf (stderr, "USAGE: %s -f <parameter file name> -r <x0(S)/x1(N)/y0(W)/y1(E)> -i <dx/dy>\n", p);
+	fprintf (stderr, "          -z <zobs> -o <0=total force, 1=X, 2=Y, 3=Z component\n", p);
+	fprintf (stderr, "          [ -v -h ]\n");
+	fprintf (stderr, "-f:  gives input parameter file name.\n");
+	fprintf (stderr, "-r:  specifies the min/max coordinates of region of interest.\n");
+	fprintf (stderr, "-i:  gives grid increments.\n");
+	fprintf (stderr, "-z:  gives z-coordinates of observation point (< 0).\n");
+	fprintf (stderr, "-o:  specifies output magnetic component.\n");
+	fprintf (stderr, "=== optional ===\n");
+	fprintf (stderr, "-v:  verbos mode.\n");
+	fprintf (stderr, "-h:  show this message.\n\n");
+	fprintf (stderr, "The seismomagnetic field is calculated on the grid x=[x0:dx:x1], y=[y0:dy:y1], z=zobs.\n\n");
 	return;
 }
 
@@ -95,38 +105,36 @@ initialize (int argc, char **argv, fault_params **fault, magnetic_params **mag)
 	}
 
 	verbos = false;
-	while ((c = getopt (argc, argv, "f:r:i:z:o:v")) != -1) {
+	while ((c = getopt (argc, argv, "f:r:i:z:o:vh")) != -1) {
 
 		switch (c) {
 			case 'f':
-			case 'F':
 				strcpy (in_fn, optarg);
 				break;
 
 			case 'r':
-			case 'R':
 				sscanf (optarg, "%lf/%lf/%lf/%lf", &xwest, &xeast, &ysouth, &ynorth);
 				break;
 
 			case 'i':
-			case 'I':
 				sscanf (optarg, "%lf/%lf", &dx, &dy);
 				break;
 
 			case 'z':
-			case 'Z':
 				zobs = (double) atof (optarg);
 				break;
 
 			case 'o':
-			case 'O':
 				set_output_comp (atoi (optarg));
 				break;
 
 			case 'v':
-			case 'V':
 				verbos = true;
 				break;
+
+			case 'h':
+				usage (argv[0]);
+				exit (1);
 
 			default:
 				break;
@@ -166,7 +174,7 @@ main (int argc, char **argv)
 	magnetic_params	*mag;
 
 	if (!initialize (argc, argv, &fault, &mag)) {
-		fprintf (stderr, "initialization of program failed.\naborted.\n");
+		fprintf (stderr, "initialization of program failed, aborted.\n");
 		exit (1);
 	}
 

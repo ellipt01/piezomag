@@ -6,9 +6,25 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 
 #include "piezomag.h"
+#include "private.h"
+
+/* allocate fault_params structure */
+fault_params *
+fault_params_alloc (void)
+{
+	return (fault_params *) malloc (sizeof (fault_params));
+}
+
+/* allocate magnetic_params structure */
+magnetic_params *
+magnetic_params_alloc (void)
+{
+	return (magnetic_params *) malloc (sizeof (magnetic_params));
+}
 
 /* total force
  * double	hx, hy, hz: x(N+S-), y(E+W-) and z(Down+Up-) components
@@ -17,9 +33,9 @@
 double
 total_force (double hx, double hy, double hz, double exf_inc, double exf_dec)
 {
-	double	f = hx * cos (deg2rad_ (exf_inc)) * cos (deg2rad_ (exf_dec))
-		- hy * cos (deg2rad_ (exf_inc)) * sin (deg2rad_ (exf_dec))
-		+ hz * sin (deg2rad_ (exf_inc));
+	double	f = hx * cos (deg2rad (exf_inc)) * cos (deg2rad (exf_dec))
+		- hy * cos (deg2rad (exf_inc)) * sin (deg2rad (exf_dec))
+		+ hz * sin (deg2rad (exf_inc));
 	return f;
 }
 
@@ -27,7 +43,7 @@ total_force (double hx, double hy, double hz, double exf_inc, double exf_dec)
 void
 rotate (double theta, double *x, double *y)
 {
-	double theta_rad = deg2rad_ (theta);
+	double theta_rad = deg2rad (theta);
 	double x1 = (*x) * cos (theta_rad) + (*y) * sin (theta_rad);
 	double y1 = (*y) * cos (theta_rad) - (*x) * sin (theta_rad);
 	*x = x1;

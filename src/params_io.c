@@ -6,70 +6,39 @@
 #include "piezomag.h"
 #include "private.h"
 
+/* dummy */
 #define DUMMY 0
 
-/* allocate fault_params structure */
-fault_params *
-fault_params_alloc (void)
-{
-	return (fault_params *) malloc (sizeof (fault_params));
-}
+typedef struct {
+	char	*keyword;
+	char	*description;
+} param_keyword;
 
-/* allocate magnetic_params structure */
-magnetic_params *
-magnetic_params_alloc (void)
-{
-	return (magnetic_params *) malloc (sizeof (magnetic_params));
-}
-
-/* keywords for parameters */
-const int	n_key = 19;
-const char *key[] = {
-	"lambda",
-	"mu",
-	"beta",
-	"exf_inc",
-	"exf_dec",
-	"mgz_int",
-	"mgz_inc",
-	"mgz_dec",
-	"dcurier",
-	"u1",
-	"u2",
-	"u3",
-	"fstrike",
-	"fdip",
-	"flength1",
-	"flength2",
-	"fwidth1",
-	"fwidth2",
-	"fdepth",
+/* keywords and descriptions of parameter */
+#define n_keys 19
+const param_keyword	keys[n_keys] = {
+		{"lambda",   "lame's constants (lambda)"},
+		{"mu",       "rigidity (mu)"},
+		{"u1",       "dislocation (strike-slip)"},
+		{"u2",       "dislocation (dip-slip)"},
+		{"u3",       "dislocation (tensile-opening)"},
+		{"fstrike",  "strike angle of fault"},
+		{"fdip",     "dip angle of fault"},
+		{"flength1", "fault length1"},
+		{"flength2", "fault length2"},
+		{"fwidth1",  "fault width1"},
+		{"fwidth2",  "fault width2"},
+		{"fdepth",   "fault depth"},
+		{"beta",     "stress sensitivity"},
+		{"exf_inc",  "inclination of external geomagnetic field"},
+		{"exf_dec",  "declination of external geomagnetic field"},
+		{"mgz_int",  "intensity of initial crustal magnetization"},
+		{"mgz_inc",  "inclination of initial crustal magnetization"},
+		{"mgz_dec",  "declination of initial crustal magnetization"},
+		{"dcurier",  "depth of Curier point isotherm"}
 };
 
-/* descriptions of keyword */
-const char *key_string[] = {
-	"lame's constants (lambda)",
-	"rigidity (mu)",
-	"stress sensitivity",
-	"inclination of external geomagnetic field",
-	"declination of external geomagnetic field",
-	"intensity of initial crustal magnetization",
-	"inclination of initial crustal magnetization",
-	"declination of initial crustal magnetization",
-	"depth of Curier point isotherm",
-	"dislocation (strike slip)",
-	"dislocation (dip slip)",
-	"dislocation (tensile opening)",
-	"strike angle of fault",
-	"dip angle of fault plane",
-	"fault length1",
-	"fault length2",
-	"fault width1",
-	"fault width2",
-	"fault depth",
-};
-
-/* store parameters to global variables and structures */
+/* store parameters to structures */
 static bool
 set_params (double *items, fault_params *fault, magnetic_params *mag)
 {
@@ -78,9 +47,10 @@ set_params (double *items, fault_params *fault, magnetic_params *mag)
 
 	if (fault == NULL || mag == NULL) return false;
 
-	for (i = 0; i < n_key; i++) {
+	for (i = 0; i < n_keys; i++) {
 		double val = items[i];
 		switch (i) {
+			// fault parameters
 			case 0:
 				fault->lambda = val;
 				break;
@@ -90,71 +60,72 @@ set_params (double *items, fault_params *fault, magnetic_params *mag)
 				break;
 
 			case 2:
-				mag->beta = val;
-				break;
-
-			case 3:
-				mag->exf_inc = val;
-				break;
-
-			case 4:
-				mag->exf_dec = val;
-				break;
-
-			case 5:
-				mag->mgz_int = val;
-				break;
-
-			case 6:
-				mag->mgz_inc = val;
-				break;
-
-			case 7:
-				mag->mgz_dec = val;
-				break;
-
-			case 8:
-				mag->dcurier = val;
-				break;
-
-			case 9:
 				fault->u1 = val;
 				break;
 
-			case 10:
+			case 3:
 				fault->u2 = val;
 				break;
 
-			case 11:
+			case 4:
 				fault->u3 = val;
 				break;
 
-			case 12:
+			case 5:
 				fault->fstrike = val;
 				break;
 
-			case 13:
+			case 6:
 				fault->fdip = val;
 				break;
 
-			case 14:
+			case 7:
 				fault->flength1 = val;
 				break;
 
-			case 15:
+			case 8:
 				fault->flength2 = val;
 				break;
 
-			case 16:
+			case 9:
 				fault->fwidth1 = val;
 				break;
 
-			case 17:
+			case 10:
 				fault->fwidth2 = val;
 				break;
 
-			case 18:
+			case 11:
 				fault->fdepth = val;
+				break;
+
+			case 12:
+				mag->beta = val;
+				break;
+
+			// magnetic properties
+			case 13:
+				mag->exf_inc = val;
+				break;
+
+			case 14:
+				mag->exf_dec = val;
+				break;
+
+			case 15:
+				mag->mgz_int = val;
+				break;
+
+			case 16:
+				mag->mgz_inc = val;
+				break;
+
+			case 17:
+				mag->mgz_dec = val;
+				break;
+
+			case 18:
+				mag->dcurier = val;
 				break;
 
 			default:
@@ -164,26 +135,29 @@ set_params (double *items, fault_params *fault, magnetic_params *mag)
 	return status;
 }
 
-/* calculate constants and store them to global variables or members of structure */
+/* calculate constants and store them to global variables and structures */
 static bool
 set_constants (fault_params *fault, magnetic_params *mag)
 {
 	double	jx, jy, jz;
 
-	sd = sin (deg2rad_ (fault->fdip));
-	cd = cos (deg2rad_ (fault->fdip));
-	td = tan (deg2rad_ (fault->fdip));
+	/* trigonometric functions */
+	sd = sin (deg2rad (fault->fdip));
+	cd = cos (deg2rad (fault->fdip));
+	td = tan (deg2rad (fault->fdip));
 	secd = 1.0 / cd;
 	sd2 = pow (sd, 2.0);
 	cd2 = pow (cd, 2.0);
-	s2d = sin (deg2rad_ (2.0 * fault->fdip));
-	c2d = cos (deg2rad_ (2.0 * fault->fdip));
+	s2d = sin (deg2rad (2.0 * fault->fdip));
+	c2d = cos (deg2rad (2.0 * fault->fdip));
 
+	/* depth of source and mirror images */
 	d[0] = DUMMY;	// not referred
-	d[1] = fault->fdepth;	// source depth
-	d[2] = fault->fdepth - 2.0 * mag->dcurier;	// depth of mirror image
-	d[3] = fault->fdepth + 2.0 * mag->dcurier;	// depth of sub-mirror image
+	d[1] = fault->fdepth;	// d1 : source depth
+	d[2] = fault->fdepth - 2.0 * mag->dcurier;	// d2: depth of mirror image
+	d[3] = fault->fdepth + 2.0 * mag->dcurier;	// d3: depth of sub-mirror image
 
+	/* alpha */
 	fault->alpha = (fault->lambda + fault->mu) / (fault->lambda + 2.0 * fault->mu);
 
 	alpha0 = 4.0 * fault->alpha - 1.0;
@@ -195,19 +169,19 @@ set_constants (fault_params *fault, magnetic_params *mag)
 	alpha5 = fault->alpha * (2.0 * fault->alpha - 5.0) / alpha0;
 	alpha6 = 3.0 * fault->alpha * (1.0 - 2.0 * fault->alpha) / alpha0;
 
-	jx = mag->mgz_int * cos (deg2rad_ (mag->mgz_inc)) * cos (deg2rad_ (mag->mgz_dec));
-	jy = - mag->mgz_int * cos (deg2rad_ (mag->mgz_inc)) * sin (deg2rad_ (mag->mgz_dec));
-	jz = mag->mgz_int * sin (deg2rad_ (mag->mgz_inc));
-	rotate (fault->fstrike, &jx, &jy);
-
-	// seismomagnetic moment
+	/* seismomagnetic moment on fault coordinate system */
 	// c0 : intensity
 	{
 		double	_c1 = fault->mu * (3.0 * fault->lambda + 2.0 * fault->mu);
 		double	_c2 = fault->lambda + fault->mu;
 		mag->c0 = 0.25 * mag->beta * _c1 / _c2;
 	}
-	// cx, cy, cz : x(N+S-), y(E+W-) and z(Down+Up-) components
+	// initial crustal magnetization on fault coordinate system
+	jx = mag->mgz_int * cos (deg2rad (mag->mgz_inc)) * cos (deg2rad (mag->mgz_dec));
+	jy = - mag->mgz_int * cos (deg2rad (mag->mgz_inc)) * sin (deg2rad (mag->mgz_dec));
+	jz = mag->mgz_int * sin (deg2rad (mag->mgz_inc));
+	rotate (fault->fstrike, &jx, &jy);
+	// (cx, cy, cz) : seismomagnetic moment vector on fault coordinate system
 	mag->cx = mag->c0 * jx;
 	mag->cy = mag->c0 * jy;
 	mag->cz = mag->c0 * jz;
@@ -217,10 +191,9 @@ set_constants (fault_params *fault, magnetic_params *mag)
 
 /*c***************************************************
  * read parameters from file
- * and store them in beforehand allocated structures
+ * and store them in previously allocated structures
  ** INPUT **
  * FILE *fp: input file descriptor
- ** OUTPUT **
  * fault_params *fault:	fault parameters
  * magnetic_params *mag:	magnetic parameters
  *c***************************************************/
@@ -228,25 +201,29 @@ bool
 fread_params (FILE *fp, fault_params *fault, magnetic_params *mag)
 {
 	int		i;
-	bool	is_set_item[n_key];
-	double items[n_key];
-	char	 buf[BUFSIZ];
+	bool	is_set_item[n_keys];
+	double	items[n_keys];
+	char	buf[BUFSIZ];
 
 	if (fault == NULL || mag == NULL) {
 		fprintf (stderr, "ERROR: fread_params: structure is empty.\n");
 		return false;
 	}
 
-	for (i = 0; i < n_key; i++) is_set_item[i] = false;
+	for (i = 0; i < n_keys; i++) is_set_item[i] = false;
 
 	while (fgets (buf, BUFSIZ, fp) != NULL) {
 		char	*ptr_buf = buf;
 
+		// skip comment and blank lines
 		if (ptr_buf[0] == '#' || ptr_buf[0] == '\n') continue;
+		// skip blanks of head of line
 		while (ptr_buf[0] == ' ' || ptr_buf[0] == '\t') ptr_buf++;
 
-		for (i = 0; i < n_key; i++) {
-			if (strncmp (ptr_buf, key[i], (size_t) strlen (key[i])) == 0) {
+		// read buffer
+		for (i = 0; i < n_keys; i++) {
+			// if first word match the keyword, read values after '='
+			if (strncmp (ptr_buf, keys[i].keyword, (size_t) strlen (keys[i].keyword)) == 0) {
 				char	*ptr_val;
 				if ((ptr_val = strrchr (buf, '=')) == NULL) continue;
 				while (ptr_val[0] == '=' || ptr_val[0] == ' ' || ptr_val[0] == '\t') ptr_val++;
@@ -258,19 +235,19 @@ fread_params (FILE *fp, fault_params *fault, magnetic_params *mag)
 			}
 		}
 	}
-	// check num of specified parameters
+	// check whether all parameters are specified
 	{
 		bool	status = true;
-		for (i = 0; i < n_key; i++) {
+		for (i = 0; i < n_keys; i++) {
 			if (!is_set_item[i]) {
 				if (status) fprintf (stderr, "ERROR: fread_params: following parameter(s) is not specified.\n");
-				fprintf (stderr, "       %s : %s\n", key[i], key_string[i]);
+				fprintf (stderr, "       %s : %s\n", keys[i].keyword, keys[i].description);
 				if (status) status = false;
 			}
 		}
 		if (!status) return false;
 	}
-	// set parameters, estimate constants
+	// set parameters, calculate constants
 	if (!set_params (items, fault, mag)) return false;
 	if (!set_constants (fault, mag)) return false;
 
@@ -291,7 +268,7 @@ void
 fwrite_params (FILE *stream, const fault_params *fault, const magnetic_params *mag)
 {
 	int i;
-	for (i = 0; i < n_key; i++) {
+	for (i = 0; i < n_keys; i++) {
 		double val = 0.;
 		switch (i) {
 			case 0:
@@ -303,77 +280,77 @@ fwrite_params (FILE *stream, const fault_params *fault, const magnetic_params *m
 				break;
 
 			case 2:
-				val = mag->beta;
-				break;
-
-			case 3:
-				val = mag->exf_inc;
-				break;
-
-			case 4:
-				val = mag->exf_dec;
-				break;
-
-			case 5:
-				val = mag->mgz_int;
-				break;
-
-			case 6:
-				val = mag->mgz_inc;
-				break;
-
-			case 7:
-				val = mag->mgz_dec;
-				break;
-
-			case 8:
-				val = mag->dcurier;
-				break;
-
-			case 9:
 				val = fault->u1;
 				break;
 
-			case 10:
+			case 3:
 				val = fault->u2;
 				break;
 
-			case 11:
+			case 4:
 				val = fault->u3;
 				break;
 
-			case 12:
+			case 5:
 				val = fault->fstrike;
 				break;
 
-			case 13:
+			case 6:
 				val = fault->fdip;
 				break;
 
-			case 14:
+			case 7:
 				val = fault->flength1;
 				break;
 
-			case 15:
+			case 8:
 				val = fault->flength2;
 				break;
 
-			case 16:
+			case 9:
 				val = fault->fwidth1;
 				break;
 
-			case 17:
+			case 10:
 				val = fault->fwidth2;
 				break;
 
-			case 18:
+			case 11:
 				val = fault->fdepth;
+				break;
+
+			case 12:
+				val = mag->beta;
+				break;
+
+			case 13:
+				val = mag->exf_inc;
+				break;
+
+			case 14:
+				val = mag->exf_dec;
+				break;
+
+			case 15:
+				val = mag->mgz_int;
+				break;
+
+			case 16:
+				val = mag->mgz_inc;
+				break;
+
+			case 17:
+				val = mag->mgz_dec;
+				break;
+
+			case 18:
+				val = mag->dcurier;
 				break;
 
 			default:
 				break;
 		}
-		fprintf (stream, "%s\t : %s = %f\n", key_string[i], key[i], val);
+		fprintf (stream, "%s\t : %s = %f\n", keys[i].description, keys[i].keyword, val);
 	}
 	return;
 }

@@ -9,7 +9,7 @@
 #
 # The format of parameter setting line is
 #
-#<keyword> = <value>
+# <keyword> = <value>
 #
 # There must be one or more blanks before and after '='.
 # <keyword> specifies the parameters such as fault parameters, crustal magnetic properties.
@@ -17,58 +17,38 @@
 # For more detail of the fault parameters, see doc/fault_geometry.pdf
 #
 
-############## PROPERTIES OF MEDIUM ##############
-### lambda     : Lame's constant (x10^11 cgs)
-### mu         : rigidity        (x10^11 cgs)
-### beta       : stress sensitivity (x10^-4 bar^-1)
+############## FAULT PROPERTIES ##############
+
+### PROPERTIES OF MEDIUM
+### <keyword>   <description>
+### lambda    : Lame's constant (x10^11 cgs)
+### mu        : rigidity        (x10^11 cgs)
 
 lambda = 3.5
 mu     = 3.5
-beta   = 1.0
-
-############## MAGNETIC PROPERTIES ##############
-
-### EXTERNAL GEOMAGNETIC FIELD INCLINATION, DECLINATION
-### exf_inc    : inclination of external field (deg.)
-### exf_dec    : declination (deg.)
-
-exf_inc = 45.0
-exf_dec = 0.0 
-
-### PROPERTIES OF INITIAL CRUSTAL MAGNETIZATION
-### mgz_int    : initial intensity of crustal magnetization (A/m)
-### mgz_inc    : inclination (deg.)
-### mgz_dec    : declination (deg.)
-
-mgz_int = 1.0
-mgz_inc = 45.0 
-mgz_dec = 0.0
-
-### CURIER POINT ISOTHERM
-### dcurier    : depth of Curier point isotherm (km)
-
-dcurier = 15.0
-
-############## FAULT PROPERTIES ##############
 
 ### DISLOCATION VECTOR
-### (u1, u2, u3):
-###  dislocation vector (strike-slip, dip-slip, tensile-opening) (meter)
+### <keyword>   <description>
+### u1        : strike-slip (meters)
+### u2        : dip-slip
+### u3        : tensile-opening
 
-u1 =  1.0
-u2 =  0.0
-u3 =  0.0
+u1 = 1.0
+u2 = 0.0
+u3 = 0.0
 
 ### FAULT GEOMETRIES
 
 ### STRIKE and DIP ANGLE
-### fstrike     : strike angle of fault (deg.)
-### fdip        : dip angle (deg.) (0 <= fdip <= 90 deg.)
+### <keyword>   <description>
+### fstrike   : strike angle of fault (deg.)
+### fdip      : dip angle (deg.) (0 <= fdip <= 90 deg.)
 
 fstrike = 90.0
 fdip    = 45.0
 
 ### LENGTH, WIDTH AND DEPTH
+### <keyword>            <description>
 ### flength1, flength2 : fault length(km)
 ### fwidth1,  fwidth2  :       width (km)
 ### fdepth             :       depth (km)
@@ -78,4 +58,36 @@ flength2 =  5.0
 fwidth1  =  0.0
 fwidth2  =  5.0
 fdepth   =  0.5
+
+############## MAGNETIC PROPERTIES ##############
+
+### STRESS SENSITIVITY
+### <keyword>   <description>
+### beta      : stress sensitivity (x10^-4 bar^-1)
+
+beta = 1.0
+
+### EXTERNAL GEOMAGNETIC FIELD INCLINATION, DECLINATION
+### <keyword>   <description>
+### exf_inc   : inclination of external field (deg.)
+### exf_dec   : declination (deg.)
+
+exf_inc = 45.0
+exf_dec = 0.0 
+
+### PROPERTIES OF INITIAL CRUSTAL MAGNETIZATION
+### <keyword>   <description>
+### mgz_int   : initial intensity of crustal magnetization (A/m)
+### mgz_inc   : inclination (deg.)
+### mgz_dec   : declination (deg.)
+
+mgz_int = 1.0
+mgz_inc = 45.0 
+mgz_dec = 0.0
+
+### CURIER POINT ISOTHERM
+### <keyword>   <description>
+### dcurier   : depth of Curier point isotherm (km)
+
+dcurier = 15.0
 

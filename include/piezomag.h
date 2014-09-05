@@ -3,19 +3,11 @@
 
 #include <stdbool.h>
 
-/*c***************
- *c   utilities
- *c***************/
-
-/* degree -> radian */
-#define deg2rad_(a) ((a) * M_PI / 180.)
-
-
 /*c***********
  *c   enums
  *c***********/
 
-/* definition of magnetic component */
+/* definition of magnetic components */
 typedef enum {
 	MAG_COMP_NONE = -1,	// dummy
 	MAG_COMP_F    =  0,	// total force
@@ -24,7 +16,7 @@ typedef enum {
 	MAG_COMP_Z    =  3,	// z component
 } MagComp;
 
-/* flag of seismomagnetic term */
+/* flags for seismomagnetic terms */
 typedef enum {
 	SEISMO_MAG_MAIN       =  1 << 0,	// main term (0)
 	SEISMO_MAG_MIRROR     =  1 << 1,	// mirror image (H0)
@@ -77,14 +69,13 @@ struct s_magnetic_params {
 	double	mgz_inc;	// inclination
 	double	mgz_dec;	// declination
 
-	// external field
+	// external geomagnetic field
 	double	exf_inc;	// inclination of external field
 	double	exf_dec;	// declination
 
 	double	dcurier;	// depth of Curier point isotherm
 
-	// seismomagnetic moment
-	// moment vector in x(NS)-y(EW)-z(DownUp) coordinate system
+	// seismomagnetic moment on fault coordinate system
 	double	cx;	// x(NS) component
 	double	cy;	// y(EW) component
 	double	cz;	// z(DownUp) component
@@ -97,11 +88,13 @@ struct s_magnetic_params {
  *c   public functions
  *c**********************/
 
-/*** params_io.c ***/
+/*** utils.c ***/
 
 /* allocate structures */
 fault_params		*fault_params_alloc (void);
 magnetic_params	*magnetic_params_alloc (void);
+
+/*** params_io.c ***/
 
 /* read parameters from file FILE *fp and store them to
  * pre-allocated structures: fault_params *fault, magnetic_params *mag. */
