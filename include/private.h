@@ -179,12 +179,21 @@ bool	check_mag_component (MagComp component);
 bool	check_seismo_mag_term (SeismoMagTerm term);
 
 /*** strike.c ***/
-double	strike_slip (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
+double	strike0 (MagComp component, const magnetic_params *mag, double xi, double et, double qq);
+double	strikeH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z);
+double	strikeHI (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z);
+double	strikeHIII (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z);
 
 /*** dip.c ***/
-double	dip_slip (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
+double	dip0 (MagComp component, const magnetic_params *mag, double xi, double et, double qq);
+double	dipH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z);
+double	dipHI (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z);
+double	dipHIII (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z);
 
 /*** tensile.c ***/
-double	tensile_opening (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z);
+double	tensile0 (MagComp component, const magnetic_params *mag, double xi, double et, double qq);
+double	tensileH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z);
+double	tensileHI (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z);
+double	tensileHIII (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z);
 
 #endif /* _PRIVATE_H_ */

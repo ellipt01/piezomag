@@ -24,37 +24,6 @@ tensilez0 (MagComp component, double xi, double et, double qq)
 	return 2.0 * K9 (component, 1.0, xi, et, qq);
 }
 
-static double
-tensile0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
-{
-	int		i;
-	double res[4];
-	double p, q;
-
-	p = y * cd - (d[1] - z) * sd;
-	q = y * sd + (d[1] - z) * cd;
-
-	for (i = 0; i < 4; i++) {
-		double xi, et;
-		double hx = 0., hy = 0., hz = 0.;
-		double sign = 1.0;
-
-		xi = x + fault->flength1;
-		et = p + fault->fwidth1;
-
-		if (i >= 2)		 xi = x - fault->flength2;
-		if (i % 2 == 0) et = p - fault->fwidth2;
-
-		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (mag->cx) > DBL_EPSILON) hx = tensilex0 (component, xi, et, q);
-		if (fabs (mag->cy) > DBL_EPSILON) hy = tensiley0 (component, xi, et, q);
-		if (fabs (mag->cz) > DBL_EPSILON) hz = tensilez0 (component, xi, et, q);
-
-		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
-	}
-	return (res[0] + res[3]) - (res[1] + res[2]);
-}
-
 /*** contributions from the mirror image H0 ***/
 static double
 tensilexH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
@@ -144,37 +113,6 @@ tensilezH0 (MagComp component, const fault_params *fault, const magnetic_params 
 	return val;
 }
 
-static double
-tensileH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
-{
-	int		i;
-	double res[4];
-	double p, q;
-
-	p = y * cd - (d[3] - z) * sd;
-	q = y * sd + (d[3] - z) * cd;
-
-	for (i = 0; i < 4; i++) {
-		double xi, et;
-		double hx = 0., hy = 0., hz = 0.;
-		double sign = 1.0;
-
-		xi = x + fault->flength1;
-		et = p + fault->fwidth1;
-
-		if (i >= 2)		 xi = x - fault->flength2;
-		if (i % 2 == 0) et = p - fault->fwidth2;
-
-		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (mag->cx) > DBL_EPSILON) hx = tensilexH0 (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cy) > DBL_EPSILON) hy = tensileyH0 (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cz) > DBL_EPSILON) hz = tensilezH0 (component, fault, mag, xi, et, q, y, z);
-
-		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
-	}
-	return res[0] - res[1] - res[2] + res[3];
-}
-
 /*** contributions from the mirror image HI ***/
 static double
 tensilexHI (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
@@ -239,37 +177,6 @@ tensilezHI (MagComp component, const fault_params *fault, const magnetic_params 
 		- alpha2 * (qd * P3_val - (z - h) * P2_val * sd);
 
 	return val;
-}
-
-static double
-tensileHI (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
-{
-	int		i;
-	double res[4];
-	double p, q;
-
-	p = y * cd - (d[2] + z) * sd;
-	q = y * sd + (d[2] + z) * cd;
-
-	for (i = 0; i < 4; i++) {
-		double xi, et;
-		double hx = 0., hy = 0., hz = 0.;
-		double sign = -1.0;
-
-		xi = x + fault->flength1;
-		et = p + fault->fwidth1;
-
-		if (i >= 2)		 xi = x - fault->flength2;
-		if (i % 2 == 0) et = p - fault->fwidth2;
-
-		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (mag->cx) > DBL_EPSILON) hx = tensilexHI (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cy) > DBL_EPSILON) hy = tensileyHI (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cz) > DBL_EPSILON) hz = tensilezHI (component, fault, mag, xi, et, q, y, z);
-
-		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
-	}
-	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
 /*** contributions from the mirror image HIII ***/
@@ -337,129 +244,52 @@ tensilezHIII (MagComp component, const fault_params *fault, const magnetic_param
 	return val;
 }
 
-static double
-tensileHIII (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+/*** seismomagnetic terms on fault coordinate system due to tensile-opening fault ***/
+
+/* The following functions dose not calculate geometry variables such as r, rx, re, ..., etc,
+ * only refer the global variables. So, before calling the following functions,
+ * calc_geometry_variables() function must be called. */
+
+/* main source */
+double
+tensile0 (MagComp component, const magnetic_params *mag, double xi, double et, double qq)
 {
-	int		i;
-	double res[4];
-	double p, q;
-
-	p = y * cd - (d[1] - z) * sd;
-	q = y * sd + (d[1] - z) * cd;
-
-	for (i = 0; i < 4; i++) {
-		double xi, et;
-		double hx = 0., hy = 0., hz = 0.;
-		double sign = 1.0;
-
-		xi = x + fault->flength1;
-		et = p + fault->fwidth1;
-
-		if (i >= 2)		 xi = x - fault->flength2;
-		if (i % 2 == 0) et = p - fault->fwidth2;
-
-		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (mag->cx) > DBL_EPSILON) hx = tensilexHIII (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cy) > DBL_EPSILON) hy = tensileyHIII (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cz) > DBL_EPSILON) hz = tensilezHIII (component, fault, mag, xi, et, q, y, z);
-
-		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
-	} 
-	return (res[0] + res[3]) - (res[1] + res[2]);
-}
-
-
-static double
-tensileHII (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
-{
-	int		i;
-	double res[4];
-	double p, q;
-	double w = (mag->dcurier - fault->fdepth) / sd;
-
-	p = y * cd - (d[2] + z) * sd;
-	q = y * sd + (d[2] + z) * cd;
-
-	for (i = 0; i < 4; i++) {
-		double xi, et;
-		double hx = 0., hy = 0., hz = 0.;
-		double sign = -1.0;
-
-		xi = x + fault->flength1;
-		et = p + fault->fwidth1;
-
-		if (i >= 2)		 xi = x - fault->flength2;
-		if (i % 2 == 0) et = p - w;
-
-		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (mag->cx) > DBL_EPSILON) hx = tensilexHI (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cy) > DBL_EPSILON) hy = tensileyHI (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cz) > DBL_EPSILON) hz = tensilezHI (component, fault, mag, xi, et, q, y, z);
-
-		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
-	}
-
-	p = y * cd - (d[1] - z) * sd;
-	q = y * sd + (d[1] - z) * cd;
-
-	for (i = 0; i < 4; i++) {
-		double xi, et;
-		double hx = 0., hy = 0., hz = 0.;
-		double sign = 1.0;
-
-		xi = x + fault->flength1;
-		et = p - w;
-
-		if (i >= 2)		 xi = x - fault->flength2;
-		if (i % 2 == 0) et = p - fault->fwidth2;
-
-		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (mag->cx) > DBL_EPSILON) hx = tensilexHIII (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cy) > DBL_EPSILON) hy = tensileyHIII (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cz) > DBL_EPSILON) hz = tensilezHIII (component, fault, mag, xi, et, q, y, z);
-
-		res[i] += mag->cx * hx + mag->cy * hy + mag->cz * hz;
-	}
-	return (res[0] + res[3]) - (res[1] + res[2]);
-}
-
-static double
-tensile_opening_main (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
-{
-	return tensile0 (component, fault, mag, x, y, z);
-}
-
-static double
-tensile_opening_mirror_image (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
-{
-	return tensileH0 (component, fault, mag, x, y, z);
-}
-
-static double
-tensile_opening_submirror_image (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
-{
-	double	val;
-	if (fault->fdepth + fault->fwidth2 * sd <= mag->dcurier) val = tensileHI (component, fault, mag, x, y, z);
-	else if (fault->fdepth - fault->fwidth1 * sd >= mag->dcurier) val = tensileHIII (component, fault, mag, x, y, z);
-	else val = tensileHII (component, fault, mag, x, y, z);
+	double	val = 0.;
+	if (fabs (mag->cx) > DBL_EPSILON) val += mag->cx * tensilex0 (component, xi, et, qq);
+	if (fabs (mag->cy) > DBL_EPSILON) val += mag->cy * tensiley0 (component, xi, et, qq);
+	if (fabs (mag->cz) > DBL_EPSILON) val += mag->cz * tensilez0 (component, xi, et, qq);
 	return val;
 }
 
-/*** public functions ***/
+/* mirror image */
 double
-tensile_opening (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+tensileH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
-	double res = 0.0;
-	if (!check_mag_component (component)) {
-		fprintf (stderr, "ERROR: tensile_opening: component must be MAG_COMP_X, MAG_COMP_Y, MAG_COMP_Z or MAG_COMP_F\n");
-		return 0.0;
-	}
-	if (!check_seismo_mag_term (term)) {
-		fprintf (stderr, "ERROR: tensile_opening: term must be SEISMO_MAG_MAIN, SEISMO_MAG_MIRROR, SEISMO_MAG_SUBMIRROR or SEISMO_MAG_TOTAL\n");
-		return 0.0;
-	}
-	if (term & SEISMO_MAG_MAIN) res += tensile_opening_main (component, fault, mag, x, y, z);
-	if (term & SEISMO_MAG_MIRROR) res += tensile_opening_mirror_image (component, fault, mag, x, y, z);
-	if (term & SEISMO_MAG_SUBMIRROR) res += tensile_opening_submirror_image (component, fault, mag, x, y, z);
-	return res;
+	double	val = 0.;
+	if (fabs (mag->cx) > DBL_EPSILON) val += mag->cx * tensilexH0 (component, fault, mag, xi, et, qq, y, z);
+	if (fabs (mag->cy) > DBL_EPSILON) val += mag->cy * tensileyH0 (component, fault, mag, xi, et, qq, y, z);
+	if (fabs (mag->cz) > DBL_EPSILON) val += mag->cz * tensilezH0 (component, fault, mag, xi, et, qq, y, z);
+	return val;
+}
+
+/* sub-mirror image: type I */
+double
+tensileHI (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+{
+	double	val = 0.;
+	if (fabs (mag->cx) > DBL_EPSILON) val += mag->cx * tensilexHI (component, fault, mag, xi, et, qq, y, z);
+	if (fabs (mag->cy) > DBL_EPSILON) val += mag->cy * tensileyHI (component, fault, mag, xi, et, qq, y, z);
+	if (fabs (mag->cz) > DBL_EPSILON) val += mag->cz * tensilezHI (component, fault, mag, xi, et, qq, y, z);
+	return val;
+}
+
+/* sub-mirror image: type III */
+double
+tensileHIII (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+{
+	double	val = 0.;
+	if (fabs (mag->cx) > DBL_EPSILON) val += mag->cx * tensilexHIII (component, fault, mag, xi, et, qq, y, z);
+	if (fabs (mag->cy) > DBL_EPSILON) val += mag->cy * tensileyHIII (component, fault, mag, xi, et, qq, y, z);
+	if (fabs (mag->cz) > DBL_EPSILON) val += mag->cz * tensilezHIII (component, fault, mag, xi, et, qq, y, z);
+	return val;
 }

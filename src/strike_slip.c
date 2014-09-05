@@ -24,37 +24,6 @@ strikez0 (MagComp component, double xi, double et, double qq)
 	return 2.0 * K3 (component, 1.0, xi, et, qq);
 }
 
-static double
-strike0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
-{
-	int		i;
-	double res[4];
-	double p, q;
-
-	p = y * cd - (d[1] - z) * sd;
-	q = y * sd + (d[1] - z) * cd;
-
-	for (i = 0; i < 4; i++) {
-		double xi, et;
-		double hx = 0., hy = 0., hz = 0.;
-		double sign = 1.0;
-
-		xi = x + fault->flength1;
-		et = p + fault->fwidth1;
-
-		if (i >= 2)		 xi = x - fault->flength2;
-		if (i % 2 == 0) et = p - fault->fwidth2;
-
-		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (mag->cx) > DBL_EPSILON) hx = strikex0 (component, xi, et, q);
-		if (fabs (mag->cy) > DBL_EPSILON) hy = strikey0 (component, xi, et, q);
-		if (fabs (mag->cz) > DBL_EPSILON) hz = strikez0 (component, xi, et, q);
-
-		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
-	}
-	return (res[0] + res[3]) - (res[1] + res[2]);
-}
-
 /*** contributions from the mirror image H0 ***/
 static double
 strikexH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
@@ -130,37 +99,6 @@ strikezH0 (MagComp component, const fault_params *fault, const magnetic_params *
 	return val;
 }
 
-static double
-strikeH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
-{
-	int		i;
-	double res[4];
-	double p, q;
-
-	p = y * cd - (d[3] - z) * sd;
-	q = y * sd + (d[3] - z) * cd;
-
-	for (i = 0; i < 4; i++) {
-		double xi, et;
-		double hx = 0., hy = 0., hz = 0.;
-		double sign = 1.0;
-
-		xi = x + fault->flength1;
-		et = p + fault->fwidth1;
-
-		if (i >= 2)		 xi = x - fault->flength2;
-		if (i % 2 == 0) et = p - fault->fwidth2;
-
-		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (mag->cx) > DBL_EPSILON) hx = strikexH0 (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cy) > DBL_EPSILON) hy = strikeyH0 (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cz) > DBL_EPSILON) hz = strikezH0 (component, fault, mag, xi, et, q, y, z);
-
-		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
-	}
-	return (res[0] + res[3]) - (res[1] + res[2]);
-}
-
 /*** contributions from the mirror image HI ***/
 static double
 strikexHI (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
@@ -214,37 +152,6 @@ strikezHI (MagComp component, const fault_params *fault, const magnetic_params *
 		+ alpha2 * (qd * M3_val - (z - h) * M2_val * sd);
 
 	return val;
-}
-
-static double
-strikeHI (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
-{
-	int		i;
-	double res[4];
-	double p, q;
-
-	p = y * cd - (d[2] + z) * sd;
-	q = y * sd + (d[2] + z) * cd;
-
-	for (i = 0; i < 4; i++) {
-		double xi, et;
-		double hx = 0., hy = 0., hz = 0.;
-		double sign = -1.0;
-
-		xi = x + fault->flength1;
-		et = p + fault->fwidth1;
-
-		if (i >= 2)		 xi = x - fault->flength2;
-		if (i % 2 == 0) et = p - fault->fwidth2;
-
-		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (mag->cx) > DBL_EPSILON) hx = strikexHI (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cy) > DBL_EPSILON) hy = strikeyHI (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cz) > DBL_EPSILON) hz = strikezHI (component, fault, mag, xi, et, q, y, z);
-
-		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
-	}
-	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
 /*** contributions from the mirror image HIII ***/
@@ -302,129 +209,52 @@ strikezHIII (MagComp component, const fault_params *fault, const magnetic_params
 	return val;
 }
 
-static double
-strikeHIII (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+/*** seismomagnetic terms on fault coordinate system due to strike-slip fault ***/
+
+/* The following functions dose not calculate geometry variables such as r, rx, re, ..., etc,
+ * only refer the global variables. So, before calling the following functions,
+ * calc_geometry_variables() function must be called. */
+
+/* main source */
+double
+strike0 (MagComp component, const magnetic_params *mag, double xi, double et, double qq)
 {
-	int		i;
-	double res[4];
-	double p, q;
-
-	p = y * cd - (d[1] - z) * sd;
-	q = y * sd + (d[1] - z) * cd;
-
-	for (i = 0; i < 4; i++) {
-		double xi, et;
-		double hx = 0., hy = 0., hz = 0.;
-		double sign = 1.0;
-
-		xi = x + fault->flength1;
-		et = p + fault->fwidth1;
-
-		if (i >= 2)		 xi = x - fault->flength2;
-		if (i % 2 == 0) et = p - fault->fwidth2;
-
-		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (mag->cx) > DBL_EPSILON) hx = strikexHIII (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cy) > DBL_EPSILON) hy = strikeyHIII (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cz) > DBL_EPSILON) hz = strikezHIII (component, fault, mag, xi, et, q, y, z);
-
-		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
-	}
-	return (res[0] + res[3]) - (res[1] + res[2]);
-}
-
-
-static double
-strikeHII (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
-{
-	int		i;
-	double res[4];
-	double p, q;
-	double w = (mag->dcurier - fault->fdepth) / sd;
-
-	p = y * cd - (d[2] + z) * sd;
-	q = y * sd + (d[2] + z) * cd;
-
-	for (i = 0; i < 4; i++) {
-		double xi, et;
-		double hx = 0., hy = 0., hz = 0.;
-		double	sign = -1.0;
-
-		xi = x + fault->flength1;
-		et = p + fault->fwidth1;
-
-		if (i >= 2)		 xi = x - fault->flength2;
-		if (i % 2 == 0) et = p - w;
-
-		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (mag->cx) > DBL_EPSILON) hx = strikexHI (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cy) > DBL_EPSILON) hy = strikeyHI (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cz) > DBL_EPSILON) hz = strikezHI (component, fault, mag, xi, et, q, y, z);
-
-		res[i] = mag->cx * hx + mag->cy * hy + mag->cz * hz;
-	}
-
-	p = y * cd - (d[1] - z) * sd;
-	q = y * sd + (d[1] - z) * cd;
-
-	for (i = 0; i < 4; i++) {
-		double xi, et;
-		double hx = 0., hy = 0., hz = 0.;
-		double	sign = 1.0;
-
-		xi = x + fault->flength1;
-		et = p - w;
-
-		if (i >= 2)		 xi = x - fault->flength2;
-		if (i % 2 == 0) et = p - fault->fwidth2;
-
-		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (mag->cx) > DBL_EPSILON) hx = strikexHIII (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cy) > DBL_EPSILON) hy = strikeyHIII (component, fault, mag, xi, et, q, y, z);
-		if (fabs (mag->cz) > DBL_EPSILON) hz = strikezHIII (component, fault, mag, xi, et, q, y, z);
-
-		res[i] += mag->cx * hx + mag->cy * hy + mag->cz * hz;
-	}
-	return (res[0] + res[3]) - (res[1] + res[2]);
-}
-
-static double
-strike_slip_main (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
-{
-	return strike0 (component, fault, mag, x, y, z);
-}
-
-static double
-strike_slip_mirror_image (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
-{
-	return strikeH0 (component, fault, mag, x, y, z);
-}
-
-static double
-strike_slip_submirror_image (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
-{
-	double	val;
-	if (fault->fdepth + fault->fwidth2 * sd <= mag->dcurier) val = strikeHI (component, fault, mag, x, y, z);
-	else if (fault->fdepth - fault->fwidth1 * sd >= mag->dcurier) val = strikeHIII (component, fault, mag, x, y, z);
-	else val = strikeHII (component, fault, mag, x, y, z);
+	double	val = 0.;
+	if (fabs (mag->cx) > DBL_EPSILON) val += mag->cx * strikex0 (component, xi, et, qq);
+	if (fabs (mag->cy) > DBL_EPSILON) val += mag->cy * strikey0 (component, xi, et, qq);
+	if (fabs (mag->cz) > DBL_EPSILON) val += mag->cz * strikez0 (component, xi, et, qq);
 	return val;
 }
 
-/*** public functions ***/
+/* mirror image */
 double
-strike_slip (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+strikeH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
-	double res = 0.;
-	if (!check_mag_component (component)) {
-		fprintf (stderr, "ERROR: strike_slip: component must be MAG_COMP_X, MAG_COMP_Y, MAG_COMP_Z or MAG_COMP_F\n");
-		return 0.0;
-	}
-	if (!check_seismo_mag_term (term)) {
-		fprintf (stderr, "ERROR: strike_slip: term must be SEISMO_MAG_MAIN, SEISMO_MAG_MIRROR, SEISMO_MAG_SUBMIRROR or SEISMO_MAG_TOTAL\n");
-		return 0.0;
-	}
-	if (term & SEISMO_MAG_MAIN) res += strike_slip_main (component, fault, mag, x, y, z);
-	if (term & SEISMO_MAG_MIRROR) res += strike_slip_mirror_image (component, fault, mag, x, y, z);
-	if (term & SEISMO_MAG_SUBMIRROR) res += strike_slip_submirror_image (component, fault, mag, x, y, z);
-	return res;
+	double	val = 0.;
+	if (fabs (mag->cx) > DBL_EPSILON) val += mag->cx * strikexH0 (component, fault, mag, xi, et, qq, y, z);
+	if (fabs (mag->cy) > DBL_EPSILON) val += mag->cy * strikeyH0 (component, fault, mag, xi, et, qq, y, z);
+	if (fabs (mag->cz) > DBL_EPSILON) val += mag->cz * strikezH0 (component, fault, mag, xi, et, qq, y, z);
+	return val;
+}
+
+/* sub-mirror image: type I */
+double
+strikeHI (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+{
+	double	val = 0.;
+	if (fabs (mag->cx) > DBL_EPSILON) val += mag->cx * strikexHI (component, fault, mag, xi, et, qq, y, z);
+	if (fabs (mag->cy) > DBL_EPSILON) val += mag->cy * strikeyHI (component, fault, mag, xi, et, qq, y, z);
+	if (fabs (mag->cz) > DBL_EPSILON) val += mag->cz * strikezHI (component, fault, mag, xi, et, qq, y, z);
+	return val;
+}
+
+/* sub-mirror image type: III */
+double
+strikeHIII (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
+{
+	double	val = 0.;
+	if (fabs (mag->cx) > DBL_EPSILON) val += mag->cx * strikexHIII (component, fault, mag, xi, et, qq, y, z);
+	if (fabs (mag->cy) > DBL_EPSILON) val += mag->cy * strikeyHIII (component, fault, mag, xi, et, qq, y, z);
+	if (fabs (mag->cz) > DBL_EPSILON) val += mag->cz * strikezHIII (component, fault, mag, xi, et, qq, y, z);
+	return val;
 }
