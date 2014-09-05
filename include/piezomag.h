@@ -104,17 +104,23 @@ bool	fread_params (FILE *fp, fault_params *fault, magnetic_params *mag);
 
 /* calculate seismomagnetic term (main(0), mirror image(H0) or sub-mirror image(HI, HIII or HII))
  * on observation point (xobs, yobs, zobs) */
-bool	seismomagnetic_field_term (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag,
+bool	seismomagnetic_field_term (MagComp component, SeismoMagTerm term,
+			const fault_params *fault, const magnetic_params *mag,
 			double xobs, double yobs, double zobs, double *val);
+
 /* calculate seismomagnetic field on observation point (xobs, yobs, zobs) */
-bool	seismomagnetic_field (MagComp component, const fault_params *fault, const magnetic_params *mag,
+bool	seismomagnetic_field (MagComp component,
+			const fault_params *fault, const magnetic_params *mag,
 			double xobs, double yobs, double zobs, double *val);
 
 /* calculate and fprintf seismomagnetic term on grid x=[xobs1:dx:xobs2], y=[yobs1:dy:yobs2], z=zobs */
-void	fprintf_seismomagnetic_field_term (FILE *stream, MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag,
+void	fprintf_seismomagnetic_field_term (FILE *stream, MagComp component, SeismoMagTerm term,
+			const fault_params *fault, const magnetic_params *mag,
 			double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs);
+
 /* calculate and fprintf seismomagnetic field on grid x=[xobs1:dx:xobs2], y=[yobs1:dy:yobs2], z=zobs */
-void	fprintf_seismomagnetic_field (FILE *stream, MagComp component, const fault_params *fault, const magnetic_params *mag,
+void	fprintf_seismomagnetic_field (FILE *stream, MagComp component,
+			const fault_params *fault, const magnetic_params *mag,
 			double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs);
 
 #endif	// _PIEZOMAG_H_

@@ -252,7 +252,7 @@ tensilezHIII (MagComp component, const fault_params *fault, const magnetic_param
 
 /* main source */
 double
-tensile0 (MagComp component, const magnetic_params *mag, double xi, double et, double qq)
+tensile0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double	val = 0.;
 	if (fabs (mag->cx) > DBL_EPSILON) val += mag->cx * tensilex0 (component, xi, et, qq);
@@ -261,7 +261,7 @@ tensile0 (MagComp component, const magnetic_params *mag, double xi, double et, d
 	return val;
 }
 
-/* mirror image */
+/* mirror image on fault coordinate system */
 double
 tensileH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {

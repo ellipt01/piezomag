@@ -217,7 +217,7 @@ strikezHIII (MagComp component, const fault_params *fault, const magnetic_params
 
 /* main source */
 double
-strike0 (MagComp component, const magnetic_params *mag, double xi, double et, double qq)
+strike0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double xi, double et, double qq, double y, double z)
 {
 	double	val = 0.;
 	if (fabs (mag->cx) > DBL_EPSILON) val += mag->cx * strikex0 (component, xi, et, qq);

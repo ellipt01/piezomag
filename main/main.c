@@ -7,7 +7,7 @@
  * An example program
  *
  * Description:
- * reads fault and magnetic parameters from file and calculate seismomagnetic field
+ * reads fault and magnetic parameters from file and calculates seismomagnetic field
  * on the grid in the specified range.
  *
  * Usage:
@@ -23,7 +23,7 @@
 
 #include "piezomag.h"
 
-/*** range of calculation. By default, x=[-10:0.1:10], y=[-10:0.1:10] (km) ***/
+/*** range of interest. By default, x=[-10:0.1:10], y=[-10:0.1:10] (km) ***/
 double		xwest = -10.;
 double		xeast = 10.;
 double		dx = 0.1;
@@ -35,13 +35,14 @@ double		dy = 0.1;
 /* z-coordinate of observation point. By default, z = -0.001 (km) ***/
 double		zobs = -0.001;
 
-/* specify component of output : MAG_COMP_F(default), MAG_COMP_X, MAG_COMP_Y or MAG_COMP_Z */
+/* output magnetic component:
+ * MAG_COMP_F(default), MAG_COMP_X, MAG_COMP_Y or MAG_COMP_Z */
 MagComp	output_comp = MAG_COMP_F;
 
 /* verbos mide */
 bool		verbos = false;
 
-
+/* convert int -> MagComp */
 static void
 set_output_comp (int val)
 {
@@ -72,13 +73,13 @@ usage (char *toolname)
 	if (p) p++;
 	else p = toolname;
 	fprintf (stderr, "USAGE: %s -f <parameter file name> -r <x0(S)/x1(N)/y0(W)/y1(E)> -i <dx/dy>\n", p);
-	fprintf (stderr, "          -z <zobs> -o <0=total force, 1=X, 2=Y, 3=Z component\n", p);
+	fprintf (stderr, "          -z <zobs> -o <output component>\n", p);
 	fprintf (stderr, "          [ -v -h ]\n");
 	fprintf (stderr, "-f:  gives input parameter file name.\n");
 	fprintf (stderr, "-r:  specifies the min/max coordinates of region of interest.\n");
 	fprintf (stderr, "-i:  gives grid increments.\n");
 	fprintf (stderr, "-z:  gives z-coordinates of observation point (< 0).\n");
-	fprintf (stderr, "-o:  specifies output magnetic component.\n");
+	fprintf (stderr, "-o:  specifies output magnetic component (0=F,1=X,2=Y,3=Z).\n");
 	fprintf (stderr, "=== optional ===\n");
 	fprintf (stderr, "-v:  verbos mode.\n");
 	fprintf (stderr, "-h:  show this message.\n\n");

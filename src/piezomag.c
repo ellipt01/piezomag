@@ -14,9 +14,51 @@
 
 #define PIEZOMAG_MIN(x, y) ((x) <= (y)) ? (x) : (y)
 
+typedef double (seismo_mag_term_func)
+		(MagComp component,
+		 const fault_params *fault, const magnetic_params *mag,
+		 double xi, double et, double qq, double y, double z);
+
+/*c*****************************************************
+ * returns specified component of seismomagnetic term
+ * calculated by seismomag_term_func *func.
+ * resultant component is on geodetic coordinate system
+ *c*****************************************************/
+static double
+seismomagnetic_component (MagComp component,
+		const fault_params *fault, const magnetic_params *mag,
+		double xi, double et, double qq, double y, double z,
+		seismo_mag_term_func *func)
+{
+	double	val = 0.0;
+	if (component == MAG_COMP_Z) {
+		val = func (MAG_COMP_Z, fault, mag, xi, et, qq, y, z);
+	} else if (component == MAG_COMP_X) {
+		val = func (MAG_COMP_X, fault, mag, xi, et, qq, y, z);
+		if (fabs (fault->fstrike) > DBL_EPSILON) {
+			double	hy = func (MAG_COMP_Y, fault, mag, xi, et, qq, y, z);
+			rotate (-fault->fstrike, &val, &hy);
+		}
+	} else if (component == MAG_COMP_Y) {
+		val = func (MAG_COMP_Y, fault, mag, xi, et, qq, y, z);
+		if (fabs (fault->fstrike) > DBL_EPSILON) {
+			double	hx = func (MAG_COMP_X, fault, mag, xi, et, qq, y, z);
+			rotate (-fault->fstrike, &hx, &val);
+		}
+	} else if (component == MAG_COMP_F) {
+		double	hx = func (MAG_COMP_X, fault, mag, xi, et, qq, y, z);
+		double	hy = func (MAG_COMP_Y, fault, mag, xi, et, qq, y, z);
+		double	hz = func (MAG_COMP_Z, fault, mag, xi, et, qq, y, z);
+		rotate (-fault->fstrike, &hx, &hy);
+		val = total_force (hx, hy, hz, mag->exf_inc, mag->exf_dec);
+	}
+	return val;
+}
+
 /* main source */
 static double
-seismomagnetic0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+seismomagnetic0 (MagComp component,
+		const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4] = {0., 0., 0., 0.};
@@ -28,6 +70,7 @@ seismomagnetic0 (MagComp component, const fault_params *fault, const magnetic_pa
 	for (i = 0; i < 4; i++) {
 		double xi, et;
 		double sign = 1.0;
+		double	val;
 
 		xi = x;
 		if (i < 2) xi += fault->flength1;
@@ -38,16 +81,26 @@ seismomagnetic0 (MagComp component, const fault_params *fault, const magnetic_pa
 		else et -= fault->fwidth2;
 
 		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (fault->u1) > DBL_EPSILON) res[i] += fault->u1 * strike0 (component, mag, xi, et, q);
-		if (fabs (fault->u2) > DBL_EPSILON) res[i] += fault->u2 * dip0 (component, mag, xi, et, q);
-		if (fabs (fault->u3) > DBL_EPSILON) res[i] += fault->u3 * tensile0 (component, mag, xi, et, q);
+		if (fabs (fault->u1) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &strike0);
+			res[i] += fault->u1 * val;
+		}
+		if (fabs (fault->u2) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &dip0);
+			res[i] += fault->u2 * val;
+		}
+		if (fabs (fault->u3) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &tensile0);
+			res[i] += fault->u3 * val;
+		}
 	}
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
 /* mirror image */
 static double
-seismomagneticH0 (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+seismomagneticH0 (MagComp component,
+		const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4] = {0., 0., 0., 0.};
@@ -59,6 +112,7 @@ seismomagneticH0 (MagComp component, const fault_params *fault, const magnetic_p
 	for (i = 0; i < 4; i++) {
 		double xi, et;
 		double sign = 1.0;
+		double	val;
 
 		xi = x;
 		if (i < 2) xi += fault->flength1;
@@ -69,20 +123,31 @@ seismomagneticH0 (MagComp component, const fault_params *fault, const magnetic_p
 		else et -= fault->fwidth2;
 
 		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (fault->u1) > DBL_EPSILON) res[i] += fault->u1 * strikeH0 (component, fault, mag, xi, et, q, y, z);
-		if (fabs (fault->u2) > DBL_EPSILON) res[i] += fault->u2 * dipH0 (component, fault, mag, xi, et, q, y, z);
-		if (fabs (fault->u3) > DBL_EPSILON) res[i] += fault->u3 * tensileH0 (component, fault, mag, xi, et, q, y, z);
+		if (fabs (fault->u1) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &strikeH0);
+			res[i] += fault->u1 * val;
+		}
+		if (fabs (fault->u2) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &dipH0);
+			res[i] += fault->u2 * val;
+		}
+		if (fabs (fault->u3) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &tensileH0);
+			res[i] += fault->u3 * val;
+		}
 	}
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
 /* sub-mirror image: type I */
 double
-seismomagneticHI (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+seismomagneticHI (MagComp component,
+		const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int		i;
 	double res[4] = {0., 0., 0., 0.};
 	double p, q;
+	double	val;
 
 	p = y * cd - (d[2] + z) * sd;
 	q = y * sd + (d[2] + z) * cd;
@@ -100,20 +165,31 @@ seismomagneticHI (MagComp component, const fault_params *fault, const magnetic_p
 		else et -= fault->fwidth2;
 
 		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (fault->u1) > DBL_EPSILON) res[i] += fault->u1 * strikeHI (component, fault, mag, xi, et, q, y, z);
-		if (fabs (fault->u2) > DBL_EPSILON) res[i] += fault->u2 * dipHI (component, fault, mag, xi, et, q, y, z);
-		if (fabs (fault->u3) > DBL_EPSILON) res[i] += fault->u3 * tensileHI (component, fault, mag, xi, et, q, y, z);
+		if (fabs (fault->u1) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &strikeHI);
+			res[i] += fault->u1 * val;
+		}
+		if (fabs (fault->u2) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &dipHI);
+			res[i] += fault->u2 * val;
+		}
+		if (fabs (fault->u3) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &tensileHI);
+			res[i] += fault->u3 * val;
+		}
 	}
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
 /* sub-mirror image: type III */
 double
-seismomagneticHIII (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+seismomagneticHIII (MagComp component,
+		const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int	i;
 	double res[4] = {0., 0., 0., 0.};
 	double p, q;
+	double	val;
 
 	p = y * cd - (d[1] - z) * sd;
 	q = y * sd + (d[1] - z) * cd;
@@ -131,21 +207,32 @@ seismomagneticHIII (MagComp component, const fault_params *fault, const magnetic
 		else et -= fault->fwidth2;
 
 		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (fault->u1) > DBL_EPSILON) res[i] += fault->u1 * strikeHIII (component, fault, mag, xi, et, q, y, z);
-		if (fabs (fault->u2) > DBL_EPSILON) res[i] += fault->u2 * dipHIII (component, fault, mag, xi, et, q, y, z);
-		if (fabs (fault->u3) > DBL_EPSILON) res[i] += fault->u3 * tensileHIII (component, fault, mag, xi, et, q, y, z);
+		if (fabs (fault->u1) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &strikeHIII);
+			res[i] += fault->u1 * val;
+		}
+		if (fabs (fault->u2) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &dipHIII);
+			res[i] += fault->u2 * val;
+		}
+		if (fabs (fault->u3) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &tensileHIII);
+			res[i] += fault->u3 * val;
+		}
 	}
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
 /* sub-mirror image: type II */
 double
-seismomagneticHII (MagComp component, const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+seismomagneticHII (MagComp component,
+		const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
 	int	i;
 	double res[4] = {0., 0., 0., 0.};
 	double p, q;
 	double w = (mag->dcurier - fault->fdepth) / sd;
+	double	val;
 
 	p = y * cd - (d[2] + z) * sd;
 	q = y * sd + (d[2] + z) * cd;
@@ -163,9 +250,18 @@ seismomagneticHII (MagComp component, const fault_params *fault, const magnetic_
 		else et -= w;
 
 		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (fault->u1) > DBL_EPSILON) res[i] += fault->u1 * strikeHI (component, fault, mag, xi, et, q, y, z);
-		if (fabs (fault->u2) > DBL_EPSILON) res[i] += fault->u2 * dipHI (component, fault, mag, xi, et, q, y, z);
-		if (fabs (fault->u3) > DBL_EPSILON) res[i] += fault->u3 * tensileHI (component, fault, mag, xi, et, q, y, z);
+		if (fabs (fault->u1) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &strikeHI);
+			res[i] += fault->u1 * val;
+		}
+		if (fabs (fault->u2) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &dipHI);
+			res[i] += fault->u2 * val;
+		}
+		if (fabs (fault->u3) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &tensileHI);
+			res[i] += fault->u3 * val;
+		}
 	}
 
 	p = y * cd - (d[1] - z) * sd;
@@ -184,32 +280,22 @@ seismomagneticHII (MagComp component, const fault_params *fault, const magnetic_
 		else et -= fault->fwidth2;
 
 		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (fault->u1) > DBL_EPSILON) res[i] += fault->u1 * strikeHIII (component, fault, mag, xi, et, q, y, z);
-		if (fabs (fault->u2) > DBL_EPSILON) res[i] += fault->u2 * dipHIII (component, fault, mag, xi, et, q, y, z);
-		if (fabs (fault->u3) > DBL_EPSILON) res[i] += fault->u3 * tensileHIII (component, fault, mag, xi, et, q, y, z);
+		if (fabs (fault->u1) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &strikeHIII);
+			res[i] += fault->u1 * val;
+		}
+		if (fabs (fault->u2) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &dipHIII);
+			res[i] += fault->u2 * val;
+		}
+		if (fabs (fault->u3) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &tensileHIII);
+			res[i] += fault->u3 * val;
+		}
 	}
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
-
-/*c*********************************************************************
- * calculates specified component of seismomagnetic field
- * on obs. point (tx, ty, zobs) of internal fault coordinate system.
- * calculated magnetic component is also in fault coordinate system
-  *c*********************************************************************/
-static double
-seismomagnetic_component_in_fault_coordinate (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double tx, double ty, double zobs)
-{
-	double	val = 0.0;
-	if (term & SEISMO_MAG_MAIN) val += seismomagnetic0 (component, fault, mag, tx, ty, zobs);
-	if (term & SEISMO_MAG_MIRROR) val += seismomagneticH0 (component, fault, mag, tx, ty, zobs);
-	if (term & SEISMO_MAG_SUBMIRROR) {
-		if (fault->fdepth + fault->fwidth2 * sd <= mag->dcurier) val += seismomagneticHI (component, fault, mag, tx, ty, zobs);
-		else if (fault->fdepth - fault->fwidth1 * sd >= mag->dcurier) val += seismomagneticHIII (component, fault, mag, tx, ty, zobs);
-		else val += seismomagneticHII (component, fault, mag, tx, ty, zobs);
-	}
-	return val;
-}
 
 /*** public functions ***/
 
@@ -228,7 +314,8 @@ seismomagnetic_component_in_fault_coordinate (MagComp component, SeismoMagTerm t
  *         SEISMO_MAG_TOTAL     (3: total seismomagnetic field)
  *c***************************************************************************/
 bool
-seismomagnetic_field_term (MagComp component, SeismoMagTerm term, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs, double *val)
+seismomagnetic_field_term (MagComp component, SeismoMagTerm term,
+		const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs, double *val)
 {
 	double	tx, ty;	// obs. point on fault coordinate system
 
@@ -256,28 +343,13 @@ seismomagnetic_field_term (MagComp component, SeismoMagTerm term, const fault_pa
 
 	clear_all_singular_flags ();
 
-	if (component == MAG_COMP_Z) {
-		*val = seismomagnetic_component_in_fault_coordinate (MAG_COMP_Z, term, fault, mag, tx, ty, zobs);
-	} else if (component == MAG_COMP_X) {
-		double	hx = seismomagnetic_component_in_fault_coordinate (MAG_COMP_X, term, fault, mag, tx, ty, zobs);
-		if (fabs (fault->fstrike) > DBL_EPSILON) {
-			double	hy = seismomagnetic_component_in_fault_coordinate (MAG_COMP_Y, term, fault, mag, tx, ty, zobs);
-			rotate (-fault->fstrike, &hx, &hy);
-		}
-		*val = hx;
-	} else if (component == MAG_COMP_Y) {
-		double	hy = seismomagnetic_component_in_fault_coordinate (MAG_COMP_Y, term, fault, mag, tx, ty, zobs);
-		if (fabs (fault->fstrike) > DBL_EPSILON) {
-			double	hx = seismomagnetic_component_in_fault_coordinate (MAG_COMP_X, term, fault, mag, tx, ty, zobs);
-			rotate (-fault->fstrike, &hx, &hy);
-		}
-		*val = hy;
-	} else if (component == MAG_COMP_F) {
-		double	hx = seismomagnetic_component_in_fault_coordinate (MAG_COMP_X, term, fault, mag, tx, ty, zobs);
-		double	hy = seismomagnetic_component_in_fault_coordinate (MAG_COMP_Y, term, fault, mag, tx, ty, zobs);
-		double hz = seismomagnetic_component_in_fault_coordinate (MAG_COMP_Z, term, fault, mag, tx, ty, zobs);
-		if (fabs (fault->fstrike) > DBL_EPSILON) rotate (-fault->fstrike, &hx, &hy);
-		*val = total_force (hx, hy, hz, mag->exf_inc, mag->exf_dec);
+	*val = 0.0;
+	if (term & SEISMO_MAG_MAIN) *val += seismomagnetic0 (component, fault, mag, tx, ty, zobs);
+	if (term & SEISMO_MAG_MIRROR) *val += seismomagneticH0 (component, fault, mag, tx, ty, zobs);
+	if (term & SEISMO_MAG_SUBMIRROR) {
+		if (fault->fdepth + fault->fwidth2 * sd <= mag->dcurier) *val += seismomagneticHI (component, fault, mag, tx, ty, zobs);
+		else if (fault->fdepth - fault->fwidth1 * sd >= mag->dcurier) *val += seismomagneticHIII (component, fault, mag, tx, ty, zobs);
+		else *val += seismomagneticHII (component, fault, mag, tx, ty, zobs);
 	}
 
 	return (is_singular_point ()) ? false : true;
@@ -293,7 +365,9 @@ seismomagnetic_field_term (MagComp component, SeismoMagTerm term, const fault_pa
  *         MAG_COMP_F(0)
  *c*******************************************************/
 bool
-seismomagnetic_field (MagComp component, const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs, double *val)
+seismomagnetic_field (MagComp component,
+		const fault_params *fault, const magnetic_params *mag,
+		double xobs, double yobs, double zobs, double *val)
 {
 	// z_obs must be < 0, i.e. outside of medium
 	if (zobs >= 0.) {
