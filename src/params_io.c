@@ -14,7 +14,7 @@ typedef struct {
 	char	*description;
 } param_keyword;
 
-/* keywords and descriptions of parameter */
+/* keyword and description of parameters */
 #define n_keys 19
 const param_keyword	keys[n_keys] = {
 		{"lambda",   "lame's constants (lambda)"},

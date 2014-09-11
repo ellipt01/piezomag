@@ -181,48 +181,6 @@ seismomagneticHI (MagComp component,
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
-/* sub-mirror image: type III */
-double
-seismomagneticHIII (MagComp component,
-		const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
-{
-	int	i;
-	double res[4] = {0., 0., 0., 0.};
-	double p, q;
-	double	val;
-
-	p = y * cd - (d[1] - z) * sd;
-	q = y * sd + (d[1] - z) * cd;
-
-	for (i = 0; i < 4; i++) {
-		double xi, et;
-		double sign = 1.0;
-
-		xi = x;
-		if (i < 2) xi += fault->flength1;
-		else xi -= fault->flength2;
-
-		et = p;
-		if (i % 2 != 0) et += fault->fwidth1;
-		else et -= fault->fwidth2;
-
-		calc_geometry_variables (sign, xi, et, q);
-		if (fabs (fault->u1) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &strikeHIII);
-			res[i] += fault->u1 * val;
-		}
-		if (fabs (fault->u2) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &dipHIII);
-			res[i] += fault->u2 * val;
-		}
-		if (fabs (fault->u3) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &tensileHIII);
-			res[i] += fault->u3 * val;
-		}
-	}
-	return (res[0] + res[3]) - (res[1] + res[2]);
-}
-
 /* sub-mirror image: type II */
 double
 seismomagneticHII (MagComp component,
@@ -277,6 +235,48 @@ seismomagneticHII (MagComp component,
 
 		et = p;
 		if (i % 2 != 0) et -= w;
+		else et -= fault->fwidth2;
+
+		calc_geometry_variables (sign, xi, et, q);
+		if (fabs (fault->u1) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &strikeHIII);
+			res[i] += fault->u1 * val;
+		}
+		if (fabs (fault->u2) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &dipHIII);
+			res[i] += fault->u2 * val;
+		}
+		if (fabs (fault->u3) > DBL_EPSILON) {
+			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &tensileHIII);
+			res[i] += fault->u3 * val;
+		}
+	}
+	return (res[0] + res[3]) - (res[1] + res[2]);
+}
+
+/* sub-mirror image: type III */
+double
+seismomagneticHIII (MagComp component,
+		const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
+{
+	int	i;
+	double res[4] = {0., 0., 0., 0.};
+	double p, q;
+	double	val;
+
+	p = y * cd - (d[1] - z) * sd;
+	q = y * sd + (d[1] - z) * cd;
+
+	for (i = 0; i < 4; i++) {
+		double xi, et;
+		double sign = 1.0;
+
+		xi = x;
+		if (i < 2) xi += fault->flength1;
+		else xi -= fault->flength2;
+
+		et = p;
+		if (i % 2 != 0) et += fault->fwidth1;
 		else et -= fault->fwidth2;
 
 		calc_geometry_variables (sign, xi, et, q);

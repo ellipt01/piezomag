@@ -76,9 +76,9 @@ struct s_magnetic_params {
 	double	dcurier;	// depth of Curier point isotherm
 
 	// seismomagnetic moment on fault coordinate system
-	double	cx;	// x(NS) component
-	double	cy;	// y(EW) component
-	double	cz;	// z(DownUp) component
+	double	cx;	// x component
+	double	cy;	// y component
+	double	cz;	// z component
 	double	c0; // = sqrt (cx^2 + cy^2 + cz^2)
 
 };

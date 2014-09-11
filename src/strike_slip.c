@@ -58,7 +58,8 @@ strikeyH0 (MagComp component, const fault_params *fault, const magnetic_params *
 	double K2_val = K2 (component, 1.0, xi, et, qq);
 	double log_re_val = log_re (component, 1.0, xi, et, qq);
 	double J2_val = J2 (component, 1.0, xi, et, qq);
-	double L2_val = L2 (component, 1.0, xi, et, qq);
+//	double L2_val = L2 (component, 1.0, xi, et, qq);
+	double L2_val = L2 (component, 1.0, xi, et, qq) * cd;
 	double M2_val = M2 (component, 1.0, xi, et, qq);
 	double M3_val = M3 (component, 1.0, xi, et, qq);
 	double M2y_val = M2y (component, 1.0, xi, et, qq);
@@ -66,9 +67,9 @@ strikeyH0 (MagComp component, const fault_params *fault, const magnetic_params *
 
 	val = - (2.0 - alpha4) * K2_val
 		+ alpha4 * log_re_val * sd + alpha3 * J2_val
-		- alpha3 * (qd * M2_val + (z - h) * L2_val * sd * cd)
-		+ 2.0 * alpha4 * h * (M2_val * cd - L2_val * sd * cd)
-		- 4.0 * alpha1 * h * L2_val * sd * cd
+		- alpha3 * (qd * M2_val + (z - h) * L2_val * sd)
+		- 2.0 * alpha4 * h * (M2_val * cd - L2_val * sd)
+		- 4.0 * alpha1 * h * L2_val * sd
 		+ 2.0 * alpha2 * h * M3_val * sd
 		+ 2.0 * alpha2 * h * ((qd + h * cd) * M2z_val - (z - 2.0 * h) * M2y_val * sd);
 
@@ -85,8 +86,8 @@ strikezH0 (MagComp component, const fault_params *fault, const magnetic_params *
 	double log_re_val = log_re (component, 1.0, xi, et, qq);
 	double M2_val = M2 (component, 1.0, xi, et, qq);
 	double M3_val = M3 (component, 1.0, xi, et, qq);
-	double M3y_val = M2z (component, 1.0, xi, et, qq);
-	double M3z_val = M2y (component, 1.0, xi, et, qq);
+	double M3y_val = M3y (component, 1.0, xi, et, qq);
+	double M3z_val = M3z (component, 1.0, xi, et, qq);
 
 	val = - (2.0 + alpha5) * K3_val
 		- fault->alpha * log_re_val * cd
