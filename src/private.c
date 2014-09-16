@@ -22,6 +22,7 @@ clear_all_singular_flags (void)
 	return;
 }
 
+/* check all singular flags */
 bool
 is_singular_point (void)
 {
@@ -44,7 +45,6 @@ calc_geometry_variables (double sign, double xi, double et, double qq)
 	double	rx2, re2, rc2;
 	double	rx3, re3, rc3;
 	double	r3x2, r3e2, r3c2;
-	double	r5x3, r5e3, r5c3;
 
 	r2 = pow (xi, 2.0) + pow (et, 2.0) + pow (qq, 2.0);
 	r = sqrt (r2);
@@ -58,19 +58,16 @@ calc_geometry_variables (double sign, double xi, double et, double qq)
 	rx2 = pow (rx, 2.0);	// (r + xi)^2
 	rx3 = pow (rx, 3.0);	// (r + xi)^2
 	r3x2 = r3 * rx2;		// r^3 * (r + xi)^2
-	r5x3 = r5 * rx3;		// r^5 * (r + xi)^2
 
 	re = r + et;
 	re2 = pow (re, 2.0);	// (r + et)^2
 	re3 = pow (re, 3.0);	// (r + et)^2
 	r3e2 = r3 * re2;		// r^3 * (r + et)^2
-	r5e3 = r5 * re3;		// r^5 * (r + et)^2
 
 	rc = r + cc;
 	rc2 = pow (rc, 2.0); // (r + cc)^2
 	rc3 = pow (rc, 3.0); // (r + cc)^2
 	r3c2 = r3 * rc2;		// r^3 * (r + cc)^2
-	r5c3 = r5 * rc3;		// r^5 * (r + cc)^2
 
 	if (fabs (r) > eps) {
 		ir  = 1.0 / r;
@@ -88,13 +85,11 @@ calc_geometry_variables (double sign, double xi, double et, double qq)
 		irx2  = 1.0 / rx2;
 		irx3  = 1.0 / rx3;
 		ir3x2 = 1.0 / r3x2;
-		ir5x3 = 1.0 / r5x3;
 	} else {
 		irx   = 0.0;
 		irx2  = 0.0;
 		irx3  = 0.0;
 		ir3x2 = 0.0;
-		ir5x3 = 0.0;
 		if (!singular_iRX) singular_iRX = true;
 	}
 
@@ -103,13 +98,11 @@ calc_geometry_variables (double sign, double xi, double et, double qq)
 		ire2  = 1.0 / re2;
 		ir3e2 = 1.0 / r3e2;
 		ire3  = 1.0 / re3;
-		ir5e3 = 1.0 / r5e3;
 	} else {
 		ire   = 0.0;
 		ire2  = 0.0;
 		ire3  = 0.0;
 		ir3e2 = 0.0;
-		ir5e3 = 0.0;
 		if (!singular_iRE) singular_iRE = true;
 	}
 
@@ -118,13 +111,11 @@ calc_geometry_variables (double sign, double xi, double et, double qq)
 		irc2  = 1.0 / rc2;
 		irc3  = 1.0 / rc3;
 		ir3c2 = 1.0 / r3c2;
-		ir5c3 = 1.0 / r5c3;
 	} else {
 		irc   = 0.0;
 		irc2  = 0.0;
 		irc3  = 0.0;
 		ir3c2 = 0.0;
-		ir5c3 = 0.0;
 		if (!singular_iRC) singular_iRC = true;
 	}
 

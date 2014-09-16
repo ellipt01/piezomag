@@ -24,7 +24,14 @@ fi
 fnparam="$1"
 fnout="results.eps"
 
-range="-10/10/-10/10"
+xsouth=-10.0
+xnorth=10.0
+ywest=-10.0
+yeast=10.0
+
+lx=`echo "("$xnorth")"-"("$xsouth")" | bc -l`
+ly=`echo "("$yeast")"-"("$ywest")" | bc -l`
+
 inc="0.1/0.1"
 
 # GMT settings
@@ -64,7 +71,7 @@ makecpt -T-5/5/0.25 -Z >| mg.cpt
 
 # main title
 title="FAULT PARAMETERS: dimension (L,W)=($LENGTH, $WIDTH)"
-echo "8 48 14 0 4 TC $title" | pstext -JX"$size" -R"$range" -N -K >| $fnout
+echo "8 48 14 0 4 TC $title" | pstext -JX"$size" -R-10/10/-10/10 -N -K >| $fnout
 
 title="dislocation=($U1, $U2, $U3), strike and dip angle=($STRIKE, $DIP)"
 echo "8 46.5 14 0 4 TC $title" | pstext -JX"$size" -R -N -K -O >> $fnout
@@ -104,10 +111,10 @@ for i in 1 2 3 0; do
 	sed s'/VAL/'$i'/'g $fnparam >| _tmp_infile_
 
 	# calculate seismomagnetic field in range x=[-10:0.1:10], y=[-10:0.1:10]
-	../main/piez -f _tmp_infile_ -r $range -i $inc -z -0.001 -o $i >| res
+	../main/piez -f _tmp_infile_ -r "$xsouth/$xnorth/$ywest/$yeast" -i $inc -z -0.001 -o $i >| res
 
 	# create contour figure
-	xyz2grd -Gres.grd -I"$inc" -R -: res
+	xyz2grd -Gres.grd -I"$inc" -R"$ywest/$yeast/$xsouth/$xnorth" -:i res
 
 	# draw color contour
 	grdimage res.grd -JX -R -P -Cmg.cpt -B5nSWe -X"$shiftx" -Y"$shifty" -K -O >> $fnout
@@ -128,8 +135,9 @@ for i in 1 2 3 0; do
 	grdcontour res.grd -JX -R -P -C0.25 -A0.5f10a0 -L0/100 -K -O >> $fnout
 
 	# title
-	echo "0 11.5 14 0 4 TC $title" | pstext -JX -R -N -K -O >> $fnout
-
+	xx=`echo $xsouth+"("$lx")"*1.05 | bc -l`
+	yy=`echo $ywest+"("$ly")"/2 | bc -l`
+	echo "$yy $xx 14 0 4 TC $title" | pstext -JX -R -N -K -O >> $fnout
 done
 
 # color scale

@@ -104,11 +104,6 @@ double	ir3x2;
 double	ir3e2;
 double	ir3c2;
 
-// 1 / r^5 * (r + xi)^3, 1 / r^5 * (r + eta)^3 and 1 / r^5 * (r + c)^3
-double	ir5x3;
-double	ir5e3;
-double	ir5c3;
-
 
 /*c***********************
  *c   private functions

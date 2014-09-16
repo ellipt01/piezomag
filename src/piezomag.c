@@ -336,7 +336,7 @@ seismomagnetic_field_term (MagComp component, SeismoMagTerm term,
 		return false;
 	}
 
-	// rotate coordinate system
+	// rotate coordinates to fault coordinate system
 	tx = xobs;
 	ty = yobs;
 	if (fabs (fault->fstrike) > DBL_EPSILON) rotate (fault->fstrike, &tx, &ty);
@@ -395,7 +395,7 @@ fprintf_seismomagnetic_field_term (FILE *stream, MagComp component, SeismoMagTer
 	int		i, j;
 	double x, y;
 	int		n_grid_x, n_grid_y;
-	bool	status;
+	bool	success;
 
 	// z_obs must be < 0, i.e. outside of medium
 	if (zobs >= 0.) {
@@ -422,8 +422,8 @@ fprintf_seismomagnetic_field_term (FILE *stream, MagComp component, SeismoMagTer
 			double val;
 
 			clear_all_singular_flags ();
-			status = seismomagnetic_field_term (component, term, fault, mag, x, y, zobs, &val);
-			if (!status) continue;
+			success = seismomagnetic_field_term (component, term, fault, mag, x, y, zobs, &val);
+			if (!success) continue;
 			fprintf (stream, "%.4f\t%.4f\t%.8f\n", x, y, val);
 		}
 	}
