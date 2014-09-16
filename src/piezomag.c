@@ -25,7 +25,7 @@ typedef double (seismo_mag_term_func)
  * resultant component is on geodetic coordinate system
  *c*****************************************************/
 static double
-seismomagnetic_component (MagComp component,
+seismomagnetic_field_component (MagComp component,
 		const fault_params *fault, const magnetic_params *mag,
 		double xi, double et, double qq, double y, double z,
 		seismo_mag_term_func *func)
@@ -82,15 +82,15 @@ seismomagnetic0 (MagComp component,
 
 		calc_geometry_variables (sign, xi, et, q);
 		if (fabs (fault->u1) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &strike0);
+			val = seismomagnetic_field_component (component, fault, mag, xi, et, q, y, z, &strike0);
 			res[i] += fault->u1 * val;
 		}
 		if (fabs (fault->u2) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &dip0);
+			val = seismomagnetic_field_component (component, fault, mag, xi, et, q, y, z, &dip0);
 			res[i] += fault->u2 * val;
 		}
 		if (fabs (fault->u3) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &tensile0);
+			val = seismomagnetic_field_component (component, fault, mag, xi, et, q, y, z, &tensile0);
 			res[i] += fault->u3 * val;
 		}
 	}
@@ -124,15 +124,15 @@ seismomagneticH0 (MagComp component,
 
 		calc_geometry_variables (sign, xi, et, q);
 		if (fabs (fault->u1) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &strikeH0);
+			val = seismomagnetic_field_component (component, fault, mag, xi, et, q, y, z, &strikeH0);
 			res[i] += fault->u1 * val;
 		}
 		if (fabs (fault->u2) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &dipH0);
+			val = seismomagnetic_field_component (component, fault, mag, xi, et, q, y, z, &dipH0);
 			res[i] += fault->u2 * val;
 		}
 		if (fabs (fault->u3) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &tensileH0);
+			val = seismomagnetic_field_component (component, fault, mag, xi, et, q, y, z, &tensileH0);
 			res[i] += fault->u3 * val;
 		}
 	}
@@ -140,7 +140,7 @@ seismomagneticH0 (MagComp component,
 }
 
 /* sub-mirror image: type I */
-double
+static double
 seismomagneticHI (MagComp component,
 		const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
@@ -166,15 +166,15 @@ seismomagneticHI (MagComp component,
 
 		calc_geometry_variables (sign, xi, et, q);
 		if (fabs (fault->u1) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &strikeHI);
+			val = seismomagnetic_field_component (component, fault, mag, xi, et, q, y, z, &strikeHI);
 			res[i] += fault->u1 * val;
 		}
 		if (fabs (fault->u2) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &dipHI);
+			val = seismomagnetic_field_component (component, fault, mag, xi, et, q, y, z, &dipHI);
 			res[i] += fault->u2 * val;
 		}
 		if (fabs (fault->u3) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &tensileHI);
+			val = seismomagnetic_field_component (component, fault, mag, xi, et, q, y, z, &tensileHI);
 			res[i] += fault->u3 * val;
 		}
 	}
@@ -182,7 +182,7 @@ seismomagneticHI (MagComp component,
 }
 
 /* sub-mirror image: type II */
-double
+static double
 seismomagneticHII (MagComp component,
 		const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
@@ -209,15 +209,15 @@ seismomagneticHII (MagComp component,
 
 		calc_geometry_variables (sign, xi, et, q);
 		if (fabs (fault->u1) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &strikeHI);
+			val = seismomagnetic_field_component (component, fault, mag, xi, et, q, y, z, &strikeHI);
 			res[i] += fault->u1 * val;
 		}
 		if (fabs (fault->u2) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &dipHI);
+			val = seismomagnetic_field_component (component, fault, mag, xi, et, q, y, z, &dipHI);
 			res[i] += fault->u2 * val;
 		}
 		if (fabs (fault->u3) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &tensileHI);
+			val = seismomagnetic_field_component (component, fault, mag, xi, et, q, y, z, &tensileHI);
 			res[i] += fault->u3 * val;
 		}
 	}
@@ -239,15 +239,15 @@ seismomagneticHII (MagComp component,
 
 		calc_geometry_variables (sign, xi, et, q);
 		if (fabs (fault->u1) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &strikeHIII);
+			val = seismomagnetic_field_component (component, fault, mag, xi, et, q, y, z, &strikeHIII);
 			res[i] += fault->u1 * val;
 		}
 		if (fabs (fault->u2) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &dipHIII);
+			val = seismomagnetic_field_component (component, fault, mag, xi, et, q, y, z, &dipHIII);
 			res[i] += fault->u2 * val;
 		}
 		if (fabs (fault->u3) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &tensileHIII);
+			val = seismomagnetic_field_component (component, fault, mag, xi, et, q, y, z, &tensileHIII);
 			res[i] += fault->u3 * val;
 		}
 	}
@@ -255,7 +255,7 @@ seismomagneticHII (MagComp component,
 }
 
 /* sub-mirror image: type III */
-double
+static double
 seismomagneticHIII (MagComp component,
 		const fault_params *fault, const magnetic_params *mag, double x, double y, double z)
 {
@@ -281,26 +281,82 @@ seismomagneticHIII (MagComp component,
 
 		calc_geometry_variables (sign, xi, et, q);
 		if (fabs (fault->u1) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &strikeHIII);
+			val = seismomagnetic_field_component (component, fault, mag, xi, et, q, y, z, &strikeHIII);
 			res[i] += fault->u1 * val;
 		}
 		if (fabs (fault->u2) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &dipHIII);
+			val = seismomagnetic_field_component (component, fault, mag, xi, et, q, y, z, &dipHIII);
 			res[i] += fault->u2 * val;
 		}
 		if (fabs (fault->u3) > DBL_EPSILON) {
-			val = seismomagnetic_component (component, fault, mag, xi, et, q, y, z, &tensileHIII);
+			val = seismomagnetic_field_component (component, fault, mag, xi, et, q, y, z, &tensileHIII);
 			res[i] += fault->u3 * val;
 		}
 	}
 	return (res[0] + res[3]) - (res[1] + res[2]);
 }
 
+/*c*****************************************************************
+ * actual function that calculates specified component and term
+ * of seismomagnetic field on obs. point (xobs, yobs, zobs)
+ *c*****************************************************************/
+static bool
+actual_seismomagnetic_field_term_func (MagComp component,SeismoMagTerm term,
+		const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs, double *val)
+{
+	double	_val = 0.0;
+
+	// rotate coordinates to fault coordinate system
+	double	tx = xobs;
+	double	ty = yobs;
+	if (fabs (fault->fstrike) > DBL_EPSILON) rotate (fault->fstrike, &tx, &ty);
+
+	clear_all_singular_flags ();
+	if (term & SEISMO_MAG_MAIN) _val += seismomagnetic0 (component, fault, mag, tx, ty, zobs);
+	if (term & SEISMO_MAG_MIRROR) _val += seismomagneticH0 (component, fault, mag, tx, ty, zobs);
+	if (term & SEISMO_MAG_SUBMIRROR) {
+		if (fault->fdepth + fault->fwidth2 * sd <= mag->dcurier) _val += seismomagneticHI (component, fault, mag, tx, ty, zobs);
+		else if (fault->fdepth - fault->fwidth1 * sd >= mag->dcurier) _val += seismomagneticHIII (component, fault, mag, tx, ty, zobs);
+		else _val += seismomagneticHII (component, fault, mag, tx, ty, zobs);
+	}
+	if (val) *val = _val;
+
+	return (is_singular_point ()) ? false : true;
+}
+
+/*c****************************************************************************
+ * actual function that calculates and outputs the specified component and term
+ * of seismomagnetic field in the range
+ * [xobs1:dx:xobs2](NS), [yobs1:dy:yobs2](EW) and z = zobs
+ *c****************************************************************************/
+static void
+actual_fprintf_seismomagnetic_field_term_func (FILE *stream,
+		MagComp component, SeismoMagTerm term,
+		const fault_params *fault, const magnetic_params *mag,
+		double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs)
+{
+	int		i, j;
+	double x, y;
+	bool	success;
+
+	int		n_grid_x = (int) floor ((xobs2 - xobs1) / dx);
+	int		n_grid_y = (int) floor ((yobs2 - yobs1) / dy);
+
+	for (i = 0, x = xobs1; i <= n_grid_x; i++, x += dx) {
+		for (j = 0, y = yobs1; j <= n_grid_y; j++, y += dy) {
+			double val;
+			success = actual_seismomagnetic_field_term_func (component, term, fault, mag, x, y, zobs, &val);
+			if (!success) continue;
+			fprintf (stream, "%.4f\t%.4f\t%.8f\n", x, y, val);
+		}
+	}
+	return;
+}
 
 /*** public functions ***/
 
 /*c***************************************************************************
- * calculates specified component and term of seismomagnetic field
+ * calculate specified component and term of seismomagnetic field
  * on obs. point (xobs, yobs, zobs)
  * MagComp component: output magnetic component
  *         MAG_COMP_X(1:NS)
@@ -317,9 +373,7 @@ bool
 seismomagnetic_field_term (MagComp component, SeismoMagTerm term,
 		const fault_params *fault, const magnetic_params *mag, double xobs, double yobs, double zobs, double *val)
 {
-	double	tx, ty;	// obs. point on fault coordinate system
-
-	// z_obs must be < 0, i.e. outside of medium
+	// z_obs must be < 0, i.e. outside of the medium
 	if (zobs >= 0.) {
 		fprintf (stderr, "ERROR: seismomagnetic_field_term: z_obs must be < 0.\n");
 		fprintf (stderr, "observation point must be located outside the medium.\n");
@@ -336,27 +390,11 @@ seismomagnetic_field_term (MagComp component, SeismoMagTerm term,
 		return false;
 	}
 
-	// rotate coordinates to fault coordinate system
-	tx = xobs;
-	ty = yobs;
-	if (fabs (fault->fstrike) > DBL_EPSILON) rotate (fault->fstrike, &tx, &ty);
-
-	clear_all_singular_flags ();
-
-	*val = 0.0;
-	if (term & SEISMO_MAG_MAIN) *val += seismomagnetic0 (component, fault, mag, tx, ty, zobs);
-	if (term & SEISMO_MAG_MIRROR) *val += seismomagneticH0 (component, fault, mag, tx, ty, zobs);
-	if (term & SEISMO_MAG_SUBMIRROR) {
-		if (fault->fdepth + fault->fwidth2 * sd <= mag->dcurier) *val += seismomagneticHI (component, fault, mag, tx, ty, zobs);
-		else if (fault->fdepth - fault->fwidth1 * sd >= mag->dcurier) *val += seismomagneticHIII (component, fault, mag, tx, ty, zobs);
-		else *val += seismomagneticHII (component, fault, mag, tx, ty, zobs);
-	}
-
-	return (is_singular_point ()) ? false : true;
+	return actual_seismomagnetic_field_term_func (component, term, fault, mag, xobs, yobs, zobs, val);
 }
 
 /*c*******************************************************
- * calculates specified component of seismomagnetic field
+ * calculate specified component of seismomagnetic field
  * on obs. point (xobs, yobs, zobs)
  * MagComp component: output magnetic component
  *         MAG_COMP_X(1:NS)
@@ -369,7 +407,7 @@ seismomagnetic_field (MagComp component,
 		const fault_params *fault, const magnetic_params *mag,
 		double xobs, double yobs, double zobs, double *val)
 {
-	// z_obs must be < 0, i.e. outside of medium
+	// z_obs must be < 0, i.e. outside of the medium
 	if (zobs >= 0.) {
 		fprintf (stderr, "ERROR: seismomagnetic_field: z_obs must be < 0.\n");
 		fprintf (stderr, "observation point must be located outside the medium.\n");
@@ -380,11 +418,11 @@ seismomagnetic_field (MagComp component,
 		fprintf (stderr, "ERROR: seismomagnetic_field: component must be MAG_COMP_X, MAG_COMP_Y, MAG_COMP_Z or MAG_COMP_F\n");
 		return false;
 	}
-	return seismomagnetic_field_term (component, SEISMO_MAG_TOTAL, fault, mag, xobs, yobs, zobs, val);
+	return actual_seismomagnetic_field_term_func (component, SEISMO_MAG_TOTAL, fault, mag, xobs, yobs, zobs, val);
 }
 
 /*c****************************************************************************
- * calculates and outputs specified component and term of seismomagnetic field
+ * calculate and outputs specified component and term of seismomagnetic field
  * in the range [xobs1:dx:xobs2](NS), [yobs1:dy:yobs2](EW) and z = zobs
  *c****************************************************************************/
 void
@@ -392,12 +430,7 @@ fprintf_seismomagnetic_field_term (FILE *stream, MagComp component, SeismoMagTer
 		const fault_params *fault, const magnetic_params *mag,
 		double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs)
 {
-	int		i, j;
-	double x, y;
-	int		n_grid_x, n_grid_y;
-	bool	success;
-
-	// z_obs must be < 0, i.e. outside of medium
+	// z_obs must be < 0, i.e. outside of the medium
 	if (zobs >= 0.) {
 		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field_term: z_obs must be < 0.\n");
 		fprintf (stderr, "observation point must be located outside the medium.\n");
@@ -414,24 +447,14 @@ fprintf_seismomagnetic_field_term (FILE *stream, MagComp component, SeismoMagTer
 		return;
 	}
 
-	n_grid_x = (int) floor ((xobs2 - xobs1) / dx);
-	n_grid_y = (int) floor ((yobs2 - yobs1) / dy);
+	actual_fprintf_seismomagnetic_field_term_func (stream, component, term, fault, mag,
+			xobs1, xobs2, dx, yobs1, yobs2, dy, zobs);
 
-	for (i = 0, x = xobs1; i <= n_grid_x; i++, x += dx) {
-		for (j = 0, y = yobs1; j <= n_grid_y; j++, y += dy) {
-			double val;
-
-			clear_all_singular_flags ();
-			success = seismomagnetic_field_term (component, term, fault, mag, x, y, zobs, &val);
-			if (!success) continue;
-			fprintf (stream, "%.4f\t%.4f\t%.8f\n", x, y, val);
-		}
-	}
 	return;
 }
 
 /*c**********************************************************************
- * calculates and outputs specified component of seismomagnetic field
+ * calculate and outputs specified component of seismomagnetic field
  * in the range [xobs1:dx:xobs2](NS), [yobs1:dy:yobs2](EW) and z = zobs
  *c**********************************************************************/
 void
@@ -439,7 +462,7 @@ fprintf_seismomagnetic_field (FILE *stream, MagComp component,
 		const fault_params *fault, const magnetic_params *mag,
 		double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs)
 {
-	// z_obs must be < 0, i.e. outside of medium
+	// z_obs must be < 0, i.e. outside of the medium
 	if (zobs >= 0.) {
 		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field: z_obs must be < 0.\n");
 		fprintf (stderr, "observation point must be located outside the medium.\n");
@@ -451,6 +474,8 @@ fprintf_seismomagnetic_field (FILE *stream, MagComp component,
 		return;
 	}
 
-	fprintf_seismomagnetic_field_term (stream, component, SEISMO_MAG_TOTAL, fault, mag, xobs1, xobs2, dx, yobs1, yobs2, dy, zobs);
+	actual_fprintf_seismomagnetic_field_term_func (stream, component, SEISMO_MAG_TOTAL, fault, mag,
+			xobs1, xobs2, dx, yobs1, yobs2, dy, zobs);
+
 	return;
 }

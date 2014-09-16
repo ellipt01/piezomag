@@ -253,7 +253,24 @@ fread_params (FILE *fp, fault_params *fault, magnetic_params *mag)
 
 	// todo: In here, check whether all parameters are valid
 
-	// check fault dip
+	// check elastic properties of the crust
+	if (fault->lambda < 0.) {
+		fprintf (stderr, "ERROR: Lame's constant lambda must be >= 0.\n");
+		return false;
+	}
+	if (fault->mu < 0.) {
+		fprintf (stderr, "ERROR: rigidity mu must be >= 0.\n");
+		return false;
+	}
+
+	// fault must be buried in the ground
+	if (fault->fdepth + fault->fwidth1 * sd < 0.0) {
+		fprintf (stderr, "ERROR: fault must be buried in the ground\n");
+		fprintf (stderr, "       i.e. fdepth + fwidth1 * sin (delta) must be >= 0.\n");
+		return false;
+	}
+
+	// check fault dip (0 <= fdip <= 90 deg.)
 	if (fault->fdip < 0. || 90. < fault->fdip) {
 		fprintf (stderr, "ERROR: fread_params: fdip must be in [0, 90] (deg.).\n");
 		return false;

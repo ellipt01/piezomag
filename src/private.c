@@ -11,7 +11,7 @@
 #include "piezomag.h"
 #include "private.h"
 
-/* treatment of singular points */
+/* clear all singular flags */
 void
 clear_all_singular_flags (void)
 {
@@ -31,13 +31,13 @@ is_singular_point (void)
 
 const double	eps = 5.e-4;
 
-/*c***************************************************
+/*c*************************************************************
  * calculate some arithmetic constants
  * and store them in global variables
  ** INPUT **
  * sign: + or -
- * double xi, eta and qq: coordinates on fault plane
- *c***************************************************/
+ * double xi, eta and qq: coordinates obs. pont on fault plane
+ *c*************************************************************/
 void
 calc_geometry_variables (double sign, double xi, double et, double qq)
 {
