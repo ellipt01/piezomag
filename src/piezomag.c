@@ -375,18 +375,20 @@ seismomagnetic_field_term (MagComp component, SeismoMagTerm term,
 {
 	// z_obs must be < 0, i.e. outside of the medium
 	if (zobs >= 0.) {
-		fprintf (stderr, "ERROR: seismomagnetic_field_term: z_obs must be < 0.\n");
-		fprintf (stderr, "observation point must be located outside the medium.\n");
+		fprintf (stderr, "ERROR: seismomagnetic_field_term: invalid z_obs.\n");
+		fprintf (stderr, "       z_obs must be < 0, i.e. observation point must be located outside the medium.\n");
 		return false;
 	}
 	// component must be X_COMP(0:NS), Y_COMP(1:EW), Z_COMP(2:DownUp) or TOTAL_FORCE(3)
 	if (!check_mag_component (component)) {
-		fprintf (stderr, "ERROR: seismomagnetic_field_term: component must be MAG_COMP_X, MAG_COMP_Y, MAG_COMP_Z or MAG_COMP_F\n");
+		fprintf (stderr, "ERROR: seismomagnetic_field_term: invalid component.\n");
+		fprintf (stderr, "       component must be MAG_COMP_X, MAG_COMP_Y, MAG_COMP_Z or MAG_COMP_F\n");
 		return false;
 	}
 	// term must be SEISMO_MAG_MAIN, SEISMO_MAG_MIRROR, SEISMO_MAG_SUBMIRROR or SEISMO_MAG_TOTAL
 	if (!check_seismo_mag_term (term)) {
-		fprintf (stderr, "ERROR: seismomagnetic_field_term: term must be SEISMO_MAG_MAIN, SEISMO_MAG_MIRROR, SEISMO_MAG_SUBMIRROR\n");
+		fprintf (stderr, "ERROR: seismomagnetic_field_term: invalid seismomagnetic term.\n");
+		fprintf (stderr, "       term must be SEISMO_MAG_MAIN, SEISMO_MAG_MIRROR, SEISMO_MAG_SUBMIRROR or SEISMO_MAG_TOTAL.\n");
 		return false;
 	}
 
@@ -409,13 +411,14 @@ seismomagnetic_field (MagComp component,
 {
 	// z_obs must be < 0, i.e. outside of the medium
 	if (zobs >= 0.) {
-		fprintf (stderr, "ERROR: seismomagnetic_field: z_obs must be < 0.\n");
-		fprintf (stderr, "observation point must be located outside the medium.\n");
+		fprintf (stderr, "ERROR: seismomagnetic_field: invalid z_obs.\n");
+		fprintf (stderr, "       z_obs must be < 0, i.e. observation point must be located outside the medium.\n");
 		return false;
 	}
 	// component must be X_COMP(0:NS), Y_COMP(1:EW), Z_COMP(2:DownUp) or TOTAL_FORCE(3)
 	if (!check_mag_component (component)) {
-		fprintf (stderr, "ERROR: seismomagnetic_field: component must be MAG_COMP_X, MAG_COMP_Y, MAG_COMP_Z or MAG_COMP_F\n");
+		fprintf (stderr, "ERROR: seismomagnetic_field: invalid component.\n");
+		fprintf (stderr, "       component must be MAG_COMP_X, MAG_COMP_Y, MAG_COMP_Z or MAG_COMP_F\n");
 		return false;
 	}
 	return actual_seismomagnetic_field_term_func (component, SEISMO_MAG_TOTAL, fault, mag, xobs, yobs, zobs, val);
@@ -432,18 +435,20 @@ fprintf_seismomagnetic_field_term (FILE *stream, MagComp component, SeismoMagTer
 {
 	// z_obs must be < 0, i.e. outside of the medium
 	if (zobs >= 0.) {
-		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field_term: z_obs must be < 0.\n");
-		fprintf (stderr, "observation point must be located outside the medium.\n");
+		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field_term: invalid z_obs.\n");
+		fprintf (stderr, "       z_obs must be < 0, i.e. observation point must be located outside the medium.\n");
 		return;
 	}
 	// component must be X_COMP(0:NS), Y_COMP(1:EW), Z_COMP(2:DownUp) or TOTAL_FORCE(3)
 	if (!check_mag_component (component)) {
-		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field_term: component must be MAG_COMP_X, MAG_COMP_Y, MAG_COMP_Z or MAG_COMP_F\n");
+		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field_term: invalid component.\n");
+		fprintf (stderr, "       component must be MAG_COMP_X, MAG_COMP_Y, MAG_COMP_Z or MAG_COMP_F\n");
 		return;
 	}
 	// term must be SEISMO_MAG_MAIN, SEISMO_MAG_MIRROR, SEISMO_MAG_SUBMIRROR or SEISMO_MAG_TOTAL
 	if (!check_seismo_mag_term (term)) {
-		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field_term: term must be SEISMO_MAG_MAIN, SEISMO_MAG_MIRROR, SEISMO_MAG_SUBMIRROR\n");
+		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field_term: invalid seismomagnetic term.\n");
+		fprintf (stderr, "       term must be SEISMO_MAG_MAIN, SEISMO_MAG_MIRROR, SEISMO_MAG_SUBMIRROR or SEISMO_MAG_TOTAL.\n");
 		return;
 	}
 
@@ -464,13 +469,14 @@ fprintf_seismomagnetic_field (FILE *stream, MagComp component,
 {
 	// z_obs must be < 0, i.e. outside of the medium
 	if (zobs >= 0.) {
-		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field: z_obs must be < 0.\n");
-		fprintf (stderr, "observation point must be located outside the medium.\n");
+		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field: invalid z_obs.\n");
+		fprintf (stderr, "       z_obs must be < 0, i.e. observation point must be located outside the medium.\n");
 		return;
 	}
 	// component must be X_COMP(0:NS), Y_COMP(1:EW), Z_COMP(2:DownUp) or TOTAL_FORCE(3)
 	if (!check_mag_component (component)) {
-		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field: component must be MAG_COMP_X, MAG_COMP_Y, MAG_COMP_Z or MAG_COMP_F\n");
+		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field: invalid component.\n");
+		fprintf (stderr, "       component must be MAG_COMP_X, MAG_COMP_Y, MAG_COMP_Z or MAG_COMP_F\n");
 		return;
 	}
 
