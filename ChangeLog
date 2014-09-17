@@ -1,1 +1,182 @@
+Commits on Sep 17, 2014
+
+* 140917-iss003: update lt version
+  Mitsuru Utsugi
+
+* 140917-iss002: modify comments
+  Mitsuru Utsugi
+
+* 140917-iss001: modify piezomag.c
+  Mitsuru Utsugi
+
+* 140916-iss001: modify calcomp.sh
+  Mitsuru Utsugi
+
+Commits on Sep 12, 2014
+
+* 140911-iss001: fix bugs
+  Mitsuru Utsugi
+
+Commits on Sep 05, 2014
+
+* 140905-iss004: modify sample eps
+  Mitsuru Utsugi
+
+* 140905-iss003: optimize routines
+  Mitsuru Utsugi
+
+* 140905-iss002: optimize calculation
+  Mitsuru Utsugi
+
+* 140905-iss001: modify keywords
+  Mitsuru Utsugi
+
+Commits on Sep 04, 2014
+
+* 140904-iss001: add params_io.c
+  Mitsuru Utsugi
+
+Commits on Sep 03, 2014
+
+* 140903-iss002: modify flags of singularity
+  Mitsuru Utsugi
+
+* 140903-iss001: remove z_obs and output_comp
+  Mitsuru Utsugi
+
+* 140902-iss001: add private.c
+  Mitsuru Utsugi
+
+Commits on Sep 01, 2014
+
+* 140901-iss003: modify enums
+  Mitsuru Utsugi
+
+* 140901-iss002: modify fault_geometry.pdf
+  Mitsuru Utsugi
+
+* 140901-iss001: modify README
+  Mitsuru Utsugi
+
+Commits on Aug 30, 2014
+
+* 140830-iss001: modify src/Makefile.am
+  Mitsuru Utsugi
+
+Commits on Aug 29, 2014
+
+* 140829-iss001: modify README
+  Mitsuru Utsugi
+
+Commits on Aug 28, 2014
+
+* 140828-iss001: modify calcomp.sh
+  Mitsuru Utsugi
+
+* 140827-iss002: modify README
+  Mitsuru Utsugi
+
+Commits on Aug 27, 2014
+
+* 140827-iss001: introduce some new enums
+  Mitsuru Utsugi
+
+Commits on Aug 26, 2014
+
+* 140826-iss002: fix bugs
+  Mitsuru Utsugi
+
+* 140826-iss001: modify coordinates transform
+  Mitsuru Utsugi
+
+Commits on Aug 23, 2014
+
+* 140823-iss003: modify README
+  Mitsuru Utsugi
+
+* 140823-iss002: modify fault_geometry.pdf
+  Mitsuru Utsugi
+
+* 140823-iss001: change coordinate system
+  now x and y axis direct North and East
+  Mitsuru Utsugi
+
+Commits on Aug 22, 2014
+
+* 140822-iss003: modify README.md
+  Mitsuru Utsugi
+
+* 140822-iss002: rename some public functions
+  Mitsuru Utsugi
+
+* 140822-iss001: now vertical fault is available
+  Mitsuru Utsugi
+
+* 140822-devel001
+  Mitsuru Utsugi
+
+Commits on Aug 21, 2014
+
+* 140820-devel002
+  Mitsuru Utsugi
+
+Commits on Aug 20, 2014
+
+* 140820-devel001
+  Mitsuru Utsugi
+
+* 140420-iss001: modify README.md
+  Mitsuru Utsugi
+
+* 140819-iss004: modify example script
+  Mitsuru Utsugi
+
+Commits on Aug 19, 2014
+
+* 140819-iss003: modify sample parameter file 
+  Mitsuru Utsugi
+
+Commits on Aug 19, 2014
+
+* 140819-iss002: modify some comments
+  Mitsuru Utsugi
+
+* 140819-iss001: add README and some documents, modify sample script
+  Mitsuru Utsugi
+
+Commits on Aug 15, 2014
+
+* 140815-iss002: to md
+  Mitsuru Utsugi
+
+* 140815-iss001: modify some comments
+  Mitsuru Utsugi
+
+Commits on Aug 14, 2014
+
+* 140814-iss003: now, range of calculation is specified by
+  command-line options -r and -i
+  Mitsuru Utsugi
+
+* 140814-iss002: modify calcomp.sh
+  Mitsuru Utsugi
+
+* 140814-iss001: modify piezomag.h and README
+   Mitsuru Utsugi
+
+Commits on Aug 08, 2014
+
+* 140808-iss001: modify comments and introduce parameter structures
+   Mitsuru Utsugi
+
+Commits on Aug 04, 2014
+
+* 140804-iss002: add example (directory "work")
+  Mitsuru Utsugi
+
+* 140803-iss001: modify README
+  Mitsuru Utsugi
+
+* firest commit
+  Mitsuru Utsugi
 

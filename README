@@ -7,8 +7,8 @@ change caused by earthquake due to piezomagnetic effect.
 This package contains library for calculating seismomagnetic field due to a vertical
 or inclined rectangular fault located inside magnetized perfectly-elastic half space.
 Using this library, you can calculate seismomagnetic field easily,
-and any dip angle and all types of fault motion, strike-slip, dip-slip and tensile
-opening is available for this library.
+and any fault strike angle, dip angle and all types of fault motion, strike-slip, dip-slip
+and tensile-opening are available for this library.
 
 ## Installation
 
@@ -46,7 +46,7 @@ and for the details of the parameter file, see "work/example_params.data"
 
 These structures are allocated by the following functions, respectivly:
 
-fault_params *fault_params_alloc (void)
+fault_params    *fault_params_alloc (void)
 
 magnetic_params *magnetic_params_alloc (void)
 
@@ -57,16 +57,17 @@ seismomagnetic_field_term (MagComp component, SeismoMagTerm term,
     const fault_params *fault, const magnetic_params *mag,
     double xobs, double yobs, double zobs, double *val);
 
-This function calculates the seismomagnetic field on obervation point (xobs, yobs, zobs).
+This function calculates the seismomagnetic field on obervation point
+(xobs(NS), yobs(EW), zobs(DownUp)).
 
 MagComp component specifies the output magnetic component
 and it takes the following values:
 
 typedef enum {
  MAG_COMP_F    =  0, // total force
- MAG_COMP_X    =  1, // x component
- MAG_COMP_Y    =  2, // y component
- MAG_COMP_Z    =  3, // z component
+ MAG_COMP_X    =  1, // x(NS) component
+ MAG_COMP_Y    =  2, // y(EW) component
+ MAG_COMP_Z    =  3, // z(DownUp) component
 } MagComp;
 
 
@@ -93,7 +94,8 @@ fprintf_seismomagnetic_field_term (FILE *stream,
     double yobs1, double yobs2, double dy, double zobs);
 
 This function calculates the seismomagnetic field on the grid x=[xobs1:dx:xobs2],
-y=[yobs1:dy:yobs2] and z=zobs. Output format is  X(NS)  Y(EW)  VAL.
+y=[yobs1:dy:yobs2] and z=zobs. If observation point is singular point,
+result is not printed out. Output format is  X(NS)  Y(EW)  VAL.
 
 ---
 
@@ -120,11 +122,12 @@ fprintf_seismomagnetic_field_term (component, SEISMO_MAG_TOTAL, fault, mag,
     xobs1, xobs2, dx, yobs1, yobs2, dy, zobs);
 
 
-## Sample program
+## Example program
 
 An example program "main/piez" is also contained in this package.
-This prograrm calls the function fprintf_seismomagnetic_field () and outputs
-seismomagnetic field on the grid of x=[xobs1:dx:xobs2], y=[yobs1:dy:yobs2].
+This prograrm calls the function `fprintf_seismomagnetic_field ()` and outputs
+seismomagnetic field on the grid of x=[xobs1:dx:xobs2], y=[yobs1:dy:yobs2]
+and z=zobs.
 To run this program, do
 
 $ ./main/piez -f <parameter file name> -r <xobs1/xobs2/yobs1/yobs2> -i <dx/dy>

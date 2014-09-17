@@ -22,7 +22,7 @@ libpiezomag_la_SOURCES =\
 
 libpiezomag_la_CPPFLAGS = -I$(top_srcdir)/include
 
-libpiezomag_la_LDFLAGS = -L$(top_srcdir)/src
+libpiezomag_la_LDFLAGS = -L$(top_srcdir)/src -version-info $(PIEZOMAG_LT_VERSION)
 
 libpiezomag_la_LIBADD =
 
