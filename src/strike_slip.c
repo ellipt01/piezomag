@@ -59,7 +59,7 @@ strikeyH0 (MagComp component, const fault_params *fault, const magnetic_params *
 	double log_re_val = log_re (component, 1.0, xi, et, qq);
 	double J2_val = J2 (component, 1.0, xi, et, qq);
 //	double L2_val = L2 (component, 1.0, xi, et, qq);
-	double L2_val = L2 (component, 1.0, xi, et, qq) * cd;
+	double L2_val = L2 (component, 1.0, xi, et, qq) * cd;	// todo: check this!
 	double M2_val = M2 (component, 1.0, xi, et, qq);
 	double M3_val = M3 (component, 1.0, xi, et, qq);
 	double M2y_val = M2y (component, 1.0, xi, et, qq);

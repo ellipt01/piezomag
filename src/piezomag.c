@@ -329,28 +329,30 @@ actual_seismomagnetic_field_term_func (MagComp component,SeismoMagTerm term,
  * of seismomagnetic field in the range
  * [xobs1:dx:xobs2](NS), [yobs1:dy:yobs2](EW) and z = zobs
  *c****************************************************************************/
-static void
+static int
 actual_fprintf_seismomagnetic_field_term_func (FILE *stream,
 		MagComp component, SeismoMagTerm term,
 		const fault_params *fault, const magnetic_params *mag,
 		double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs)
 {
-	int		i, j;
+	int		i, j, k;
 	double x, y;
 	bool	success;
 
 	int		n_grid_x = (int) floor ((xobs2 - xobs1) / dx);
 	int		n_grid_y = (int) floor ((yobs2 - yobs1) / dy);
 
+	k = 0;
 	for (i = 0, x = xobs1; i <= n_grid_x; i++, x += dx) {
 		for (j = 0, y = yobs1; j <= n_grid_y; j++, y += dy) {
 			double val;
 			success = actual_seismomagnetic_field_term_func (component, term, fault, mag, x, y, zobs, &val);
 			if (!success) continue;
 			fprintf (stream, "%.4f\t%.4f\t%.8f\n", x, y, val);
+			k++;
 		}
 	}
-	return;
+	return k;
 }
 
 /*** public functions ***/
@@ -428,7 +430,7 @@ seismomagnetic_field (MagComp component,
  * calculate and outputs specified component and term of seismomagnetic field
  * in the range [xobs1:dx:xobs2](NS), [yobs1:dy:yobs2](EW) and z = zobs
  *c****************************************************************************/
-void
+int
 fprintf_seismomagnetic_field_term (FILE *stream, MagComp component, SeismoMagTerm term,
 		const fault_params *fault, const magnetic_params *mag,
 		double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs)
@@ -437,32 +439,31 @@ fprintf_seismomagnetic_field_term (FILE *stream, MagComp component, SeismoMagTer
 	if (zobs >= 0.) {
 		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field_term: invalid z_obs.\n");
 		fprintf (stderr, "       z_obs must be < 0, i.e. observation point must be located outside the medium.\n");
-		return;
+		return _PIEZOMAG_DUMMY_;
 	}
 	// component must be X_COMP(0:NS), Y_COMP(1:EW), Z_COMP(2:DownUp) or TOTAL_FORCE(3)
 	if (!check_mag_component (component)) {
 		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field_term: invalid component.\n");
 		fprintf (stderr, "       component must be MAG_COMP_X, MAG_COMP_Y, MAG_COMP_Z or MAG_COMP_F\n");
-		return;
+		return _PIEZOMAG_DUMMY_;
 	}
 	// term must be SEISMO_MAG_MAIN, SEISMO_MAG_MIRROR, SEISMO_MAG_SUBMIRROR or SEISMO_MAG_TOTAL
 	if (!check_seismo_mag_term (term)) {
 		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field_term: invalid seismomagnetic term.\n");
 		fprintf (stderr, "       term must be SEISMO_MAG_MAIN, SEISMO_MAG_MIRROR, SEISMO_MAG_SUBMIRROR or SEISMO_MAG_TOTAL.\n");
-		return;
+		return _PIEZOMAG_DUMMY_;
 	}
 
-	actual_fprintf_seismomagnetic_field_term_func (stream, component, term, fault, mag,
-			xobs1, xobs2, dx, yobs1, yobs2, dy, zobs);
+	return actual_fprintf_seismomagnetic_field_term_func (stream, component, term, fault, mag,
+				xobs1, xobs2, dx, yobs1, yobs2, dy, zobs);
 
-	return;
 }
 
 /*c**********************************************************************
  * calculate and outputs specified component of seismomagnetic field
  * in the range [xobs1:dx:xobs2](NS), [yobs1:dy:yobs2](EW) and z = zobs
  *c**********************************************************************/
-void
+int
 fprintf_seismomagnetic_field (FILE *stream, MagComp component,
 		const fault_params *fault, const magnetic_params *mag,
 		double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs)
@@ -471,17 +472,15 @@ fprintf_seismomagnetic_field (FILE *stream, MagComp component,
 	if (zobs >= 0.) {
 		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field: invalid z_obs.\n");
 		fprintf (stderr, "       z_obs must be < 0, i.e. observation point must be located outside the medium.\n");
-		return;
+		return _PIEZOMAG_DUMMY_;
 	}
 	// component must be X_COMP(0:NS), Y_COMP(1:EW), Z_COMP(2:DownUp) or TOTAL_FORCE(3)
 	if (!check_mag_component (component)) {
 		fprintf (stderr, "ERROR: fprintf_seismomagnetic_field: invalid component.\n");
 		fprintf (stderr, "       component must be MAG_COMP_X, MAG_COMP_Y, MAG_COMP_Z or MAG_COMP_F\n");
-		return;
+		return _PIEZOMAG_DUMMY_;
 	}
 
-	actual_fprintf_seismomagnetic_field_term_func (stream, component, SEISMO_MAG_TOTAL, fault, mag,
-			xobs1, xobs2, dx, yobs1, yobs2, dy, zobs);
-
-	return;
+	return actual_fprintf_seismomagnetic_field_term_func (stream, component, SEISMO_MAG_TOTAL, fault, mag,
+				xobs1, xobs2, dx, yobs1, yobs2, dy, zobs);
 }

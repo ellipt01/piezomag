@@ -45,6 +45,8 @@ gmtset HEADER_FONT "Helvetica"
 gmtset HEADER_FONT_SIZE "10p"
 gmtset LABEL_FONT "Helvetica"
 gmtset LABEL_FONT_SIZE "10p"
+gmtset COLOR_MODEL "rgb"
+gmtset MEASURE_UNIT "cm"
 
 size=9/9
 

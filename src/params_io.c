@@ -6,9 +6,6 @@
 #include "piezomag.h"
 #include "private.h"
 
-/* dummy */
-#define DUMMY 0
-
 typedef struct {
 	char	*keyword;
 	char	*description;
@@ -152,7 +149,7 @@ set_constants (fault_params *fault, magnetic_params *mag)
 	c2d = cos (deg2rad (2.0 * fault->fdip));
 
 	/* depth of source and mirror images */
-	d[0] = DUMMY;	// not referred
+	d[0] = _PIEZOMAG_DUMMY_;	// not referred
 	d[1] = fault->fdepth;	// d1 : source depth
 	d[2] = fault->fdepth - 2.0 * mag->dcurier;	// d2: depth of mirror image
 	d[3] = fault->fdepth + 2.0 * mag->dcurier;	// d3: depth of sub-mirror image

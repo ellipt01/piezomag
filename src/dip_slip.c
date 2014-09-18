@@ -33,11 +33,11 @@ dipxH0 (MagComp component, const fault_params *fault, const magnetic_params *mag
 	double qd = y * sd + (fault->fdepth - h) * cd;
 	double K4_val = K4 (component, 1.0, xi, et, qq);
 	double log_re_val = log_re (component, 1.0, xi, et, qq);
-	double J2_val = J2 (component, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
+	double J2_val = J2 (component, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);	// todo: check this!
 	double O1_val = O1 (component, 1.0, xi, et, qq);
 	double N2_val = N2 (component, 1.0, xi, et, qq);
 	double M2_val = M2 (component, 1.0, xi, et, qq);
-	double O2z_val = O1z (component, 1.0, xi, et, qq);
+	double O2z_val = O1z (component, 1.0, xi, et, qq);	// todo: check this! (O2z -> O1z)
 	double N2z_val = N2z (component, 1.0, xi, et, qq);
 
 	val =	(2.0 - alpha4) * K4_val
@@ -59,7 +59,7 @@ dipyH0 (MagComp component, const fault_params *fault, const magnetic_params *mag
 	double K5_val = K5 (component, 1.0, xi, et, qq);
 	double log_rx_val = log_rx (component, 1.0, xi, et, qq);
 	double atan_xe_qr_val = atan_xe_qr (component, 1.0, xi, et, qq);
-	double J1_val = J1 (component, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
+	double J1_val = J1 (component, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);	// todo: check this!
 	double O2_val = O2 (component, 1.0, xi, et, qq);
 	double O3_val = O3 (component, 1.0, xi, et, qq);
 	double N1_val = N1 (component, 1.0, xi, et, qq);
@@ -116,12 +116,12 @@ dipxHI (MagComp component, const fault_params *fault, const magnetic_params *mag
 	double qd = y * sd + (fault->fdepth - h) * cd;
 	double K4_val = K4 (component, -1.0, xi, et, qq);
 	double log_re_val = log_re (component, -1.0, xi, et, qq);
-	double J2_val = J2 (component, -1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
+	double J2_val = J2 (component, -1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);	// todo: check this!
 	double O1_val = O1 (component, -1.0, xi, et, qq);
 	double N2_val = N2 (component, -1.0, xi, et, qq);
 
 	val = - alpha4 * K4_val + alpha3 * (log_re_val * s2d + J2_val * c2d)
-		- alpha2 * (qd * O1_val + (z - h) * N2_val * sd);
+		+ alpha2 * (qd * O1_val + (z - h) * N2_val * sd);
 
 	return val;
 }
@@ -135,7 +135,7 @@ dipyHI (MagComp component, const fault_params *fault, const magnetic_params *mag
 	double K5_val = K5 (component, -1.0, xi, et, qq);
 	double log_rx_val = log_rx (component, -1.0, xi, et, qq);
 	double atan_xe_qr_val = atan_xe_qr (component, -1.0, xi, et, qq);
-	double J1_val = J1 (component, -1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
+	double J1_val = J1 (component, -1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);	// todo: check this!
 	double O2_val = O2 (component, -1.0, xi, et, qq);
 	double O3_val = O3 (component, -1.0, xi, et, qq);
 	double N1_val = N1 (component, -1.0, xi, et, qq);
@@ -176,7 +176,7 @@ dipxHIII (MagComp component, const fault_params *fault, const magnetic_params *m
 	double qd = y * sd + (fault->fdepth - h) * cd;
 	double K4_val = K4 (component, 1.0, xi, et, qq);
 	double log_re_val = log_re (component, 1.0, xi, et, qq);
-	double J2_val = J2 (component, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
+	double J2_val = J2 (component, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);	// todo: check this!
 	double O1_val = O1 (component, 1.0, xi, et, qq);
 	double N2_val = N2 (component, 1.0, xi, et, qq);
 
@@ -195,7 +195,7 @@ dipyHIII (MagComp component, const fault_params *fault, const magnetic_params *m
 	double K5_val = K5 (component, 1.0, xi, et, qq);
 	double log_rx_val = log_rx (component, 1.0, xi, et, qq);
 	double atan_xe_qr_val = atan_xe_qr (component, 1.0, xi, et, qq);
-	double J1_val = J1 (component, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);
+	double J1_val = J1 (component, 1.0, xi, et, qq) * (fault_is_vertical ? 1. : secd);	// todo: check this!
 	double O2_val = O2 (component, 1.0, xi, et, qq);
 	double O3_val = O3 (component, 1.0, xi, et, qq);
 	double N1_val = N1 (component, 1.0, xi, et, qq);

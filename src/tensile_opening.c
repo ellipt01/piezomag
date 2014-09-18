@@ -45,9 +45,7 @@ tensilexH0 (MagComp component, const fault_params *fault, const magnetic_params 
 	val =	(2.0 - alpha4) * K7_val
 		+ 2.0 * alpha3 * log_rc_val * sd - fault->alpha * log_re_val
 		+ alpha3 * (qd * P1_val - (z - h) * (M2_val + N2_val * sd))
-//		+ alpha3 * (qd * P1_val - (z - h) * (M2_val + N2_val * sd) * td)
 		+ 2.0 * alpha5 * h * (P1_val * cd + (M2_val + N2_val * sd))
-//		+ 2.0 * alpha5 * h * (P1_val * cd + (M2_val + N2_val * sd) * td)
 		+ 6.0 * alpha3 * h * M3_val
 		- 2.0 * alpha2 * h * ((qd + h * cd) * P1z_val - (z - 2.0 * h) * P1y_val * sd);
 
@@ -79,7 +77,8 @@ tensileyH0 (MagComp component, const fault_params *fault, const magnetic_params 
 		- 2.0 * fault->alpha * h * ((O3_val+ M1_val * sd) * cd + (O2_val - L1_val * sd) * sd)
 		+ 6.0 * alpha3 * h * L1_val * sd2
 		+ 2.0 * alpha2 * h * ((qd + h * cd) * (O2y_val + M1y_val *cd)
-				+ (z - 2.0 * h) * (O2z_val + M1y_val * sd)
+//				+ (z - 2.0 * h) * (O2z_val + M1y_val * sd)
+				+ (z - 2.0 * h) * (O2z_val + M1y_val) * sd	//todo: check this!
 				+ M1_val * sd2 * cd);
 
 	return val;
@@ -106,7 +105,7 @@ tensilezH0 (MagComp component, const fault_params *fault, const magnetic_params 
 		+ 2.0 * alpha4 * h * (P3_val * cd + P2_val * sd)
 		+ 4.0 * alpha1 * h * M1_val * sd2
 		+ 2.0 * alpha2 * h * ((qd + h * cd) * P3z_val
-		// todo: check here (P3_val * sd -> P3_val * sd * cd is correct ?)
+		// todo: check this!
 		// 		- (z - 2.0 * h) * P3y_val + 2.0 * P3_val * sd);
 				- (z - 2.0 * h) * P3y_val * sd + 2.0 * P2_val * sd * cd);
 
@@ -131,7 +130,6 @@ tensilexHI (MagComp component, const fault_params *fault, const magnetic_params 
 	val =	- alpha4 * K7_val
 		- 2.0 * alpha3 * log_rc_val * sd + fault->alpha * log_re_val
 		+ alpha2 * (qd * P1_val + (z - h) * (M2_val - N2_val * sd));
-	//	+ alpha2 * (qd * P1_val + (z - h) * (M2_val - N2_val * sd) * td);
 
 	return val;
 }
@@ -197,7 +195,6 @@ tensilexHIII (MagComp component, const fault_params *fault, const magnetic_param
 	val =	alpha4 * K7_val
 		- 2.0 * alpha3 * log_rc_val * sd + fault->alpha * log_re_val
 		- alpha3 * (qd * P1_val - (z - h) * (M2_val + N2_val * sd));
-	//	- alpha3 * (qd * P1_val - (z - h) * (M2_val + N2_val * sd) * td);
 
 	return val;
 }

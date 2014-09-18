@@ -333,115 +333,115 @@ double
 L1 (MagComp component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return L1_x (sign, xi, et, qq);
-	else if (component == MAG_COMP_Y) return L1_y (sign, xi, et, qq);
-	else if (component == MAG_COMP_Z) return L1_z (sign, xi, et, qq);
-	return 0.;
+	if (component == MAG_COMP_Y) return L1_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return L1_z (sign, xi, et, qq);
+	return _PIEZOMAG_DUMMY_;
 }
 
 double
 L2 (MagComp component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return L2_x (sign, xi, et, qq);
-	else if (component == MAG_COMP_Y) return L2_y (sign, xi, et, qq);
-	else if (component == MAG_COMP_Z) return L2_z (sign, xi, et, qq);
-	return 0.;
+	if (component == MAG_COMP_Y) return L2_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return L2_z (sign, xi, et, qq);
+	return _PIEZOMAG_DUMMY_;
 }
 
 double
 M1 (MagComp component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return M1_x (sign, xi, et, qq);
-	else if (component == MAG_COMP_Y) return M1_y (sign, xi, et, qq);
-	else if (component == MAG_COMP_Z) return M1_z (sign, xi, et, qq);
-	return 0.;
+	if (component == MAG_COMP_Y) return M1_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return M1_z (sign, xi, et, qq);
+	return _PIEZOMAG_DUMMY_;
 }
 
 double
 M2 (MagComp component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return M2_x (sign, xi, et, qq);
-	else if (component == MAG_COMP_Y) return M2_y (sign, xi, et, qq);
-	else if (component == MAG_COMP_Z) return M2_z (sign, xi, et, qq);
-	return 0.;
+	if (component == MAG_COMP_Y) return M2_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return M2_z (sign, xi, et, qq);
+	return _PIEZOMAG_DUMMY_;
 }
 
 double
 M3 (MagComp component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return M3_x (sign, xi, et, qq);
-	else if (component == MAG_COMP_Y) return M3_y (sign, xi, et, qq);
-	else if (component == MAG_COMP_Z) return M3_z (sign, xi, et, qq);
-	return 0.;
+	if (component == MAG_COMP_Y) return M3_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return M3_z (sign, xi, et, qq);
+	return _PIEZOMAG_DUMMY_;
 }
 
 double
 N1 (MagComp component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return N1_x (sign, xi, et, qq);
-	else if (component == MAG_COMP_Y) return N1_y (sign, xi, et, qq);
-	else if (component == MAG_COMP_Z) return N1_z (sign, xi, et, qq);
-	return 0.;
+	if (component == MAG_COMP_Y) return N1_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return N1_z (sign, xi, et, qq);
+	return _PIEZOMAG_DUMMY_;
 }
 
 double
 N2 (MagComp component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return N2_x (sign, xi, et, qq);
-	else if (component == MAG_COMP_Y) return N2_y (sign, xi, et, qq);
-	else if (component == MAG_COMP_Z) return N2_z (sign, xi, et, qq);
-	return 0.;
+	if (component == MAG_COMP_Y) return N2_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return N2_z (sign, xi, et, qq);
+	return _PIEZOMAG_DUMMY_;
 }
 
 double
 O1 (MagComp component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return O1_x (sign, xi, et, qq);
-	else if (component == MAG_COMP_Y) return O1_y (sign, xi, et, qq);
-	else if (component == MAG_COMP_Z) return O1_z (sign, xi, et, qq);
-	return 0.;
+	if (component == MAG_COMP_Y) return O1_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return O1_z (sign, xi, et, qq);
+	return _PIEZOMAG_DUMMY_;
 }
 
 double
 O2 (MagComp component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return O2_x (sign, xi, et, qq);
-	else if (component == MAG_COMP_Y) return O2_y (sign, xi, et, qq);
-	else if (component == MAG_COMP_Z) return O2_z (sign, xi, et, qq);
-	return 0.;
+	if (component == MAG_COMP_Y) return O2_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return O2_z (sign, xi, et, qq);
+	return _PIEZOMAG_DUMMY_;
 }
 
 double
 O3 (MagComp component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return O3_x (sign, xi, et, qq);
-	else if (component == MAG_COMP_Y) return O3_y (sign, xi, et, qq);
-	else if (component == MAG_COMP_Z) return O3_z (sign, xi, et, qq);
-	return 0.;
+	if (component == MAG_COMP_Y) return O3_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return O3_z (sign, xi, et, qq);
+	return _PIEZOMAG_DUMMY_;
 }
 
 double
 P1 (MagComp component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return P1_x (sign, xi, et, qq);
-	else if (component == MAG_COMP_Y) return P1_y (sign, xi, et, qq);
-	else if (component == MAG_COMP_Z) return P1_z (sign, xi, et, qq);
-	return 0.;
+	if (component == MAG_COMP_Y) return P1_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return P1_z (sign, xi, et, qq);
+	return _PIEZOMAG_DUMMY_;
 }
 
 double
 P2 (MagComp component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return P2_x (sign, xi, et, qq);
-	else if (component == MAG_COMP_Y) return P2_y (sign, xi, et, qq);
-	else if (component == MAG_COMP_Z) return P2_z (sign, xi, et, qq);
-	return 0.;
+	if (component == MAG_COMP_Y) return P2_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return P2_z (sign, xi, et, qq);
+	return _PIEZOMAG_DUMMY_;
 }
 
 double
 P3 (MagComp component, double sign, double xi, double et, double qq)
 {
 	if (component == MAG_COMP_X) return P3_x (sign, xi, et, qq);
-	else if (component == MAG_COMP_Y) return P3_y (sign, xi, et, qq);
-	else if (component == MAG_COMP_Z) return P3_z (sign, xi, et, qq);
-	return 0.;
+	if (component == MAG_COMP_Y) return P3_y (sign, xi, et, qq);
+	if (component == MAG_COMP_Z) return P3_z (sign, xi, et, qq);
+	return _PIEZOMAG_DUMMY_;
 }

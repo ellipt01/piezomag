@@ -114,12 +114,12 @@ bool	seismomagnetic_field (MagComp component,
 			double xobs, double yobs, double zobs, double *val);
 
 /* calculate and fprintf seismomagnetic term on grid x=[xobs1:dx:xobs2], y=[yobs1:dy:yobs2], z=zobs */
-void	fprintf_seismomagnetic_field_term (FILE *stream, MagComp component, SeismoMagTerm term,
+int		fprintf_seismomagnetic_field_term (FILE *stream, MagComp component, SeismoMagTerm term,
 			const fault_params *fault, const magnetic_params *mag,
 			double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs);
 
 /* calculate and fprintf seismomagnetic field on grid x=[xobs1:dx:xobs2], y=[yobs1:dy:yobs2], z=zobs */
-void	fprintf_seismomagnetic_field (FILE *stream, MagComp component,
+int		fprintf_seismomagnetic_field (FILE *stream, MagComp component,
 			const fault_params *fault, const magnetic_params *mag,
 			double xobs1, double xobs2, double dx, double yobs1, double yobs2, double dy, double zobs);
 

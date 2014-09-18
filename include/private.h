@@ -18,6 +18,12 @@
  *c   utilities
  *c***************/
 
+/* dummy(0) */
+#ifdef _PIEZOMAG_DUMMY_
+#undef _PIEZOMAG_DUMMY_
+#endif
+#define _PIEZOMAG_DUMMY_ 0
+
 /* degree -> radian */
 #define deg2rad(a) ((a) * M_PI / 180.)
 
@@ -51,10 +57,10 @@ double	s2d;	// sin (2 * delta)
 double	c2d;	// cos (2 * delta)
 
 /* depth of source and mirror images
- * d0 = dummy (not used)
- * d1 = fdepth
- * d2 = fdepth - 2 * dcurier
- * d3 = fdepth + 2 * dcurier */
+ * d[0] = dummy (not used)
+ * d[1] = fdepth
+ * d[2] = fdepth - 2 * dcurier
+ * d[3] = fdepth + 2 * dcurier */
 double	d[4];
 
 /* medium constants: alpha = (lambda + mu) / (lambda + 2 * mu) */

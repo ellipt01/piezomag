@@ -28,8 +28,7 @@ magnetic_params_alloc (void)
 
 /* total force
  * double	hx, hy, hz: x(N+S-), y(E+W-) and z(Down+Up-) components
- * double	exf_inc, exf_dec:	inclination and declination of external field
- * double	exf_dec:	declination of external field (clockwise +). */
+ * double	exf_inc, exf_dec:	inclination and declination of external field. */
 double
 total_force (double hx, double hy, double hz, double exf_inc, double exf_dec)
 {
@@ -51,7 +50,7 @@ rotate (double theta, double *x, double *y)
 	return;
 }
 
-/* check specified magnetic component is valid */
+/* check whether specified magnetic component is valid */
 bool
 check_mag_component (MagComp component)
 {
@@ -59,7 +58,7 @@ check_mag_component (MagComp component)
 	return false;
 }
 
-/* check specified seismomagnetic term is valid */
+/* check whether specified seismomagnetic term is valid */
 bool
 check_seismo_mag_term (SeismoMagTerm term)
 {

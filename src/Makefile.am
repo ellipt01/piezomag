@@ -1,7 +1,5 @@
 ## Process this file with automake to produce Makefile.in
 
-AM_CPPFLAGS = -I$(top_srcdir)/include
-
 AM_CFLAGS =\
 	 -Wall\
 	 -g
@@ -20,9 +18,7 @@ libpiezomag_la_SOURCES =\
 	tensile_opening.c\
 	piezomag.c
 
+libpiezomag_la_LIBADD = -L$(top_srcdir)/src
+libpiezomag_la_LDFLAGS = -version-info $(PIEZOMAG_LT_VERSION)
 libpiezomag_la_CPPFLAGS = -I$(top_srcdir)/include
-
-libpiezomag_la_LDFLAGS = -L$(top_srcdir)/src -version-info $(PIEZOMAG_LT_VERSION)
-
-libpiezomag_la_LIBADD =
 
