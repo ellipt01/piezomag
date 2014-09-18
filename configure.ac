@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(piezomag, 0.5.1)
+AC_INIT(piezomag, 0.5.2)
 
 PIEZOMAG_CURRENT=1
 PIEZOMAG_REVISION=0
@@ -28,7 +28,7 @@ dnl Libtool is used for building share libraries
 AC_PROG_LIBTOOL
 
 # pkgconfig
-PIEZOMAG_DESCRIPTION="Library for calculating seismo-magnetic effect due to an inclined rectangular fault"
+PIEZOMAG_DESCRIPTION="A library for calculating seismomagnetic effect due to a rectangular fault"
 AC_SUBST([PIEZOMAG_DESCRIPTION])
 AC_CONFIG_FILES([piezomag.pc:pkgconfig/piezomag.pc.in])
 

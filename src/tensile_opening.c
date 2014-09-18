@@ -48,7 +48,6 @@ tensilexH0 (MagComp component, const fault_params *fault, const magnetic_params 
 		+ 2.0 * alpha5 * h * (P1_val * cd + (M2_val + N2_val * sd))
 		+ 6.0 * alpha3 * h * M3_val
 		- 2.0 * alpha2 * h * ((qd + h * cd) * P1z_val - (z - 2.0 * h) * P1y_val * sd);
-
 	return val;
 }
 
@@ -77,7 +76,6 @@ tensileyH0 (MagComp component, const fault_params *fault, const magnetic_params 
 		- 2.0 * fault->alpha * h * ((O3_val+ M1_val * sd) * cd + (O2_val - L1_val * sd) * sd)
 		+ 6.0 * alpha3 * h * L1_val * sd2
 		+ 2.0 * alpha2 * h * ((qd + h * cd) * (O2y_val + M1y_val *cd)
-//				+ (z - 2.0 * h) * (O2z_val + M1y_val * sd)
 				+ (z - 2.0 * h) * (O2z_val + M1y_val) * sd	//todo: check this!
 				+ M1_val * sd2 * cd);
 

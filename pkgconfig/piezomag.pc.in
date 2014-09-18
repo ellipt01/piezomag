@@ -4,7 +4,7 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: @PACKAGE@
-Description: @CDESCENT_DESCRIPTION@
+Description: @PIEZOMAG_DESCRIPTION@
 Version: @VERSION@
 Libs: -L${libdir} -lpiezomag -lm
 Cflags: -I${includedir}/@PACKAGE@

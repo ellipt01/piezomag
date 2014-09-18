@@ -285,7 +285,7 @@ P1y_x (double sign, double xi, double et, double qq)
 {
 	return - sign * 3.0 * xi * cc * ir5
 		- 3.0 * xi * (r + re) * sd * ir3e2
-		+ xi * xi * xi * (8.0 * ir3 + 9.0 * xi * ir * ir3 + 3.0 * xi * xi * ir5) * ire3 * sd;
+		+ xi * xi * xi * (8.0 * ir3 + 9.0 * et * ir * ir3 + 3.0 * et * et * ir5) * ire3 * sd;
 }
 
 static double
