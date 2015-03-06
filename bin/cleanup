@@ -20,6 +20,9 @@ rm -f config.h.in install-sh missing depcomp aclocal.m4 acinclude.m4
 echo "rm -f stamp-h.in"
 rm -f stamp-h.in
 
+echo "rm -f ar-lib"
+rm -f ar-lib
+
 echo "rm -f *.pc"
 rm -f *.pc
 

@@ -73,7 +73,7 @@ usage (char *toolname)
 	if (p) p++;
 	else p = toolname;
 	fprintf (stderr, "USAGE: %s -f <parameter file name> -r <x0(S)/x1(N)/y0(W)/y1(E)> -i <dx/dy>\n", p);
-	fprintf (stderr, "          -z <zobs> -o <output component>\n", p);
+	fprintf (stderr, "          -z <zobs> -o <output component>\n");
 	fprintf (stderr, "          [ -v -h ]\n");
 	fprintf (stderr, "-f:  gives input parameter file name.\n");
 	fprintf (stderr, "-r:  specifies the min/max coordinates of region of interest.\n");

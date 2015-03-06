@@ -15,7 +15,9 @@ AC_CONFIG_HEADERS([config.h])
 AC_CANONICAL_SYSTEM
 
 dnl Initialize automake
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([foreign subdir-objects -Wall])
+
+AM_PROG_AR([ACT-IF-FAIL])
 
 dnl this allows us specify individual liking flags for each target
 AM_PROG_CC_C_O 
