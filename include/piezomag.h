@@ -100,6 +100,9 @@ magnetic_params	*magnetic_params_alloc (void);
  * pre-allocated structures: fault_params *fault, magnetic_params *mag. */
 bool	fread_params (FILE *fp, fault_params *fault, magnetic_params *mag);
 
+/* write parameters to stream */
+void	fwrite_params (FILE *stream, const fault_params *fault, const magnetic_params *mag);
+
 /*** piezomag.c ***/
 
 /* calculate seismomagnetic term (main(0), mirror image(H0) or sub-mirror image(HI, HIII or HII))
